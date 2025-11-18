@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aetheron – AI Components powered by X402</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        background-color: #030712;
+        overflow: hidden;
+      }
+
+      /* --- PARTICLE BACKGROUND --- */
+      .background {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .particle {
+        position: absolute;
+        background: rgba(34, 211, 238, 0.3);
+        border-radius: 50%;
+        width: 2px;
+        height: 2px;
+        animation: floatUp linear infinite;
+      }
+
+      @keyframes floatUp {
+        0% { transform: translateY(100vh); opacity: 0; }
+        30% { opacity: 1; }
+        100% { transform: translateY(-10vh); opacity: 0; }
+      }
+
+      .scanlines {
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.04) 0,
+          rgba(255, 255, 255, 0.04) 1px,
+          transparent 2px,
+          transparent 4px
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* --- NEW CLEAN LOADING INTRO --- */
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1s ease;
+      }
+
+      #loading-screen.fade-out {
+        opacity: 0;
+      }
+
+      .loading-text {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      /* --- MAIN CONTENT --- */
+      #main-content {
+        position: relative;
+        z-index: 10;
+        opacity: 0;
+        transform: scale(0.98);
+        transition: opacity 1.5s ease, transform 1.5s ease;
+      }
+
+      #main-content.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      @keyframes floatText {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+        100% { transform: translateY(0px); }
+      }
+
+      @keyframes glowPulse {
+        0% { box-shadow: 0 0 0 rgba(34, 211, 238, 0.4); }
+        50% { box-shadow: 0 0 25px rgba(34, 211, 238, 0.8); }
+        100% { box-shadow: 0 0 0 rgba(34, 211, 238, 0.4); }
+      }
+    </style>
+  </head>
+
+  <body class="text-gray-100 font-sans page-fade">
+
+    <!-- PARTICLES -->
+    <div class="background">
+      <div id="particle-container"></div>
+      <div class="scanlines"></div>
+    </div>
+
+    <!-- UPDATED LOADING SCREEN -->
+    <div id="loading-screen">
+
+      <h1 class="text-3xl font-semibold mb-4 text-cyan-300 tracking-wide">
+        Initializing <span class="text-cyan-400">Aetheron Protocol</span>
+      </h1>
+
+      <!-- Clean premium loading bar -->
+      <div class="w-72 h-2 bg-white/10 rounded-full overflow-hidden shadow-lg shadow-cyan-400/10">
+        <div id="loading-bar" class="h-full w-0 bg-cyan-400 transition-all duration-500"></div>
+      </div>
+
+      <p id="loading-seq" class="loading-text text-gray-400 text-sm mt-4"></p>
+    </div>
+
+    <!-- MAIN LANDING CONTENT -->
+    <section
+      id="main-content"
+      class="min-h-screen flex flex-col items-center justify-center text-center p-8"
+    >
+      <h1
+        class="text-5xl md:text-6xl font-bold mb-4 animate-[floatText_3s_ease-in-out_infinite]"
+      >
+        Welcome to <span class="text-cyan-400">Aetheron</span>
+      </h1>
+
+     <p class="text-gray-400 max-w-xl mb-6">
+        A premium AI component marketplace powered by the X402 protocol.
+      </p>
+
+      <!-- Existing Explore button -->
+      <button
+        id="explore-btn"
+        class="px-6 py-3 bg-cyan-500 text-black rounded-xl font-semibold hover:bg-cyan-400 transition animate-[glowPulse_3s_infinite]"
+      >
+        Explore Components
+      </button>
+
+      <!-- Aetheron Token header (clickable, smaller) -->
+      <a href="/aetheron-token" class="block text-center group mt-8 mb-4">
+
+  <h2 class="text-xl font-semibold text-cyan-300 transition group-hover:text-cyan-200">
+    Aetheron Token
+  </h2>
+
+  <!-- Smaller arrow animation -->
+  <span class="text-cyan-400 text-base opacity-80 inline-block mt-1 group-hover:opacity-100 animate-soft-bounce">
+    ↓
+  </span>
+
+      </a>
+
+      <!-- Soft bounce animation -->
+      <style>
+      @keyframes soft-bounce {
+        0%, 100% { transform: translateY(0); opacity: 0.85; }
+        50% { transform: translateY(3px); opacity: 1; }
+      }
+      .animate-soft-bounce {
+        animation: soft-bounce 1.8s ease-in-out infinite;
+      }
+      </style>
+
+    <script>
+      // Generate particles
+      const particleContainer = document.getElementById("particle-container");
+      for (let i = 0; i < 80; i++) {
+        const p = document.createElement("div");
+        p.classList.add("particle");
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = 4 + Math.random() * 8 + "s";
+        p.style.animationDelay = Math.random() * 5 + "s";
+        particleContainer.appendChild(p);
+      }
+
+      // Boot sequence
+      const messages = [
+        "Loading core modules...",
+        "Activating AI lattice...",
+        "Establishing quantum handshake...",
+        "Connecting to X402 interface...",
+        "Deploying systems...",
+        "Aetheron online."
+      ];
+
+      const loadingText = document.getElementById("loading-seq");
+      const loadingBar = document.getElementById("loading-bar");
+
+      let index = 0;
+      let progress = 0;
+
+      function showNextMessage() {
+        if (index < messages.length) {
+
+          // fade text out
+          loadingText.style.opacity = 0;
+
+          setTimeout(() => {
+            loadingText.textContent = messages[index];
+            loadingText.style.opacity = 1;
+            index++;
+
+            // smooth progress
+            progress += Math.random() * 18 + 12;
+            if (progress > 100) progress = 100;
+            loadingBar.style.width = progress + "%";
+
+            setTimeout(showNextMessage, 900);
+          }, 250);
+
+        } else {
+          loadingBar.style.width = "100%";
+
+          const loader = document.getElementById("loading-screen");
+          loader.classList.add("fade-out");
+
+          setTimeout(() => {
+            loader.style.display = "none";
+            document.getElementById("main-content").classList.add("active");
+            document.body.style.overflow = "auto";
+          }, 1100);
+        }
+      }
+
+      showNextMessage();
+
+      // Navigate to shop
+      document.getElementById("explore-btn").addEventListener("click", () => {
+        window.location.href = "/shop";
+      });
+    </script>
+  </body>
+</html>

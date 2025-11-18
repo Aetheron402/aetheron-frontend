@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM-Powered Code Explainer — Aetheron</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+    <script type="module">
+      import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
+      window.splToken = spl;
+    </script>
+    <style>
+      body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
+      .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
+      .btn:hover { background:#67e8f9; }
+      .kbd { border:1px solid #334155; padding:.15rem .35rem; border-radius:.35rem; font-size:.8rem; color:#94a3b8; }
+    </style>
+  </head>
+
+  <body class="font-sans">
+    <!-- HEADER -->
+    <header class="flex justify-between items-center p-6 border-b border-cyan-900/30">
+      <a href="/shop" class="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition">
+        Aetheron Components
+      </a>
+      <nav class="flex gap-6 text-sm items-center">
+        <a href="/docs" class="text-gray-400 hover:text-cyan-300">Docs</a>
+        <button id="connect-wallet" class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs">
+          Connect Wallet
+        </button>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-3xl mx-auto mt-12 px-4">
+      <h2 class="text-3xl font-semibold text-cyan-300 mb-2">LLM-Powered Code Explainer</h2>
+      <p class="text-gray-400 mb-6">Understand any code instantly — get explanations, complexity ratings, and refactor suggestions.<br>
+        <span class="text-cyan-400">Price: 0.50 USDC per use</span>
+      </p>
+
+      <label class="block text-sm text-gray-400 mb-2">Paste your code below</label>
+      <textarea id="user-code" rows="10" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none" placeholder="Paste Python, JavaScript, or Solidity code here..."></textarea>
+
+      <div class="flex gap-3 mt-5">
+        <button class="btn" onclick="tryCodeCall(false)">Call (expect 402)</button>
+        <button class="btn" onclick="tryCodeCall(true)">Simulate Pay + Call</button>
+      </div>
+
+      <div id="code-result" class="mt-6 text-sm bg-white/5 border border-cyan-400/10 rounded-lg p-3 overflow-auto max-h-96 hidden"></div>
+
+      <p class="text-xs text-gray-500 mt-3">
+        Dev debug: send header <span class="kbd">X-WALLET: DEMO_OK</span> to simulate a valid payment.
+      </p>
+    </main>
+
+    <footer class="border-t border-cyan-900/30 mt-12 text-center text-sm text-gray-500 p-6">
+      © 2025 Aetheron — Built on the X402 protocol.
+    </footer>
+
+    <!-- Wallet Selection Modal -->
+    <div id="wallet-select-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+      <div class="modal text-center bg-[#0b1220] border border-cyan-400/30 rounded-lg p-6 w-[340px]">
+        <h3 class="text-cyan-300 text-lg font-semibold mb-4">Choose Wallet</h3>
+        <button id="phantom-btn" class="btn mb-2 w-full flex items-center justify-center gap-2">
+          <img src="https://seeklogo.com/images/P/phantom-wallet-logo-6D30F1B8D4-seeklogo.com.png" class="w-5 h-5" />
+          Phantom (Solana)
+        </button>
+        <button id="metamask-btn" class="btn w-full flex items-center justify-center gap-2">
+          <img src="https://seeklogo.com/images/M/metamask-logo-09EDE53DBD-seeklogo.com.png" class="w-5 h-5" />
+          MetaMask (Ethereum)
+        </button>
+        <p class="text-xs text-gray-400 mt-4 cursor-pointer hover:underline" onclick="closeWalletSelector()">Cancel</p>
+      </div>
+    </div>
+
+    <!-- WALLET + API LOGIC -->
+    <script defer>
+      const SOLANA_NETWORK = "https://mainnet.helius-rpc.com/?api-key=63f5896a-519d-4701-a181-654bcd2f5854";
+      const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      const PAYMENT_WALLET = "FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1";
+
+      let currentWallet = "";
+      let currentChain = "";
+      const walletBtn = document.getElementById("connect-wallet");
+
+      function shorten(addr) { return "🔗 " + addr.slice(0, 4) + "..." + addr.slice(-4); }
+      function updateWalletUI() { walletBtn.textContent = shorten(currentWallet); }
+      function closeWalletSelector() { document.getElementById("wallet-select-modal").style.display = "none"; }
+
+      async function connectPhantom() {
+        try {
+          if (window.solana?.isPhantom) {
+            await window.solana.disconnect().catch(() => {});
+            const res = await window.solana.connect({ onlyIfTrusted: false });
+            currentWallet = res.publicKey.toString();
+            currentChain = "solana";
+            updateWalletUI();
+            localStorage.setItem("connectedWallet", currentWallet);
+          } else alert("Phantom Wallet not found. Please install the extension.");
+        } catch (err) { console.error("Phantom connection failed:", err); }
+        closeWalletSelector();
+      }
+
+      async function connectMetamask() {
+        try {
+          if (!window.ethereum) { alert("MetaMask not found."); return; }
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          if (accounts.length) { currentWallet = accounts[0]; currentChain = "ethereum"; updateWalletUI(); }
+        } catch (err) { console.error("MetaMask connection failed:", err); }
+        closeWalletSelector();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.style.opacity = 1;
+        walletBtn.addEventListener("click", () => {
+          if (currentWallet) {
+            const confirmDisconnect = confirm(`Connected as ${shorten(currentWallet)}\nDisconnect / switch wallet?`);
+            if (confirmDisconnect) { currentWallet = ""; walletBtn.textContent = "Connect Wallet"; }
+          } else { document.getElementById("wallet-select-modal").style.display = "flex"; }
+        });
+        document.getElementById("phantom-btn").addEventListener("click", connectPhantom);
+        document.getElementById("metamask-btn").addEventListener("click", connectMetamask);
+      });
+
+      // --- CODE EXPLAINER CALL LOGIC ---
+      async function tryCodeCall(simulate) {
+        const resultDiv = document.getElementById("code-result");
+        const code = document.getElementById("user-code").value.trim();
+        if (!currentWallet) { alert("Please connect your wallet first."); return; }
+        if (!code) { alert("Please paste your code first."); return; }
+        resultDiv.classList.remove("hidden");
+        resultDiv.textContent = "⏳ Sending request...";
+
+        try {
+          const headers = { "Content-Type": "application/json" };
+          if (simulate) headers["X-WALLET"] = "DEMO_OK";
+          const res = await fetch("/api/code-explainer", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ text: code, wallet: currentWallet, chain: currentChain })
+          });
+          const data = await res.json();
+
+          if (res.status === 402) {
+            resultDiv.textContent = "💰 Payment required. Please complete the transaction in your wallet.";
+            return;
+          }
+
+          if (res.status === 200) {
+            resultDiv.innerHTML = `
+              <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
+              <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
+              <p class="text-xs text-cyan-400 mt-2">Engine: ${data.engine_version} | Asset ID: ${data.asset_id}</p>
+            `;
+            const blob = new Blob([data.optimized_prompt], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `code_explainer_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+          } else {
+            resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+          }
+        } catch (err) {
+          console.error(err);
+          resultDiv.textContent = "❌ Request failed: " + err.message;
+        }
+      }
+    </script>
+  </body>
+</html>

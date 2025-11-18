@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Learn – Aetheron{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto">
+
+  <!-- 🧭 Breadcrumb -->
+  <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">/ Aetheron / Learn</p>
+
+  <!-- 🔙 Back Button -->
+  <a href="/shop"
+     class="inline-flex items-center text-cyan-300 hover:text-cyan-200 text-sm mb-6 transition">
+    ← Back to Shop
+  </a>
+
+  <h1 class="text-4xl font-bold text-cyan-400 mb-4">Learn About Aetheron</h1>
+  <p class="text-gray-300 mb-8">
+    Aetheron is an AI component marketplace built on the X402 protocol — enabling decentralized, on-chain access to intelligent modules.
+    Every AI call is settled transparently with <span class="text-cyan-300 font-semibold">USDC</span> and verified on the blockchain.
+  </p>
+
+  <div class="space-y-8 text-gray-300">
+
+    <!-- Components -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">What Are Components?</h2>
+      <p>
+        Components are focused AI modules such as <em>Prompt Optimizer</em>, <em>Code Explainer</em>, and <em>PersonaSim</em>.
+        Each performs a single intelligent task — from rewriting prompts to auditing code — and returns a verifiable
+        premium file (PDF or TXT). Every interaction is handled through an on-chain 402 payment pattern.
+      </p>
+      <p class="mt-2 text-gray-400 text-sm">
+        Think of Aetheron as an <span class="text-cyan-300">app store for micro-intelligences</span> — self-contained AI units you can call directly with your wallet.
+      </p>
+    </div>
+
+    <!-- X402 Protocol -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">How the X402 Protocol Works</h2>
+      <p>
+        X402 defines a new pay-per-use pattern for AI endpoints. When a component is invoked,
+        the backend may return a <span class="font-mono text-cyan-200">402 Payment Required</span> response,
+        prompting the user to complete an on-chain payment.
+        Once verified, the component automatically executes and returns the output.
+      </p>
+      <p class="mt-2 text-gray-400 text-sm">
+        This ensures <strong>trustless access control</strong> — no subscriptions, no API keys, and no centralized billing.
+      </p>
+    </div>
+
+    <!-- Wallet -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">Connecting Your Wallet</h2>
+      <p>
+        Click the <span class="bg-cyan-700/40 text-cyan-200 px-2 py-0.5 rounded">Connect Wallet</span> button at the top.
+        Aetheron currently supports Phantom Wallet. In Q1 2026 we will add support for MetaMask aswell. Once connected, you can initiate verified transactions directly from your browser.
+      </p>
+      <p class="mt-2 text-gray-400 text-sm">
+        Ethereum and other chains will be added in future releases — ensuring full multi-chain compatibility.
+      </p>
+    </div>
+
+    <!-- Need Crypto -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">Do I Need Crypto?</h2>
+      <p>
+        Yes — Aetheron runs entirely on-chain using stablecoins such as USDC for settlement.
+        This ensures transparency, immutability, and zero dependency on traditional billing systems.
+      </p>
+    </div>
+
+    <!-- Built For -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">Built for Developers, Analysts, and Creators</h2>
+      <ul class="list-disc ml-6 space-y-2">
+        <li><span class="text-white">Developers:</span> integrate AI logic into Web3 apps without API keys.</li>
+        <li><span class="text-white">Analysts:</span> generate verifiable AI reports that can be shared or tokenized.</li>
+        <li><span class="text-white">Creators:</span> purchase one-off AI outputs or automate creative workflows.</li>
+      </ul>
+    </div>
+
+    <!-- What Makes Aetheron Different -->
+    <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition">
+      <h2 class="text-xl text-cyan-300 font-semibold mb-2">What Makes Aetheron Different?</h2>
+      <ul class="list-disc ml-6 space-y-1">
+        <li>100% transparent on-chain billing through X402.</li>
+        <li>Each AI module is isolated, composable, and verified.</li>
+        <li>Outputs are cryptographically tied to transaction IDs for authenticity.</li>
+      </ul>
+      <p class="mt-2 text-gray-400 text-sm">
+        Aetheron merges the reliability of blockchain with the creativity of AI — building a new category of autonomous digital labor.
+      </p>
+    </div>
+  </div>
+
+  <!-- ↑ Back to top -->
+  <p class="text-center mt-12">
+    <a href="#" class="text-cyan-400 hover:text-cyan-300 text-sm">↑ Back to top</a>
+  </p>
+</section>
+{% endblock %}

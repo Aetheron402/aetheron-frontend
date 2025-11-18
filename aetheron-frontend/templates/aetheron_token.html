@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Aetheron Token – Dashboard{% endblock %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto py-14 px-4 md:px-0">
+
+  <!-- Breadcrumb -->
+  <p class="text-xs text-gray-500 uppercase tracking-widest mb-4 animate-fade-in">
+    / Aetheron / Aetheron Token
+  </p>
+
+  <!-- Back link -->
+  <a href="/shop"
+     class="inline-flex items-center text-cyan-300 hover:text-cyan-200 text-sm mb-8 transition animate-fade-in">
+    ← Back to Shop
+  </a>
+
+  <!-- Page Title -->
+  <div class="text-center mb-10 animate-slide-up">
+    <h1 class="text-5xl font-bold text-cyan-400 mb-4">Aetheron Token</h1>
+    <p class="text-gray-300 mb-8 max-w-3xl mx-auto text-center leading-relaxed animate-fade-in">
+      $AETH is launching on the Solana network as the core token of the Aetheron ecosystem, powering AI components, expanding utility, supporting long-term development, and strengthening the community. 
+      Our model is built for sustainability: creator fees are split transparently across development, long-term locked buybacks, and recurring community rewards. 
+      Aetheron is designed to grow with its holders — as usage increases, value cycles back into the ecosystem and the people who support it.
+    </p>
+  </div>
+
+  <!-- CA ONLY -->
+  <div class="bg-gray-900/60 border border-cyan-400/20 rounded-2xl py-10 px-8
+              shadow-[0_0_30px_rgba(34,211,238,0.15)]
+              animate-slide-up delay-100">
+
+    <div class="grid grid-cols-1 text-center">
+ 
+      <!-- Contract Address -->
+      <div>
+        <p class="text-[11px] uppercase tracking-widest text-gray-400 mb-2">
+          Contract Address
+        </p>
+        <p class="text-cyan-300 text-2xl font-bold">
+          Dropping Soon
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION TITLE -->
+  <h2 class="text-5xl font-bold text-cyan-400 mt-28 mb-16 text-center animate-fade-in">
+    Creator Fees Distribution
+  </h2>
+
+  <!-- THREE WALLETS -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-20 place-items-start md:place-items-center">
+
+    <!-- CREATOR WALLET -->
+    <div class="p-10 max-w-md rounded-2xl border border-cyan-400/30 bg-gray-900/40 
+                shadow-[0_0_25px_rgba(34,211,238,0.15)]
+                transition hover:shadow-[0_0_40px_rgba(34,211,238,0.35)]
+                hover:-translate-y-1 duration-300 animate-slide-up">
+
+      <h3 class="text-3xl font-bold text-cyan-300 mb-6 text-center">Creator Wallet</h3>
+
+      <p class="font-mono text-2xl text-gray-200 break-all mb-6 text-center">
+        FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1
+      </p>
+
+      <p class="text-xl text-gray-400 leading-relaxed text-center">
+        50% of creator fees stay in this wallet and are used to push Aetheron forward — 
+        covering development, marketing, infrastructure, operations, and key ecosystem upgrades.
+      </p>
+    </div>
+
+    <!-- BUYBACK WALLET -->
+    <div class="p-10 max-w-md rounded-2xl border border-cyan-400/30 bg-gray-900/40 
+                shadow-[0_0_25px_rgba(34,211,238,0.15)]
+                transition hover:shadow-[0_0_40px_rgba(34,211,238,0.35)]
+                hover:-translate-y-1 duration-300 animate-slide-up delay-150">
+
+      <h3 class="text-3xl font-bold text-cyan-300 mb-6 text-center">Buyback Wallet</h3>
+
+      <p class="font-mono text-2xl text-gray-200 break-all mb-6 text-center">
+        HRbfANC58L34zQUoKZkNuLTSgNXAnfQ7WM4XA4ahweas
+      </p>
+
+      <p class="text-xl text-gray-400 leading-relaxed mb-10 text-center">
+        25% of creator fees go here.  
+        Funds are used to <span class="text-cyan-300 font-semibold">buy $AETH</span> on Raydium.  
+        Purchased tokens are locked for <strong>12 months</strong>.
+      </p>
+
+      <div class="text-center">
+        <p class="text-sm uppercase tracking-widest text-gray-500 mb-1">Token Amount Locked</p>
+        <p class="text-cyan-300 text-4xl font-bold animate-pulse-slow">0 $AETH</p>
+      </div>
+    </div>
+
+    <!-- GIVEAWAY WALLET -->
+    <div class="p-10 max-w-md rounded-2xl border border-cyan-400/30 bg-gray-900/40 
+                shadow-[0_0_25px_rgba(34,211,238,0.15)]
+                transition hover:shadow-[0_0_40px_rgba(34,211,238,0.35)]
+                hover:-translate-y-1 duration-300 animate-slide-up delay-300">
+
+      <h3 class="text-3xl font-bold text-cyan-300 mb-6 text-center">Giveaway Wallet</h3>
+
+      <p class="font-mono text-2xl text-gray-200 break-all mb-6 text-center">
+        3kUzYNUN3yDg2gyeXd5ZmuYR9C1yrYtiGFiuoGqupuhJ
+      </p>
+
+      <p class="text-xl text-gray-400 leading-relaxed mb-10 text-center">
+        25% of creator fees go here.  
+        SOL rewards are distributed weekly to community holders. Giveaways will be held on our X!
+        Must hold <span class="text-cyan-300 font-semibold">$AETH</span> to qualify (proof-of-hold).
+      </p>
+
+      <div class="text-center">
+        <p class="text-sm uppercase tracking-widest text-gray-500 mb-1">SOL Balance</p>
+        <p class="text-cyan-300 text-4xl font-bold animate-pulse-slow">0 SOL</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Animations -->
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 1s ease-out forwards; }
+.animate-slide-up { animation: slide-up 1s ease-out forwards; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-150 { animation-delay: 0.15s; }
+.delay-300 { animation-delay: 0.3s; }
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+</style>
+
+{% endblock %}
