@@ -59,7 +59,7 @@ Backend is private to protect proprietary logic.
 
 ## 🌐 Links
 
-- **Main Website:** https://aetheron402.com  
+- **Main Website:** https://www.aetheron402.com  
 - **Twitter:** https://twitter.com/Aetheron402  
 - **Email:** team@aetheron402.com  
 
