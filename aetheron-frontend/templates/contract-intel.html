@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contract Intelligence Analyzer — Aetheron</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+
+    <style>
+      body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
+      .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
+      .btn:hover { background:#67e8f9; }
+      .kbd { border:1px solid #334155; padding:.15rem .35rem; border-radius:.35rem; font-size:.8rem; color:#94a3b8; }
+    </style>
+  </head>
+
+  <body class="font-sans">
+    <!-- HEADER -->
+    <header class="flex justify-between items-center p-6 border-b border-cyan-900/30">
+      <a href="/shop" class="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition">
+        Aetheron Components
+      </a>
+      <nav class="flex gap-6 text-sm items-center">
+        <a href="/docs" class="text-gray-400 hover:text-cyan-300">Docs</a>
+        <button id="connect-wallet" class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs">
+          Connect Wallet
+        </button>
+      </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-3xl mx-auto mt-12 px-4">
+      <h2 class="text-3xl font-semibold text-cyan-300 mb-2">Contract Intelligence Analyzer</h2>
+      <p class="text-gray-400 mb-6">
+        Analyze any Solana or Ethereum contract.<br>
+        <span class="text-cyan-400">Price: 1.00 USDC per scan</span>
+      </p>
+
+      <!-- Contract Analyzer UI -->
+      <label class="block text-sm text-gray-400 mb-2">Select Network</label>
+      <select id="network" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none mb-4">
+        <option value="solana">Solana</option>
+        <option value="ethereum">Ethereum</option>
+      </select>
+
+      <label class="block text-sm text-gray-400 mb-2">Contract Address</label>
+      <input
+        id="contract-address"
+        type="text"
+        class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none"
+        placeholder="Enter contract address…"
+      />
+
+      <label class="block text-sm text-gray-400 mb-1 mt-3">Output Format</label>
+      <select id="intel-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none">
+        <option value="pdf" selected>Premium PDF (.pdf)</option>
+        <option value="txt">Plain Text (.txt)</option>
+      </select>
+
+      <div class="flex gap-3 mt-5">
+        <button class="btn" onclick="tryContractCall(false)">Call (expect 402)</button>
+        <button class="btn" onclick="tryContractCall(true)">Simulate Pay + Call</button>
+      </div>
+
+      <div id="contract-result" class="mt-6 text-sm bg-white/5 border border-cyan-400/10 rounded-lg p-3 overflow-auto max-h-96 hidden"></div>
+
+      <p class="text-xs text-gray-500 mt-3">
+        Dev debug: send header <span class="kbd">X-WALLET: DEMO_OK</span> to simulate a valid payment.
+      </p>
+    </main>
+
+    <footer class="border-t border-cyan-900/30 mt-12 text-center text-sm text-gray-500 p-6">
+      © 2025 Aetheron — Built on the X402 protocol.
+    </footer>
+
+    <!-- LOGIC -->
+    <script defer>
+      document.body.style.opacity = 1;
+
+      let currentWallet = "";
+      const walletBtn = document.getElementById("connect-wallet");
+      function shorten(addr){ return "🔗 " + addr.slice(0,4) + "..." + addr.slice(-4); }
+
+      walletBtn.addEventListener("click", async () => {
+        if (!window.solana || !window.solana.isPhantom) { alert("Phantom Wallet not found."); return; }
+        try {
+          const res = await window.solana.connect({ onlyIfTrusted: false });
+          currentWallet = res.publicKey.toString();
+          walletBtn.textContent = shorten(currentWallet);
+          localStorage.setItem("connectedWallet", currentWallet);
+        } catch(e){ console.error(e); }
+      });
+
+      async function tryContractCall(simulate){
+        const resultDiv = document.getElementById("contract-result");
+        let contractAddr = document.getElementById("contract-address").value.trim();
+        let cleanAddr = contractAddr;
+
+        // remove pump.fun UI suffixes
+        if (cleanAddr.toLowerCase().endsWith("pump")) {
+          cleanAddr = cleanAddr.slice(0, -4);
+        }
+
+        // remove bonkbot UI suffixes
+        if (cleanAddr.toLowerCase().endsWith("bonk")) {
+          cleanAddr = cleanAddr.slice(0, -4);
+        }
+        const network = document.getElementById("network").value;
+        const format = document.getElementById("intel-format").value;
+
+        if(!currentWallet){ alert("Please connect your wallet first."); return; }
+        if(!contractAddr){ alert("Please enter a contract address."); return; }
+
+        resultDiv.classList.remove("hidden");
+        resultDiv.textContent = "⏳ Sending request...";
+
+        try{
+          const headers = { "Content-Type": "application/json" };
+          if (simulate) headers["X-WALLET"] = "DEMO_OK";
+
+          const res = await fetch("/api/contract-intel", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                contract_address: cleanAddr,
+                chain: network,
+                format: format
+            })
+           });
+
+          const data = await res.json();
+
+          if(res.status === 402){
+            resultDiv.textContent = "💰 Payment required. Please complete the transaction in your wallet.";
+            return;
+          }
+
+          if(res.status === 202){
+            resultDiv.innerHTML = `
+              <div class="text-cyan-300 font-semibold mb-1">⏳ Scan queued:</div>
+              <div class="text-gray-200">Task ID: ${data.task_id}</div>
+              <div class="mt-2 text-xs text-gray-400">Use /api/job-status/${data.task_id} to poll the result.</div>
+            `;
+          }
+          else {
+            resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+          }
+        }catch(err){
+          console.error(err);
+          resultDiv.textContent = "❌ Request failed: " + err.message;
+        }
+      }
+
+      window.tryContractCall = tryContractCall;
+    </script>
+  </body>
+</html>
