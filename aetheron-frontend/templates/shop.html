@@ -17,8 +17,33 @@
 
     <style>
       body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
-      .card { background: rgba(15,23,42,.85); border: 1px solid rgba(56,189,248,.2); border-radius: 1rem; transition: all .3s ease; }
-      .card:hover { transform: translateY(-4px); box-shadow: 0 0 30px rgba(34,211,238,.25); }
+
+      .card { 
+        background: rgba(15,23,42,.85); 
+        border: 1px solid rgba(56,189,248,.2); 
+        border-radius: 1rem; 
+        transition: all .3s ease; 
+      }
+
+      .card:hover {
+        transform: translateY(-4px) translateX(var(--x, 0));
+        box-shadow: 0 0 30px rgba(34,211,238,.25);
+      }
+
+      /* ⭐ REQUIRED — this makes the shift happen */
+      .prebuilt-hover {
+        --x: 12rem;    /* pushes the card right on hover */
+      }
+
+      .contract-intel-hover {
+        --x: 12rem;
+      }
+
+      /* ⭐ UNIVERSAL EQUAL CARD HEIGHT */
+      #components-grid .card {
+        min-height: 280px;
+      }
+
       .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
       .btn:hover { background:#67e8f9; }
       .pill { padding:.35rem .9rem; border-radius:9999px; background:rgba(15,23,42,.8); border:1px solid rgba(56,189,248,.3); color:#67e8f9; font-size:.85rem; }
@@ -32,7 +57,6 @@
         box-shadow: 0 0 16px rgba(34,211,238,.45);
       }
     </style>
-  </head>
 
   <body class="font-sans">
     <!-- HEADER -->
@@ -42,6 +66,11 @@
       </h1>
   
       <nav class="flex gap-6 text-sm items-center">
+
+        <a href="https://github.com/Aetheron402" target="_blank"
+           class="text-gray-400 hover:text-cyan-300 transition">
+           GitHub
+        </a>
 
         <a href="https://x.com/Aetheron402" target="_blank"
            class="text-gray-400 hover:text-cyan-300 transition">
@@ -78,7 +107,8 @@
     <main id="components-grid" class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
       {% for c in components %}
       <div
-        class="card p-6 flex flex-col justify-between"
+        class="card p-6 flex flex-col justify-between w-full h-full min-h-[280px] transform
+               {% if c.slug == 'contract-intel' %} contract-intel-hover md:translate-x-[12rem] {% endif %}"
         data-name="{{ c.name | lower }}"
         data-category="{% if c.slug == 'prompt-optimizer' or c.slug == 'prompt-tester' %}AI Tools{% elif c.slug == 'code-explainer' %}Development{% else %}AI Tools{% endif %}"
       >
@@ -94,54 +124,47 @@
           <!-- ✅ Prompt Optimizer uses modal -->
           {% if c.slug == "prompt-optimizer" %}
             <button class="btn use-btn" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+
           {% elif c.slug == "code-explainer" %}
             <button class="btn use-btn" data-component="code-explainer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+
           {% elif c.slug == "prompt-tester" %}
             <button class="btn use-btn" data-component="prompt-tester" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+
+          {% elif c.slug == "contract-intel" %}
+            <button class="btn use-btn" data-component="contract-analyzer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+
           {% elif c.coming_soon %}
             <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Soon</button>
+
           {% else %}
             <a class="btn" href="/buy/{{ c.id }}">Buy</a>
           {% endif %}
+
         </div>
       </div>
       {% endfor %}
+      <!-- ====== Staggered Coming Soon Section ====== -->
+      <div class="flex flex-wrap justify-center gap-10 mt-0">
+
+        <!-- Prebuilt Agent Store -->
+        <div class="card prebuilt-hover transform p-6 flex flex-col justify-between opacity-60 w-80 md:translate-x-[12rem]">
+          <div>
+            <div class="mb-2"><span class="pill">coming-soon</span></div>
+            <h2 class="text-xl font-semibold text-cyan-400">Prebuilt Agent Store (Template)</h2>
+            <p class="text-gray-400 text-sm mt-2">
+              One-click download of ready-to-use AI agent templates such as DeFi Discord bots
+              or PDF Chat Assistants. Unlock via X402 for a one-time purchase.
+            </p>
+          </div>
+          <div class="mt-6 flex justify-between items-center">
+            <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+            <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Q4 2025</button>
+          </div>
+        </div>
+
+      </div>
     </main>
-
-    <!-- ====== Staggered Coming Soon Section ====== -->
-    <div class="flex flex-wrap justify-center gap-10 mt-12">
-      <!-- Contract Intelligence Analyzer -->
-      <div class="card p-6 flex flex-col justify-between opacity-60 w-80 md:translate-x-[-3rem]">
-        <div>
-          <div class="mb-2"><span class="pill">coming-soon</span></div>
-          <h2 class="text-xl font-semibold text-cyan-400">Contract Intelligence Analyzer (Crypto)</h2>
-          <p class="text-gray-400 text-sm mt-2">
-            Input Ethereum or Solana contract address → Output: metadata, function count, and known issues.
-            A lite version of the AI Token Contract Analyzer.
-          </p>
-        </div>
-        <div class="mt-6 flex justify-between items-center">
-          <span class="text-cyan-300 font-semibold">1.00 USDC</span>
-          <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Q4 2025</button>
-        </div>
-      </div>
-
-      <!-- Prebuilt Agent Store -->
-      <div class="card p-6 flex flex-col justify-between opacity-60 w-80 md:translate-x-[3rem]">
-        <div>
-          <div class="mb-2"><span class="pill">coming-soon</span></div>
-          <h2 class="text-xl font-semibold text-cyan-400">Prebuilt Agent Store (Template)</h2>
-          <p class="text-gray-400 text-sm mt-2">
-            One-click download of ready-to-use AI agent templates such as DeFi Discord bots
-            or PDF Chat Assistants. Unlock via X402 for a one-time purchase.
-          </p>
-        </div>
-        <div class="mt-6 flex justify-between items-center">
-          <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-          <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Q4 2025</button>
-        </div>
-      </div>
-    </div>
 
     <!-- ====== My Recent Assets Section ====== -->
     <section id="my-assets-section" class="max-w-5xl mx-auto mt-20 hidden">
@@ -215,8 +238,13 @@
       © 2025 Aetheron — Built on the X402 protocol.
       <div class="space-x-4 mt-2">
 
+        <a href="https://github.com/Aetheron402" target="_blank"
+           class="hover:text-cyan-300">
+           GitHub
+        </a>
+
         <a href="https://x.com/Aetheron402" target="_blank"
-           class="text-gray-400 hover:text-cyan-300 transition">
+           class="hover:text-cyan-300">
            Aetheron on X
         </a>
 
@@ -224,6 +252,7 @@
         <a href="/roadmap" class="hover:text-cyan-300">Roadmap</a>
         <a href="/legal" class="hover:text-cyan-300">Legal</a>
         <a href="/aetheron-token" class="hover:text-cyan-300">Aetheron Token</a>
+    
       </div>
     </footer>
 
@@ -312,6 +341,53 @@
       </div>
     </div>
 
+    <!-- MODAL: Contract Intelligence Analyzer -->
+    <div id="modal-contract-bg" class="modal-bg">
+      <div class="modal bg-gray-950/95 backdrop-blur border border-cyan-400/20 rounded-2xl shadow-xl p-6 w-[520px]">
+
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="text-cyan-300 text-xl font-semibold mb-1">Contract Intelligence Analyzer</h3>
+            <p class="text-sm text-gray-400">Price: <span class="text-cyan-300 font-semibold">1.00 USDC</span> per request.</p>
+          </div>
+
+          <button onclick="closeContractModal()" class="text-gray-400 hover:text-cyan-300 text-lg">✕</button>
+        </div>
+
+        <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+          Enter an Ethereum or Solana contract address.  
+          Aetheron will extract metadata, functions, risks, and known issues.
+        </p>
+
+        <label class="block text-sm text-gray-400 mb-2">Contract Address</label>
+        <input id="contract-address"
+          class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 text-gray-200 outline-none"
+          placeholder="0x.... or Solana address" />
+
+        <label class="block text-sm text-gray-400 mb-1 mt-4">Network</label>
+        <select id="contract-network"
+          class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 text-gray-200">
+          <option value="ethereum">Ethereum</option>
+          <option value="solana">Solana</option>
+        </select>
+
+        <label class="block text-sm text-gray-400 mb-1 mt-4">Output format</label>
+        <select id="contract-output-format"
+          class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 text-gray-200">
+          <option value="pdf" selected>Premium PDF (.pdf)</option>
+          <option value="txt">Plain Text (.txt)</option>
+        </select>
+
+        <div class="flex justify-center mt-6">
+          <button class="btn px-8 py-2.5 text-base" onclick="tryContractCall(false)">Analyze</button>
+        </div>
+ 
+        <div id="contract-result"
+          class="mt-5 text-sm bg-white/5 border border-cyan-400/10 rounded-lg p-3 overflow-auto max-h-64 hidden text-gray-300"></div>
+
+      </div>
+    </div>
+
     <!-- Wallet Selection Modal -->
     <div id="wallet-select-modal" class="modal-bg" style="display: none;">
       <div class="modal text-center">
@@ -372,6 +448,19 @@
     return "🔗 " + addr.slice(0, 4) + "..." + addr.slice(-4);
   }
 
+  // --- AUTO-DETECT ETH vs SOLANA ---
+  function detectNetworkFromAddress(addr) {
+    // Ethereum: 0x + 40 hex chars
+    const ethRegex = /^0x[a-fA-F0-9]{40}$/;
+
+    // Solana: base58, 32–44 chars, no 0/O/I/l
+    const solRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+    if (ethRegex.test(addr)) return "ethereum";
+    if (solRegex.test(addr)) return "solana";
+    return null;
+  }
+
   // ✅ Update wallet button + ledger link
   function updateWalletUI() {
     walletBtn.textContent = shorten(currentWallet);
@@ -399,6 +488,10 @@
   function closeCodeModal() {
     document.getElementById("modal-code-bg").style.display = "none";
   }
+
+  function closeContractModal() {
+  document.getElementById("modal-contract-bg").style.display = "none";
+}
 
   // ✅ FIXED: Always force popup, never reuse cached sessions
   async function connectPhantom() {
@@ -483,6 +576,17 @@
       }
     });
 
+    // --- AUTO-DETECT NETWORK AS USER TYPES ---
+    const addrInput = document.getElementById("contract-address");
+    const networkSelect = document.getElementById("contract-network");
+
+    if (addrInput && networkSelect) {
+      addrInput.addEventListener("input", () => {
+        const detected = detectNetworkFromAddress(addrInput.value.trim());
+        if (detected) networkSelect.value = detected;
+      });
+    }
+
     document.querySelectorAll(".use-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const price = parseFloat(btn.dataset.price);
@@ -490,8 +594,13 @@
 
         if (comp === "code-explainer") {
           document.getElementById("modal-code-bg").style.display = "flex";
-        } else if (comp === "prompt-tester") {
+
+        } else if (comp === "prompt-tester") {      // ✅ PersonaSim
           document.getElementById("modal-tester-bg").style.display = "flex";
+
+        } else if (comp === "contract-analyzer") {  // ✅ NEW — Analyzer
+          document.getElementById("modal-contract-bg").style.display = "flex";
+
         } else {
           openPromptModal(price);
         }
@@ -499,6 +608,137 @@
     });
 
     function closeTesterModal(){ document.getElementById("modal-tester-bg").style.display = "none"; }
+
+    async function tryContractCall(simulate) {
+      const addr = document.getElementById("contract-address").value.trim();
+      const networkSelect = document.getElementById("contract-network");
+      let network = networkSelect.value; // default before detection
+
+      const format = document.getElementById("contract-output-format").value;
+      const resultDiv = document.getElementById("contract-result");
+
+      if (!currentWallet) {
+        alert("Please connect your wallet first.");
+        return;
+      }
+      if (!addr) {
+        alert("Please enter a contract address.");
+        return;
+      }
+
+      // 🔍 AUTO-DETECT NETWORK BASED ON ADDRESS
+      const detected = detectNetworkFromAddress(addr);
+      if (detected) {
+        network = detected;                  // use detected value
+        networkSelect.value = detected;      // update dropdown visually
+      } else {
+        alert("This address does not look like a valid Solana or Ethereum address.");
+        return;
+      }
+
+      resultDiv.classList.remove("hidden");
+      resultDiv.textContent = "⏳ Sending request...";
+      showLoading("Analyzing contract...");
+
+      const headers = {
+        "Content-Type": "application/json",
+        "X-USER-WALLET": currentWallet,
+        "X-WALLET": simulate ? "DEMO_OK" : ""
+      };
+
+      const res = await fetch("/api/contract-intel", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          contract_address: addr,
+          network,
+          format
+        })
+      });
+
+      if (res.status === 402) {
+        resultDiv.textContent = "💰 Payment required. Opening Phantom…";
+
+        // SETTINGS
+        const priceUSDC = 1.00;
+
+        try {
+          if (currentChain !== "solana" || !window.solana?.isPhantom) {
+            resultDiv.textContent = "⚠️ Please connect Phantom wallet first.";
+            return;
+          }
+
+          const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
+          const payer = new solanaWeb3.PublicKey(currentWallet);
+          const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
+          const mint = new solanaWeb3.PublicKey(USDC_MINT);
+
+          // USDC transfer
+          const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
+            connection, payer, mint, payer
+          )).address;
+
+          const toTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
+            connection, payer, mint, receiver
+          )).address;
+
+          const ix = splToken.createTransferInstruction(
+            fromTokenAccount,
+            toTokenAccount,
+            payer,
+            Math.floor(priceUSDC * 1_000_000)
+          );
+
+          const tx = new solanaWeb3.Transaction().add(ix);
+          tx.feePayer = payer;
+          const { blockhash } = await connection.getLatestBlockhash();
+          tx.recentBlockhash = blockhash;
+
+          const signed = await window.solana.signTransaction(tx);
+          const signature = await connection.sendRawTransaction(signed.serialize());
+          await connection.confirmTransaction(signature, "finalized");
+
+          console.log("USDC payment tx:", signature);
+
+          resultDiv.textContent = "Payment confirmed. Running analysis…";
+
+          // Re-run API call with payment signature
+          const paidRes = await fetch("/api/contract-intel", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-WALLET": signature,
+              "X-USER-WALLET": currentWallet
+            },
+            body: JSON.stringify({
+              contract_address: addr,
+              network,
+              format
+            })
+          });
+
+          const data2 = await paidRes.json();
+          if (paidRes.status === 202 && data2.task_id) {
+            pollJobStatus(data2.task_id, resultDiv, format);
+            return;
+          }
+        } catch (err) {
+          console.error("Payment failed:", err);
+          resultDiv.textContent = "❌ Payment failed: " + err.message;
+        }
+
+        return;
+      }
+
+      const data = await res.json();
+
+      if (res.status === 202 && data.task_id) {
+        pollJobStatus(data.task_id, resultDiv, format);
+        return;
+      }
+
+      resultDiv.textContent = JSON.stringify(data, null, 2);
+    }
 
     async function tryTesterModalCall(simulate) {
       const resultDiv = document.getElementById("tester-result");
@@ -519,13 +759,21 @@
       showLoading("Optimizing your prompt...");
 
       try {
-        const headers = { "Content-Type": "application/json" };
-        if (simulate) headers["X-WALLET"] = "DEMO_OK";
+        const headers = {
+          "Content-Type": "application/json",
+          "X-USER-WALLET": currentWallet,
+          "X-WALLET": simulate ? "DEMO_OK" : ""   // FIRST CALL MUST SEND EMPTY STRING
+        };
 
         const res = await fetch("/api/prompt-tester", {
           method: "POST",
           headers,
-          body: JSON.stringify({ text, format })
+          body: JSON.stringify({
+            text,
+            wallet: currentWallet,
+            chain: currentChain,
+            format
+          })
         });
 
         // ✅ Handle 402 Payment Required
@@ -581,7 +829,12 @@
             const paidRes = await fetch("/api/prompt-tester", {
               method: "POST",
               headers: paidHeaders,
-              body: JSON.stringify({ text, format })
+              body: JSON.stringify({
+                text,
+                wallet: currentWallet,
+                chain: currentChain,
+                format
+              })
             });
 
             const data2 = await paidRes.json();
@@ -642,6 +895,8 @@
 
     window.tryTesterModalCall = tryTesterModalCall;
     window.closeTesterModal = closeTesterModal;
+    window.closeContractModal = closeContractModal;
+    window.tryContractCall = tryContractCall;
 
     document.getElementById("phantom-btn").addEventListener("click", connectPhantom);
     // document.getElementById("metamask-btn").addEventListener("click", connectMetamask);
@@ -725,8 +980,11 @@
     showLoading("Optimizing your prompt...");
 
     try {
-      const headers = { "Content-Type": "application/json" };
-      if (simulate) headers["X-WALLET"] = "DEMO_OK";   // demo mode
+      const headers = {
+        "Content-Type": "application/json",
+        "X-USER-WALLET": currentWallet,    // 🔥 REQUIRED FOR REAL PAYMENT
+        "X-WALLET": simulate ? "DEMO_OK" : ""   // 🔥 FIRST CALL MUST SEND EMPTY STRING
+      };
 
       // temporary example endpoint
       const res = await fetch("/api/prompt-optimizer", {
@@ -873,8 +1131,11 @@ async function tryCodeCall(simulate) {
   showLoading("Analyzing your code...");
 
   try {
-    const headers = { "Content-Type": "application/json" };
-    if (simulate) headers["X-WALLET"] = "DEMO_OK";
+    const headers = {
+      "Content-Type": "application/json",
+      "X-USER-WALLET": currentWallet,       
+      "X-WALLET": simulate ? "DEMO_OK" : "" 
+    };
     const format = document.getElementById("output-format").value;
 
     const res = await fetch("/api/code-explainer", {
