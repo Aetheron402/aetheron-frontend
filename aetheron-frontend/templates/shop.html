@@ -224,9 +224,12 @@
         <select id="prompt-output-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
           <option value="pdf" selected>Premium PDF (.pdf)</option>
           <option value="txt">Plain Text (.txt)</option>
+          <option value="docx">Word Document (.docx)</option>
+          <option value="html">Web Page (.html)</option>
+          <option value="md">Markdown (.md)</option>
         </select>
 
-        <div class="flex justify-center mt-6">
+        <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryCall(false)">Execute</button>
         </div>
 
@@ -285,10 +288,13 @@
         <select id="output-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
           <option value="pdf" selected>Premium PDF (.pdf)</option>
           <option value="txt">Plain Text (.txt)</option>
+          <option value="docx">Word Document (.docx)</option>
+          <option value="html">Web Page (.html)</option>
+          <option value="md">Markdown (.md)</option>
         </select>
 
         <!-- Execute button -->
-        <div class="flex justify-center mt-6">
+        <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryCodeCall(false)">Execute</button>
         </div>
 
@@ -324,14 +330,16 @@
 
         <!-- Output format -->
         <label class="block text-sm text-gray-400 mb-1 mt-4">Output format</label>
-        <select id="tester-output-format"
-          class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
+        <select id="tester-output-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
           <option value="pdf" selected>Premium PDF (.pdf)</option>
           <option value="txt">Plain Text (.txt)</option>
+          <option value="docx">Word Document (.docx)</option>
+          <option value="html">Web Page (.html)</option>
+          <option value="md">Markdown (.md)</option>
         </select>
 
         <!-- Execute button -->
-        <div class="flex justify-center mt-6">
+        <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryTesterModalCall(false)">Execute</button>
         </div>
 
@@ -372,13 +380,16 @@
         </select>
 
         <label class="block text-sm text-gray-400 mb-1 mt-4">Output format</label>
-        <select id="contract-output-format"
-          class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 text-gray-200">
+        <select id="contract-output-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
           <option value="pdf" selected>Premium PDF (.pdf)</option>
           <option value="txt">Plain Text (.txt)</option>
+          <option value="docx">Word Document (.docx)</option>
+          <option value="html">Web Page (.html)</option>
+          <option value="md">Markdown (.md)</option>
         </select>
 
-        <div class="flex justify-center mt-6">
+
+        <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryContractCall(false)">Analyze</button>
         </div>
  
@@ -880,7 +891,7 @@
         else {
           const a = document.createElement("a");
           a.href = data.download_url;
-          a.download = `personasim_${Date.now()}.txt`;
+          a.download = `personasim_${Date.now()}.${data.format || format}`;
           a.click();
         }
       }
@@ -1093,7 +1104,7 @@
         // Download plain text file
         const a = document.createElement("a");
         a.href = data.download_url;
-        a.download = `optimized_prompt_${Date.now()}.txt`;
+        a.download = `optimized_prompt_${Date.now()}.${data.format || format}`;
         a.click();
       }
     } else if (data.optimized_prompt) {
@@ -1228,7 +1239,7 @@ async function tryCodeCall(simulate) {
             // Download txt directly
             const a = document.createElement("a");
             a.href = data2.download_url;
-            a.download = `code_explainer_${Date.now()}.txt`;
+            a.download = `code_explainer_${Date.now()}.${data.format || format}`;
             a.click();
           }
         } else if (data2.optimized_prompt) {
@@ -1365,17 +1376,17 @@ async function pollJobStatus(taskId, resultDiv, userFormat = "pdf") {
       } else {
         const a = document.createElement("a");
         a.href = url;
-        a.download = `aetheron_${Date.now()}.txt`;
+        a.download = `aetheron_${Date.now()}.${format}`;
         a.click();
       }
 
-      hideLoading();  // ✅ <- add this
+      hideLoading();
       break;
     }
 
     if (data.state === "FAILURE") {
       resultDiv.textContent = "❌ Failed: " + (data.error || "Unknown error");
-      hideLoading();  // ✅ <- add this too
+      hideLoading();
       break;
     }
 
