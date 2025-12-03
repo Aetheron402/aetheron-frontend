@@ -40,7 +40,7 @@ This frontend interacts with the private backend service:
 - Payment validation  
 - Task creation  
 - Celery worker pipeline  
-- File generation (PDF / TXT)  
+- File generation (PDF / TXT / DOCX / HTML / MD)  
 - Asset storage & history tracking  
 
 Backend is private to protect proprietary logic.
