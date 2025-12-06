@@ -29,34 +29,49 @@
 <!-- =====================================
      HEADER (IDENTICAL TO shop.html)
 ====================================== -->
-<header class="flex justify-between items-center p-6 border-b border-cyan-900/30">
+<header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
+
+  <!-- LOGO -->
   <h1 onclick="window.location.href='/'"
-     class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
+      class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
     Aetheron Components
   </h1>
 
-  <nav class="flex gap-6 text-sm items-center">
-
-    <a href="https://github.com/Aetheron402" target="_blank"
-       class="text-gray-400 hover:text-cyan-300 transition">
-       GitHub
-    </a>
-    
-    <a href="https://x.com/Aetheron402" target="_blank"
-       class="text-gray-400 hover:text-cyan-300 transition">
-       Aetheron on X
-    </a>
-
-    <a href="/learn" class="text-gray-400 hover:text-cyan-300 transition">Learn</a>
-    <a href="/roadmap" class="text-gray-400 hover:text-cyan-300 transition">Roadmap</a>
-    <a href="/legal" class="text-gray-400 hover:text-cyan-300 transition">Legal</a>
-    <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300 transition">Aetheron Token</a>
+  <!-- DESKTOP NAV -->
+  <nav class="desktop-nav hidden md:flex gap-6 text-sm items-center">
+    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-400 hover:text-cyan-300">Learn</a>
+    <a href="/roadmap" class="text-gray-400 hover:text-cyan-300">Roadmap</a>
+    <a href="/legal" class="text-gray-400 hover:text-cyan-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300">Aetheron Token</a>
 
     <button id="connect-wallet"
       class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs transition">
       Connect Wallet
     </button>
   </nav>
+
+  <!-- MOBILE MENU BUTTON -->
+  <button class="mobile-menu-btn md:hidden text-cyan-300 text-3xl" onclick="toggleMobileMenu()">☰</button>
+
+  <!-- MOBILE NAV -->
+  <nav id="mobile-nav"
+     class="hidden flex-col gap-4 bg-[#030712]/95 border-t border-cyan-400/30 p-4 absolute left-0 right-0 top-full z-50 md:hidden">
+
+    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-300">Learn</a>
+    <a href="/roadmap" class="text-gray-300">Roadmap</a>
+    <a href="/legal" class="text-gray-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-300">Aetheron Token</a>
+
+    <button id="mobile-connect-wallet"
+      class="bg-cyan-700 text-white px-3 py-2 rounded">
+      Connect Wallet
+    </button>
+  </nav>
+
 </header>
 
 <!-- =====================================
@@ -141,7 +156,7 @@
 
   async function connectPhantom() {
     if (!window.solana?.isPhantom) {
-      alert("Phantom Wallet not found");
+      alert("To continue, please open this site through the Phantom app browser on mobile, or use a desktop browser with the Phantom extension installed.");
       return;
     }
 
@@ -198,6 +213,24 @@
   // document.getElementById("metamask-btn").onclick = connectMetamask;
 
   document.body.style.opacity = 1;
+</script>
+
+<script>
+function toggleMobileMenu() {
+  const nav = document.getElementById("mobile-nav");
+  nav.classList.toggle("hidden");
+  nav.classList.toggle("flex");
+}
+
+// Mobile wallet button mirrors desktop
+document.addEventListener("DOMContentLoaded", () => {
+  const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
+  const walletBtn = document.getElementById("connect-wallet");
+
+  if (mobileWalletBtn && walletBtn) {
+    mobileWalletBtn.addEventListener("click", () => walletBtn.click());
+  }
+});
 </script>
 
 </body>
