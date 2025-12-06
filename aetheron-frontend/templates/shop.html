@@ -16,77 +16,215 @@
     </script>
 
     <style>
-      body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
+  body { 
+    background-color: #030712; 
+    color: #e5e7eb;
+    opacity: 0; 
+    transition: opacity .8s ease; 
+  }
 
-      .card { 
-        background: rgba(15,23,42,.85); 
-        border: 1px solid rgba(56,189,248,.2); 
-        border-radius: 1rem; 
-        transition: all .3s ease; 
-      }
+  .card { 
+    background: rgba(15,23,42,.85); 
+    border: 1px solid rgba(56,189,248,.2); 
+    border-radius: 1rem; 
+    padding: 1.5rem;
+    transition: all .3s ease; 
+  }
 
-      .card:hover {
-        transform: translateY(-4px) translateX(var(--x, 0));
-        box-shadow: 0 0 30px rgba(34,211,238,.25);
-      }
+  .card:hover {
+    transform: translateY(-4px) translateX(var(--x, 0));
+    box-shadow: 0 0 30px rgba(34,211,238,.25);
+  }
 
-      /* ⭐ REQUIRED — this makes the shift happen */
-      .prebuilt-hover {
-        --x: 12rem;    /* pushes the card right on hover */
-      }
+  .prebuilt-hover { --x: 12rem; }
+  .contract-intel-hover { --x: 12rem; }
 
-      .contract-intel-hover {
-        --x: 12rem;
-      }
+  #components-grid .card {
+    min-height: 280px;
+  }
 
-      /* ⭐ UNIVERSAL EQUAL CARD HEIGHT */
-      #components-grid .card {
-        min-height: 280px;
-      }
+  .btn { 
+    background:#22d3ee; 
+    color:#000; 
+    font-weight:600; 
+    padding:.5rem 1rem; 
+    border-radius:.5rem; 
+    transition: all .3s; 
+  }
+  .btn:hover { background:#67e8f9; }
 
-      .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
-      .btn:hover { background:#67e8f9; }
-      .pill { padding:.35rem .9rem; border-radius:9999px; background:rgba(15,23,42,.8); border:1px solid rgba(56,189,248,.3); color:#67e8f9; font-size:.85rem; }
-      .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.65); display:none; align-items:center; justify-content:center; z-index:50; }
-      .modal { background:#0b1220; border:1px solid rgba(56,189,248,.25); border-radius:1rem; width:min(540px, 92vw); padding:1.25rem; }
-      .kbd { border:1px solid #334155; padding:.15rem .35rem; border-radius:.35rem; font-size:.8rem; color:#94a3b8; }
-      .pill-active {
-        background: rgba(34,211,238,.12);
-        border-color: rgba(34,211,238,.9);
-        color: #e0f2fe;
-        box-shadow: 0 0 16px rgba(34,211,238,.45);
-      }
-    </style>
+  .pill { 
+    padding:.35rem .9rem; 
+    border-radius:9999px; 
+    background:rgba(15,23,42,.8); 
+    border:1px solid rgba(56,189,248,.3); 
+    color:#67e8f9; 
+    font-size:.85rem; 
+  }
+
+  .modal-bg { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,.65); 
+    display:none; 
+    align-items:center; 
+    justify-content:center; 
+    z-index:50; 
+  }
+
+  .modal { 
+    background:#0b1220; 
+    border:1px solid rgba(56,189,248,.25); 
+    border-radius:1rem; 
+    width:min(540px, 92vw); 
+    padding:1.25rem; 
+  }
+
+  .kbd { 
+    border:1px solid #334155; 
+    padding:.15rem .35rem; 
+    border-radius:.35rem; 
+    font-size:.8rem; 
+    color:#94a3b8; 
+  }
+
+  .pill-active {
+    background: rgba(34,211,238,.12);
+    border-color: rgba(34,211,238,.9);
+    color: #e0f2fe;
+    box-shadow: 0 0 16px rgba(34,211,238,.45);
+  }
+
+
+  /* ---------------------- */
+  /* 📱 MOBILE FIXES BELOW */
+  /* ---------------------- */
+  @media (max-width: 640px) {
+
+    .card {
+      padding: 1.1rem !important;
+      min-height: auto !important;
+    }
+
+    .card h2 {
+      font-size: 1.05rem !important;
+    }
+
+    .card p {
+      font-size: 0.85rem !important;
+    }
+
+    .card .mt-6 {
+      margin-top: 1rem !important;
+    }
+
+    .btn {
+      padding: 0.4rem 0.9rem !important;
+      font-size: 0.9rem !important;
+    }
+
+    .prebuilt-hover,
+    .contract-intel-hover {
+      --x: 0 !important; /* disable slide on mobile */
+    }
+
+    #components-grid {
+      gap: 1.2rem !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    header {
+      padding: 1rem !important;
+    }
+
+    h2.text-3xl {
+      font-size: 1.6rem !important;
+    }
+
+    #search {
+      padding: 0.6rem 0.8rem !important;
+    }
+  }
+  /* ---------------------- */
+  /* END MOBILE FIXES */
+  /* ---------------------- */
+
+    /* MOBILE HEADER FIX */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  .mobile-nav {
+    display: none;
+    flex-direction: column;
+    background: rgba(3, 7, 18, 0.95);
+    border-top: 1px solid rgba(56, 189, 248, .3);
+    padding: 1rem;
+  }
+  .mobile-nav a, 
+  .mobile-nav button {
+    margin-bottom: 0.75rem;
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  header + * {
+    display: none !important;
+  }
+}
+</style>
 
   <body class="font-sans">
     <!-- HEADER -->
-    <header class="flex justify-between items-center p-6 border-b border-cyan-900/30">
-      <h1 onclick="goHome()" class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
-        Aetheron Components
-      </h1>
-  
-      <nav class="flex gap-6 text-sm items-center">
+    <header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
 
-        <a href="https://github.com/Aetheron402" target="_blank"
-           class="text-gray-400 hover:text-cyan-300 transition">
-           GitHub
-        </a>
+  <!-- LOGO -->
+  <h1 onclick="window.location.href='/'"
+      class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
+    Aetheron Components
+  </h1>
 
-        <a href="https://x.com/Aetheron402" target="_blank"
-           class="text-gray-400 hover:text-cyan-300 transition">
-           Aetheron on X
-        </a>
+  <!-- DESKTOP NAV -->
+  <nav class="desktop-nav hidden md:flex gap-6 text-sm items-center">
+    <a href="https://github.com/Aetheron402" class="text-gray-400 hover:text-cyan-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" class="text-gray-400 hover:text-cyan-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-400 hover:text-cyan-300">Learn</a>
+    <a href="/roadmap" class="text-gray-400 hover:text-cyan-300">Roadmap</a>
+    <a href="/legal" class="text-gray-400 hover:text-cyan-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300">Aetheron Token</a>
 
-        <a href="/learn" class="text-gray-400 hover:text-cyan-300 transition">Learn</a>
-        <a href="/roadmap" class="text-gray-400 hover:text-cyan-300 transition">Roadmap</a>
-        <a href="/legal" class="text-gray-400 hover:text-cyan-300 transition">Legal</a>
-        <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300 transition">Aetheron Token</a>
+    <button id="connect-wallet"
+            class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs">
+      Connect Wallet
+    </button>
+  </nav>
 
-        <button id="connect-wallet" class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs transition">
-          Connect Wallet
-        </button>
-      </nav>
-    </header>
+  <!-- MOBILE MENU BUTTON -->
+  <button class="mobile-menu-btn md:hidden text-cyan-300 text-3xl" onclick="toggleMobileMenu()">☰</button>
+
+  <!-- MOBILE NAV -->
+  <nav id="mobile-nav"
+       class="hidden flex-col gap-4 bg-[#030712]/95 border-t border-cyan-400/30 p-4 absolute left-0 right-0 top-full z-50 md:hidden">
+
+    <a href="https://github.com/Aetheron402" class="text-gray-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" class="text-gray-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-300">Learn</a>
+    <a href="/roadmap" class="text-gray-300">Roadmap</a>
+    <a href="/legal" class="text-gray-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-300">Aetheron Token</a>
+
+    <button id="mobile-connect-wallet"
+            class="bg-cyan-700 text-white px-3 py-2 rounded">
+      Connect Wallet
+    </button>
+  </nav>
+
+</header>
 
     <!-- SEARCH + FILTERS -->
     <section class="max-w-5xl mx-auto mt-10 text-center">
@@ -108,7 +246,7 @@
       {% for c in components %}
       <div
         class="card p-6 flex flex-col justify-between w-full h-full min-h-[280px] transform
-               {% if c.slug == 'contract-intel' %} contract-intel-hover md:translate-x-[12rem] {% endif %}"
+               {% if c.slug == 'prebuilt-agent-store' %} prebuilt-hover {% endif %}"
         data-name="{{ c.name | lower }}"
         data-category="{% if c.slug == 'prompt-optimizer' or c.slug == 'prompt-tester' %}AI Tools{% elif c.slug == 'code-explainer' %}Development{% else %}AI Tools{% endif %}"
       >
@@ -121,7 +259,6 @@
         <div class="mt-6 flex justify-between items-center">
           <span class="text-cyan-300 font-semibold">{{ c.price }}</span>
 
-          <!-- ✅ Prompt Optimizer uses modal -->
           {% if c.slug == "prompt-optimizer" %}
             <button class="btn use-btn" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
 
@@ -134,9 +271,13 @@
           {% elif c.slug == "contract-intel" %}
             <button class="btn use-btn" data-component="contract-analyzer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
 
+          {% elif c.slug == "agents" %}
+            <!-- ⭐ Correct slug — opens the agents store -->
+            <a class="btn" href="/agents">Open Store</a>
+
           {% elif c.coming_soon %}
             <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Soon</button>
-
+    
           {% else %}
             <a class="btn" href="/buy/{{ c.id }}">Buy</a>
           {% endif %}
@@ -144,26 +285,6 @@
         </div>
       </div>
       {% endfor %}
-      <!-- ====== Staggered Coming Soon Section ====== -->
-      <div class="flex flex-wrap justify-center gap-10 mt-0">
-
-        <!-- Prebuilt Agent Store -->
-        <div class="card prebuilt-hover transform p-6 flex flex-col justify-between opacity-60 w-80 md:translate-x-[12rem]">
-          <div>
-            <div class="mb-2"><span class="pill">coming-soon</span></div>
-            <h2 class="text-xl font-semibold text-cyan-400">Prebuilt Agent Store (Template)</h2>
-            <p class="text-gray-400 text-sm mt-2">
-              One-click download of ready-to-use AI agent templates such as DeFi Discord bots
-              or PDF Chat Assistants. Unlock via X402 for a one-time purchase.
-            </p>
-          </div>
-          <div class="mt-6 flex justify-between items-center">
-            <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-            <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Q4 2025</button>
-          </div>
-        </div>
-
-      </div>
     </main>
 
     <!-- ====== My Recent Assets Section ====== -->
@@ -518,7 +639,9 @@
         window.userWallet = currentWallet;
         onWalletConnected();
       } else {
-        alert("Phantom Wallet not found. Please install the extension.");
+        alert(
+          "To continue, please open this site through the Phantom app browser on mobile, or use a desktop browser with the Phantom extension installed."
+        );
       }
     } catch (err) {
       console.error("Phantom connection failed:", err);
@@ -586,6 +709,14 @@
         document.getElementById("wallet-select-modal").style.display = "flex";
       }
     });
+
+    // ✅ MOBILE WALLET BUTTON — mirror desktop connect behavior
+    const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
+    if (mobileWalletBtn) {
+      mobileWalletBtn.addEventListener("click", () => {
+        walletBtn.click();  // Triggers the desktop connect logic
+      });
+    }
 
     // --- AUTO-DETECT NETWORK AS USER TYPES ---
     const addrInput = document.getElementById("contract-address");
@@ -1395,5 +1526,13 @@ async function pollJobStatus(taskId, resultDiv, userFormat = "pdf") {
 }
 </script>
 <script src="/static/js/loading.js" defer></script>
+
+    <script>
+    function toggleMobileMenu() {
+      const nav = document.getElementById("mobile-nav");
+      nav.classList.toggle("hidden");
+      nav.classList.toggle("flex");
+    }
+    </script>
   </body>
 </html>
