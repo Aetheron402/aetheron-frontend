@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prebuilt Agent Store — Aetheron</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@solana/web3.js@1.95.0/lib/index.iife.min.js"></script>
+
+  <!-- SPL Token (working import from esm.sh) -->
+  <script type="module">
+    import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
+    window.splToken = spl;
+    console.log("SPL Token loaded:", spl);
+  </script>
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #e5e7eb;
+      opacity: 0;
+      transition: opacity .6s ease;
+    }
+
+    .card {
+      background: rgba(15,23,42,.85);
+      border: 1px solid rgba(56,189,248,.2);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: .25s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(34,211,238,.25);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      background: rgba(15,23,42,.8);
+      border: 1px solid rgba(56,189,248,.3);
+      color: #67e8f9;
+      font-size: .85rem;
+      white-space: nowrap;
+    }
+
+    .btn {
+      background:#22d3ee;
+      color:#000;
+      font-weight:600;
+      padding:.5rem 1rem;
+      border-radius:.5rem;
+      transition:.25s;
+    }
+    .btn:hover {
+      background:#67e8f9;
+    }
+
+    /* Wallet Modal (matching shop/base) */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      background: #0b1220;
+      border: 1px solid rgba(56,189,248,.25);
+      border-radius: 1rem;
+      width: min(480px, 92vw);
+      padding: 1.25rem;
+    }
+  </style>
+</head>
+
+<body class="font-sans">
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.style.opacity = 1;
+  });
+</script>
+
+<!-- ========== HEADER ========== -->
+<header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
+
+  <!-- LOGO -->
+  <h1 onclick="window.location.href='/'"
+      class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
+    Aetheron Components
+  </h1>
+
+  <!-- DESKTOP NAV -->
+  <nav class="desktop-nav hidden md:flex gap-6 text-sm items-center">
+    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-400 hover:text-cyan-300">Learn</a>
+    <a href="/roadmap" class="text-gray-400 hover:text-cyan-300">Roadmap</a>
+    <a href="/legal" class="text-gray-400 hover:text-cyan-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300">Aetheron Token</a>
+
+    <button id="connect-wallet"
+      class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs transition">
+      Connect Wallet
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU BUTTON -->
+  <button class="mobile-menu-btn md:hidden text-cyan-300 text-3xl" onclick="toggleMobileMenu()">☰</button>
+
+  <!-- MOBILE NAV -->
+  <nav id="mobile-nav"
+     class="hidden flex-col gap-4 bg-[#030712]/95 border-t border-cyan-400/30 p-4 absolute left-0 right-0 top-full z-50 md:hidden">
+
+    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-300">GitHub</a>
+    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-300">Aetheron on X</a>
+    <a href="/learn" class="text-gray-300">Learn</a>
+    <a href="/roadmap" class="text-gray-300">Roadmap</a>
+    <a href="/legal" class="text-gray-300">Legal</a>
+    <a href="/aetheron-token" class="text-gray-300">Aetheron Token</a>
+
+    <button id="mobile-connect-wallet"
+      class="bg-cyan-700 text-white px-3 py-2 rounded">
+      Connect Wallet
+    </button>
+  </nav>
+
+</header>
+
+<div class="max-w-4xl mx-auto px-6 mt-6">
+
+  <!-- 🧭 Breadcrumb -->
+  <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">
+    / AETHERON / AGENTS
+  </p>
+
+  <!-- 🔙 Back Button -->
+  <a href="/shop"
+     class="inline-flex items-center text-cyan-300 hover:text-cyan-200 text-sm mb-6 transition">
+    ← Back to Shop
+  </a>
+
+</div>
+
+<!-- ========== TITLE ========== -->
+<section class="text-center max-w-3xl mx-auto mt-4">
+  <h2 class="text-4xl font-semibold text-cyan-300 mb-4">Prebuilt Agent Store (Template)</h2>
+  <p class="text-gray-400">
+    Download automation agent templates. Spanning trading bots, Discord/Telegram assistants, whale trackers, liquidity monitors, snipers, analysis engines, and other on-chain tools. Each template provides a robust, customizable framework that’s easy to adapt, extend, and integrate into real workflow environments.
+  </p>
+</section>
+
+<!-- ========== GRID ========== -->
+<main class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mt-16">
+
+  <!-- Agent 1 -->
+  <div class="card flex flex-col justify-between">
+    <div class="w-fit mb-3">
+      <span class="pill">download</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold text-cyan-400">Sniper Trade Agent</h2>
+      <p class="text-gray-400 text-sm mt-2">
+        Real-time memecoin sniper bot with safety rules, blacklist protection and adjustable auto-buy triggers.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+      <button class="btn buy-agent-btn" data-id="solana-sniper" data-price="4.99">Buy</button>
+    </div>
+  </div>
+
+  <!-- Agent 2 -->
+  <div class="card flex flex-col justify-between">
+    <div class="w-fit mb-3">
+      <span class="pill">download</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold text-cyan-400">Wallet Watcher Bot</h2>
+      <p class="text-gray-400 text-sm mt-2">
+        Monitor any wallet in real time — transfers, NFT actions, and smart swap/liquidity signals with optional alerts.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+      <button class="btn buy-agent-btn" data-id="wallet-watcher" data-price="4.99">Buy</button>
+    </div>
+  </div>
+
+  <!-- Agent 3 -->
+  <div class="card flex flex-col justify-between">
+    <div class="w-fit mb-3">
+      <span class="pill">download</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold text-cyan-400">Discord Support Agent</h2>
+      <p class="text-gray-400 text-sm mt-2">
+        Automated AI Discord assistant — responds to users, runs commands,
+        moderates and manages intelligently.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+      <button class="btn buy-agent-btn" data-id="discord-helper" data-price="4.99">Buy</button>
+    </div>
+  </div>
+
+  <!-- Agent 4 -->
+  <div class="card flex flex-col justify-between">
+    <div class="w-fit">
+      <span class="pill mb-3">download</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold text-cyan-400">Pump.fun Launch Assistant</h2>
+      <p class="text-gray-400 text-sm mt-2">
+        Automates tracking new launches, liquidity events, and early-signal opportunities in real time.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+      <button class="btn buy-agent-btn" data-id="pumpfun-launcher" data-price="4.99">Buy</button>
+    </div>
+  </div>
+
+  <!-- Agent 5 -->
+  <div class="card flex flex-col justify-between">
+    <div class="w-fit">
+      <span class="pill mb-3">download</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold text-cyan-400">Solana Trading Assistant</h2>
+      <p class="text-gray-400 text-sm mt-2">
+        Helps analyze tokens, identify trends, and assist with decision-making using real-time data.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+      <button class="btn buy-agent-btn" data-id="solana-trading-assistant" data-price="4.99">Buy</button>
+    </div>
+  </div>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-cyan-900/30 mt-20 text-center text-sm text-gray-500 p-6">
+  © 2025 Aetheron — Built on the X402 protocol.
+
+  <div class="space-x-4 mt-2">
+
+    <a href="https://github.com/Aetheron402" target="_blank"
+       class="hover:text-cyan-300">GitHub</a>
+
+    <a href="https://x.com/Aetheron402" target="_blank"
+       class="hover:text-cyan-300">Aetheron on X</a>
+
+    <a href="/learn" class="hover:text-cyan-300">Learn</a>
+    <a href="/roadmap" class="hover:text-cyan-300">Roadmap</a>
+    <a href="/legal" class="hover:text-cyan-300">Legal</a>
+    <a href="/aetheron-token" class="hover:text-cyan-300">Aetheron Token</a>
+
+  </div>
+</footer>
+
+<!-- Wallet Selection Modal -->
+<div id="wallet-select-modal" class="modal-bg" style="display: none;">
+  <div class="modal text-center">
+    <h3 class="text-cyan-300 text-lg font-semibold mb-4">Choose Wallet</h3>
+
+    <!-- Phantom (Solana) — ACTIVE -->
+    <button id="phantom-btn"
+            class="btn mb-3 w-full flex items-center justify-center gap-2">
+      Phantom Wallet
+    </button>
+
+    <!-- MetaMask (Ethereum) — Coming Soon -->
+    <button class="btn w-full flex flex-col items-center justify-center gap-0.5
+                   bg-gray-800 cursor-not-allowed opacity-60">
+      <span>MetaMask</span>
+      <span class="text-xs text-gray-400">Coming Q1 2026</span>
+    </button>
+
+    <p class="text-xs text-gray-400 mt-4 cursor-pointer hover:underline"
+       onclick="closeWalletSelector()">Cancel</p>
+  </div>
+</div>
+
+<!-- Solana Wallet Adapter -->
+<script src="https://wallet.adaptor.solana.com/adaptor.js"></script>
+
+<script>
+let currentWallet = "";
+let currentChain  = "";
+
+const SOLANA_NETWORK = "https://mainnet.helius-rpc.com/?api-key=63f5896a-519d-4701-a181-654bcd2f5854";
+const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+const PAYMENT_WALLET = "FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1";
+</script>
+
+<script>
+const { 
+  Connection,
+  PublicKey,
+  Transaction,
+  SystemProgram 
+} = solanaWeb3;
+</script>
+
+<script>
+function shorten(addr) {
+  return "🔗 " + addr.slice(0, 4) + "..." + addr.slice(-4);
+}
+
+function closeWalletSelector() {
+  document.getElementById("wallet-select-modal").style.display = "none";
+}
+
+async function connectPhantom() {
+  try {
+    if (window.solana?.isPhantom) {
+      await window.solana.disconnect().catch(()=>{});
+      const res = await window.solana.connect({ onlyIfTrusted: false });
+
+      currentWallet = res.publicKey.toString();
+      currentChain = "solana";
+
+      document.getElementById("connect-wallet").textContent = shorten(currentWallet);
+    } else {
+      alert("To continue, please open this site through the Phantom app browser on mobile, or use a desktop browser with the Phantom extension installed.");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  closeWalletSelector();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const walletBtn = document.getElementById("connect-wallet");
+
+  walletBtn.addEventListener("click", () => {
+    const modal = document.getElementById("wallet-select-modal");
+
+    if (!currentWallet) {
+      modal.style.display = "flex";   // 🔥 SHOW MODAL
+    } else {
+      if (confirm("Disconnect wallet?")) {
+        currentWallet = "";
+        walletBtn.textContent = "Connect Wallet";
+      }
+    }
+  });
+
+  document.getElementById("phantom-btn")
+    .addEventListener("click", connectPhantom);
+});
+</script>
+
+<script>
+document.querySelectorAll(".buy-agent-btn").forEach(btn => {
+  btn.addEventListener("click", async () => {
+
+    if (!currentWallet) {
+      alert("Connect your wallet first.");
+      return;
+    }
+
+    if (!window.solana?.isPhantom) {
+      alert("Phantom wallet not installed.");
+      return;
+    }
+
+    const agentId = btn.dataset.id;
+    const price = parseFloat(btn.dataset.price || "4.99");
+    const decimals = 6;
+    const amount = BigInt(Math.round(price * 10 ** decimals));
+
+    try {
+      const connection = new Connection(SOLANA_NETWORK, "confirmed");
+
+      const payer = new PublicKey(currentWallet);
+      const merchant = new PublicKey(PAYMENT_WALLET);
+      const mint = new PublicKey(USDC_MINT);
+
+      // IMPORTANT: use window.splToken
+      const payerATA = await window.splToken.getAssociatedTokenAddress(mint, payer);
+      const merchantATA = await window.splToken.getAssociatedTokenAddress(mint, merchant);
+
+      const transferIx = window.splToken.createTransferInstruction(
+        payerATA,
+        merchantATA,
+        payer,
+        amount,
+        [],
+        window.splToken.TOKEN_PROGRAM_ID
+      );
+
+      const { blockhash } = await connection.getLatestBlockhash("finalized");
+
+      const tx = new Transaction({
+        recentBlockhash: blockhash,
+        feePayer: payer
+      }).add(transferIx);
+
+      const { signature } = await window.solana.signAndSendTransaction(tx);
+
+      console.log("USDC Pay Signature:", signature);
+
+      const res = await fetch(`/api/download_agent/${agentId}`, {
+        method: "GET",
+        headers: {
+          "X-WALLET": signature,
+          "X-USER-WALLET": currentWallet
+        }
+      });
+
+      if (res.status === 200) {
+        const blob = await res.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = agentId + ".zip";
+        link.click();
+      }
+      else if (res.status === 402) {
+        alert("Payment rejected by backend.");
+      }
+      else {
+        alert("Download failed (status " + res.status + ")");
+      }
+
+    } catch (err) {
+      console.error("Payment error:", err);
+      alert("Payment failed. Check console.");
+    }
+
+  });
+});
+</script>
+
+<script>
+function toggleMobileMenu() {
+  const nav = document.getElementById("mobile-nav");
+  nav.classList.toggle("hidden");
+  nav.classList.toggle("flex");
+}
+
+// Mirror mobile wallet button → desktop connect logic
+document.addEventListener("DOMContentLoaded", () => {
+  const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
+  const desktopWalletBtn = document.getElementById("connect-wallet");
+
+  if (mobileWalletBtn && desktopWalletBtn) {
+    mobileWalletBtn.addEventListener("click", () => desktopWalletBtn.click());
+  }
+});
+</script>
+  
+</body>
+</html>
