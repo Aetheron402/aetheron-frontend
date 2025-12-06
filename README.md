@@ -1,8 +1,6 @@
-<h1 align="center">Aetheron Frontend</h1>
+# Aetheron Frontend
 
-<p align="center">
-  User interface for the Aetheron X402 Component Marketplace.
-</p>
+User interface for the Aetheron X402 Component Marketplace.
 
 ---
 
@@ -22,6 +20,21 @@ The frontend is built using lightweight, fully static web technologies.
 
 ---
 
+## 🔒 Important Note
+
+This repository includes **only the UI layer**.  
+It does **not** include:
+
+- Agent source code  
+- Paid component logic  
+- Backend worker processes  
+- Payment validation  
+- X402 execution engine  
+
+All proprietary logic resides in the **private backend** for security and product protection.
+
+---
+
 ## 🛠 Tech Stack
 
 - HTML / Jinja2 Templates  
@@ -35,7 +48,7 @@ The frontend is built using lightweight, fully static web technologies.
 
 ## 🔌 Backend
 
-This frontend interacts with the private backend service:
+This frontend interacts with the private backend service, which handles:
 
 - Payment validation  
 - Task creation  
@@ -43,17 +56,18 @@ This frontend interacts with the private backend service:
 - File generation (PDF / TXT / DOCX / HTML / MD)  
 - Asset storage & history tracking  
 
-Backend is private to protect proprietary logic.
+The backend is private to protect proprietary logic.
 
 ---
 
 ## 🗂 Project Structure
 
+```
 /static
    /css
    /js
 /templates
-/generated
+```
 
 ---
 
@@ -65,6 +79,4 @@ Backend is private to protect proprietary logic.
 
 ---
 
-<p align="center">
-  <sub>Part of the Aetheron AI ecosystem — powered by X402.</sub>
-</p>
+Part of the Aetheron AI ecosystem — powered by X402.
