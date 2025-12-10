@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("wallet-select-modal");
 
     if (!currentWallet) {
-      modal.style.display = "flex";   // 🔥 SHOW MODAL
+      modal.style.display = "flex";   // SHOW MODAL
     } else {
       if (confirm("Disconnect wallet?")) {
         currentWallet = "";
