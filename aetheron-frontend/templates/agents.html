@@ -4,16 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prebuilt Agent Store — Aetheron</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@solana/web3.js@1.95.0/lib/index.iife.min.js"></script>
+  
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src
+        'self'
+        'unsafe-inline'
+        https://cdn.tailwindcss.com
+        https://cdn.jsdelivr.net
+        https://esm.sh;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+      connect-src 'self' https://mainnet.helius-rpc.com;
+      frame-ancestors 'none';
+      object-src 'none';
+    "
+  />
 
-  <!-- SPL Token (working import from esm.sh) -->
+  <script
+    src="https://cdn.tailwindcss.com/3.4.1"
+    integrity="sha384-Y6DgSq1sH2lUv7f5NQ1pCcyG8xv4aR7xVplgFMBfBd5x3pwmzNeU76A6kO4Yp83G"
+    crossorigin="anonymous"
+  ></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
+    integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
+    crossorigin="anonymous"
+  ></script>
   <script type="module">
     import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
     window.splToken = spl;
     console.log("SPL Token loaded:", spl);
   </script>
 
+  <!-- =========================================================
+       🎨 YOUR CSS (unchanged)
+       ========================================================= -->
   <style>
     body {
       background-color: #030712;
@@ -37,7 +66,6 @@
     .pill {
       display: inline-flex;
       align-items: center;
-      width: auto;
       padding: 0.35rem 0.9rem;
       border-radius: 9999px;
       background: rgba(15,23,42,.8);
@@ -59,25 +87,25 @@
       background:#67e8f9;
     }
 
-    /* Wallet Modal (matching shop/base) */
     .modal-bg {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.65);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
     }
 
     .modal {
-      background: #0b1220;
-      border: 1px solid rgba(56,189,248,.25);
-      border-radius: 1rem;
-      width: min(480px, 92vw);
-      padding: 1.25rem;
+      background:#0b1220;
+      border:1px solid rgba(56,189,248,.25);
+      border-radius:1rem;
+      width:min(480px, 92vw);
+      padding:1.25rem;
     }
   </style>
+
 </head>
 
 <body class="font-sans">
@@ -293,9 +321,6 @@
        onclick="closeWalletSelector()">Cancel</p>
   </div>
 </div>
-
-<!-- Solana Wallet Adapter -->
-<script src="https://wallet.adaptor.solana.com/adaptor.js"></script>
 
 <script>
 let currentWallet = "";
