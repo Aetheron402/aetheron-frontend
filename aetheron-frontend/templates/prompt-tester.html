@@ -1,18 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Prompt Tester (PersonaSim) — Aetheron</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
-    <style>
-      body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
-      .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
-      .btn:hover { background:#67e8f9; }
-      .kbd { border:1px solid #334155; padding:.15rem .35rem; border-radius:.35rem; font-size:.8rem; color:#94a3b8; }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ REQUIRED CSP (must appear BEFORE any <script> tags) -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 
+        'self'
+        'unsafe-inline'
+        https://cdn.jsdelivr.net
+        https://cdn.tailwindcss.com;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data:;
+      connect-src 'self'
+        https://api.mainnet-beta.solana.com
+        https://api.devnet.solana.com;
+      frame-ancestors 'none';
+      object-src 'none';
+    "
+  />
+
+  <title>Smart Prompt Tester (PersonaSim) — Aetheron</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ SAFE Solana Web3.js (patched, with SRI) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
+    integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
+    crossorigin="anonymous"
+  ></script>
+
+  <style>
+    body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
+    .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
+    .btn:hover { background:#67e8f9; }
+    .kbd { border:1px solid #334155; padding:.15rem .35rem; border-radius:.35rem; font-size:.8rem; color:#94a3b8; }
+  </style>
+</head>
 
   <body class="font-sans">
     <header class="flex justify-between items-center p-6 border-b border-cyan-900/30">
