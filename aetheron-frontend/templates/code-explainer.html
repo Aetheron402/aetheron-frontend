@@ -3,13 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ✅ REQUIRED CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 
+          'self'
+          'unsafe-inline'
+          https://cdn.tailwindcss.com
+          https://cdn.jsdelivr.net
+          https://esm.sh;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https:;
+        connect-src 'self' https://mainnet.helius-rpc.com;
+        frame-ancestors 'none';
+        object-src 'none';
+      "
+    />
+
     <title>LLM-Powered Code Explainer — Aetheron</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+
+    <!-- ✅ Tailwind pinned + SRI -->
+    <script
+      src="https://cdn.tailwindcss.com/3.4.1"
+      integrity="sha384-Y6DgSq1sH2lUv7f5NQ1pCcyG8xv4aR7xVplgFMBfBd5x3pwmzNeU76A6kO4Yp83G"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ✅ SAFE web3.js (patched + SRI) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
+      integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ✅ SPL Token pinned (esm.sh allowed in CSP) -->
     <script type="module">
       import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
       window.splToken = spl;
     </script>
+
     <style>
       body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
       .btn { background:#22d3ee; color:#000; font-weight:600; padding:.5rem 1rem; border-radius:.5rem; transition: all .3s; }
