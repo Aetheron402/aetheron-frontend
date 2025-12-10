@@ -5,7 +5,6 @@
   <title>{% block title %}Aetheron{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ✅ REQUIRED CSP (must come BEFORE all scripts) -->
   <meta
     http-equiv="Content-Security-Policy"
     content="
@@ -55,9 +54,6 @@
 
 <body class="font-sans">
 
-<!-- =====================================
-     HEADER (IDENTICAL TO shop.html)
-====================================== -->
 <header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
 
   <!-- LOGO -->
@@ -103,16 +99,10 @@
 
 </header>
 
-<!-- =====================================
-     PAGE CONTENT
-====================================== -->
 <main class="p-6">
   {% block content %}{% endblock %}
 </main>
 
-<!-- =====================================
-     FOOTER
-====================================== -->
 <footer class="border-t border-cyan-900/30 mt-12 text-center text-sm text-gray-500 p-6">
   © 2025 Aetheron — Built on the X402 protocol.
   <div class="space-x-4 mt-2">
@@ -161,10 +151,6 @@
   </div>
 </div>
 
-
-<!-- =====================================
-     WALLET JS (COPIED FROM shop.html)
-====================================== -->
 <script>
   const SOLANA_NETWORK = "https://mainnet.helius-rpc.com/?api-key=63f5896a-519d-4701-a181-654bcd2f5854";
   let currentWallet = "";
