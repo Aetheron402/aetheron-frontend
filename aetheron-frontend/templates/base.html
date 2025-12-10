@@ -5,11 +5,40 @@
   <title>{% block title %}Aetheron{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+  <!-- ✅ REQUIRED CSP (must come BEFORE all scripts) -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src
+        'self'
+        'unsafe-inline'
+        https://cdn.tailwindcss.com
+        https://cdn.jsdelivr.net
+        https://esm.sh;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+      connect-src 'self' https://mainnet.helius-rpc.com;
+      frame-ancestors 'none';
+      object-src 'none';
+    "
+  />
 
-  <!-- SPL Token -->
+  <script
+    src="https://cdn.tailwindcss.com/3.4.1"
+    integrity="sha384-Y6DgSq1sH2lUv7f5NQ1pCcyG8xv4aR7xVplgFMBfBd5x3pwmzNeU76A6kO4Yp83G"
+    crossorigin="anonymous"
+  ></script>
+
+  <!-- Your own CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
+    integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
+    crossorigin="anonymous"
+  ></script>
+
   <script type="module">
     import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
     window.splToken = spl;
