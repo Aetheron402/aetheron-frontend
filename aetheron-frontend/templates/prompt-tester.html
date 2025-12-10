@@ -2,7 +2,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ✅ REQUIRED CSP (must appear BEFORE any <script> tags) -->
   <meta
     http-equiv="Content-Security-Policy"
     content="
@@ -12,7 +11,7 @@
         'unsafe-inline'
         https://cdn.jsdelivr.net
         https://cdn.tailwindcss.com;
-      style-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
       img-src 'self' data:;
       connect-src 'self'
         https://api.mainnet-beta.solana.com
