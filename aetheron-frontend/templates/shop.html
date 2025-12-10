@@ -737,10 +737,10 @@
         if (comp === "code-explainer") {
           document.getElementById("modal-code-bg").style.display = "flex";
 
-        } else if (comp === "prompt-tester") {      // ✅ PersonaSim
+        } else if (comp === "prompt-tester") {      // PersonaSim
           document.getElementById("modal-tester-bg").style.display = "flex";
 
-        } else if (comp === "contract-analyzer") {  // ✅ NEW — Analyzer
+        } else if (comp === "contract-analyzer") {  // NEW — Analyzer
           document.getElementById("modal-contract-bg").style.display = "flex";
 
         } else {
@@ -1124,8 +1124,8 @@
     try {
       const headers = {
         "Content-Type": "application/json",
-        "X-USER-WALLET": currentWallet,    // 🔥 REQUIRED FOR REAL PAYMENT
-        "X-WALLET": simulate ? "DEMO_OK" : ""   // 🔥 FIRST CALL MUST SEND EMPTY STRING
+        "X-USER-WALLET": currentWallet,    // REQUIRED FOR REAL PAYMENT
+        "X-WALLET": simulate ? "DEMO_OK" : ""   // FIRST CALL MUST SEND EMPTY STRING
       };
 
       // temporary example endpoint
@@ -1136,7 +1136,7 @@
           text,
           wallet: currentWallet,
           chain: currentChain,
-          format: document.getElementById("prompt-output-format").value  // ✅ added
+          format: document.getElementById("prompt-output-format").value
         })
       });
 
@@ -1207,7 +1207,7 @@
       text,
       wallet: currentWallet,
       chain: currentChain,
-      format: document.getElementById("prompt-output-format").value  // ✅ added here too
+      format: document.getElementById("prompt-output-format").value
     });
 
     console.log("🔁 Sending paid verification with signature:", signature);
