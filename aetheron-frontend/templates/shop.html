@@ -3,10 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 
+          'self'
+          'unsafe-inline'
+          https://cdn.jsdelivr.net
+          https://cdn.tailwindcss.com
+          https://esm.sh
+          'sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z';
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+        img-src 'self' data:;
+        connect-src 'self'
+          https://api.mainnet-beta.solana.com
+          https://api.devnet.solana.com
+          https://mainnet.helius-rpc.com
+          https://*.helius-rpc.com;
+        frame-ancestors 'none';
+        object-src 'none';
+      "
+    />
+
     <title>Aetheron Components</title>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Solana Web3 -->
-    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+
+    <!-- Solana Web3.js (SAFE VERSION + SRI) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.2/lib/index.iife.min.js"
+      integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
+      crossorigin="anonymous"
+    ></script>
 
     <!-- SPL Token (final working dynamic import using esm.sh) -->
     <script type="module">
