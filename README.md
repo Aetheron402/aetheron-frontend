@@ -1,82 +1,107 @@
 # Aetheron Frontend
 
-User interface for the Aetheron X402 Component Marketplace.
+Public UI for the **Aetheron X402 Component Marketplace** and **Aetheron Token ecosystem**.
 
 ---
 
-## 🌐 Overview
+## Overview
 
-This repository contains the **public-facing frontend** for the Aetheron platform.  
-It is responsible for:
+This repository contains the **public-facing frontend** for Aetheron.  
+It provides the interface for:
 
-- Displaying available AI components  
-- Handling wallet connections (Phantom today, MetaMask in Q1 2026)  
-- Rendering component modals & inputs  
-- Submitting requests to the backend  
-- Showing generated results to users  
-- UI for the Aetheron Token, Ledger, Roadmap, and Component pages
+- Browsing AI components  
+- Wallet authentication (Phantom → MetaMask coming Q1 2026)  
+- Triggering X402 on-chain payments  
+- Submitting component requests to the backend  
+- Showing generated outputs (PDF, TXT, DOCX, MD, HTML)  
+- Accessing the Aetheron Token page  
+- Purchasing downloadable agent templates (Agent Store)  
 
-The frontend is built using lightweight, fully static web technologies.
+The frontend is fully static, lightweight, and framework-agnostic.
 
 ---
 
-## 🔒 Important Note
+## Important Note
 
-This repository includes **only the UI layer**.  
+This repository contains **UI code only**.  
 It does **not** include:
 
-- Agent source code  
-- Paid component logic  
-- Backend worker processes  
-- Payment validation  
-- X402 execution engine  
+- Backend or worker logic  
+- Payment verification or validation  
+- Component engines  
+- PDF/MD/TXT renderers  
+- AETH price calculations  
+- AI prompts or processing logic  
+- Any proprietary intelligence systems  
 
-All proprietary logic resides in the **private backend** for security and product protection.
+All operational logic exists in the private backend.
+
+This repo is safe for public visibility.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
-- HTML / Jinja2 Templates  
+- HTML & Jinja2 templates  
 - TailwindCSS  
-- JavaScript  
-- Solana Web3 Wallet Adapter  
-- Static asset delivery  
-- X402 payment triggers (Solana → USDC)
+- Vanilla JavaScript  
+- Solana Web3.js (Phantom)  
+- Token-2022 SPL integration  
+- Secure CSP headers  
+- X402 on-chain triggers (USDC + AETH)  
 
 ---
 
-## 🔌 Backend
+## Backend (Private)
 
-This frontend interacts with the private backend service, which handles:
+The frontend communicates with the private backend, which handles:
 
-- Payment validation  
-- Task creation  
-- Celery worker pipeline  
-- File generation (PDF / TXT / DOCX / HTML / MD)  
-- Asset storage & history tracking  
+- On-chain payment verification  
+- USDC and AETH price routing  
+- Worker task creation (Celery)  
+- PDF/TXT/DOCX/HTML/MD generation  
+- Agent ZIP packaging  
+- Ledger & billing entries  
+- R2 (S3) storage uploads  
+- Rate limits, validation, and security  
 
-The backend is private to protect proprietary logic.
+The backend remains closed-source for product protection.
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 /static
    /css
    /js
 /templates
+   base.html
+   component pages
+   agent store
+   token page
 ```
 
 ---
 
-## 🌐 Links
+## SDK
 
-- **Main Website:** https://www.aetheron402.com  
-- **Twitter:** https://twitter.com/Aetheron402  
+Aetheron provides a public **TypeScript SDK** for wallet-native integration:
+
+- USDC / AETH payments  
+- Component generation  
+- Wallet-adapter support  
+
+(Repository: aetheron-sdk — coming soon)
+
+---
+
+## Links
+
+- **Website:** https://www.aetheron402.com  
+- **X / Twitter:** https://twitter.com/Aetheron402  
 - **Email:** team@aetheron402.com  
 
 ---
 
-Part of the Aetheron AI ecosystem — powered by X402.
+<p align="center"><sub>Part of the Aetheron AI ecosystem — powered by X402.</sub></p>
