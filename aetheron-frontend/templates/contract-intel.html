@@ -131,7 +131,7 @@
         if(!contractAddr){ alert("Please enter a contract address."); return; }
 
         resultDiv.classList.remove("hidden");
-        resultDiv.textContent = "⏳ Sending request...";
+        resultDiv.textContent = "Sending request...";
 
         try{
           const headers = { "Content-Type": "application/json" };
@@ -150,23 +150,23 @@
           const data = await res.json();
 
           if(res.status === 402){
-            resultDiv.textContent = "💰 Payment required. Please complete the transaction in your wallet.";
+            resultDiv.textContent = "Payment required. Please complete the transaction in your wallet.";
             return;
           }
 
           if(res.status === 202){
             resultDiv.innerHTML = `
-              <div class="text-cyan-300 font-semibold mb-1">⏳ Scan queued:</div>
+              <div class="text-cyan-300 font-semibold mb-1">Scan queued:</div>
               <div class="text-gray-200">Task ID: ${data.task_id}</div>
               <div class="mt-2 text-xs text-gray-400">Use /api/job-status/${data.task_id} to poll the result.</div>
             `;
           }
           else {
-            resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+            resultDiv.textContent = "Error: " + (data.message || "Unknown error");
           }
         }catch(err){
           console.error(err);
-          resultDiv.textContent = "❌ Request failed: " + err.message;
+          resultDiv.textContent = "Request failed: " + err.message;
         }
       }
 
