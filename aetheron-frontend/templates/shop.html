@@ -173,9 +173,6 @@
       padding: 0.6rem 0.8rem !important;
     }
   }
-  /* ---------------------- */
-  /* END MOBILE FIXES */
-  /* ---------------------- */
 
     /* MOBILE HEADER FIX */
 @media (max-width: 768px) {
@@ -299,7 +296,7 @@
             <button class="btn use-btn" data-component="contract-analyzer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
 
           {% elif c.slug == "agents" %}
-            <!-- ⭐ Correct slug — opens the agents store -->
+            <!-- Correct slug — opens the agents store -->
             <a class="btn" href="/agents">Open Store</a>
 
           {% elif c.coming_soon %}
@@ -572,7 +569,7 @@
 
     <link rel="stylesheet" href="/static/css/style.css">
 
-    <!-- ✅ WALLET + MODAL + API Logic -->
+    <!-- WALLET + MODAL + API Logic -->
     <script defer>
       // --- SOLANA CONFIG ---
       const SOLANA_NETWORK = "API";
@@ -584,7 +581,7 @@
   let currentChain  = "";
   const walletBtn = document.getElementById("connect-wallet");
 
-  // ✅ Unified validation helper
+  // Unified validation helper
   function ensureWalletAndInput(value, type = "text") {
     if (!currentWallet) {
       alert("Please connect your wallet first.");
@@ -620,7 +617,7 @@
     return null;
   }
 
-  // ✅ Update wallet button + ledger link
+  // Update wallet button + ledger link
   function updateWalletUI() {
     walletBtn.textContent = shorten(currentWallet);
   }
@@ -652,7 +649,7 @@
   document.getElementById("modal-contract-bg").style.display = "none";
 }
 
-  // ✅ FIXED: Always force popup, never reuse cached sessions
+  // Always force popup, never reuse cached sessions
   async function connectPhantom() {
     try {
       if (window.solana?.isPhantom) {
@@ -676,7 +673,7 @@
     closeWalletSelector();
   }
 
-  // ✅ FIXED: Always force MetaMask permission popup
+  // Always force MetaMask permission popup
   async function connectMetamask() {
     try {
       if (!window.ethereum) {
@@ -737,7 +734,7 @@
       }
     });
 
-    // ✅ MOBILE WALLET BUTTON — mirror desktop connect behavior
+    // MOBILE WALLET BUTTON — mirror desktop connect behavior
     const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
     if (mobileWalletBtn) {
       mobileWalletBtn.addEventListener("click", () => {
@@ -795,7 +792,7 @@
         return;
       }
 
-      // 🔍 AUTO-DETECT NETWORK BASED ON ADDRESS
+      // AUTO-DETECT NETWORK BASED ON ADDRESS
       const detected = detectNetworkFromAddress(addr);
       if (detected) {
         network = detected;                  // use detected value
@@ -945,7 +942,7 @@
           })
         });
 
-        // ✅ Handle 402 Payment Required
+        // Handle 402 Payment Required
         if (res.status === 402) {
           resultDiv.textContent = "💰 Payment required. Opening Phantom...(10-30s)";
 
@@ -1036,7 +1033,7 @@
           return;
         }
 
-    // ✅ Handle successful or simulated call
+    // Handle successful or simulated call
     const data = await res.json();
     if (res.status === 200) {
       resultDiv.innerHTML = `
@@ -1181,7 +1178,7 @@
     const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
     const mint = new solanaWeb3.PublicKey(USDC_MINT);
 
-    // ✅ getOrCreateAssociatedTokenAccount returns an object, we only want .address
+    // getOrCreateAssociatedTokenAccount returns an object
     const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
       connection,
       payer,
@@ -1196,7 +1193,7 @@
       receiver
     )).address;
 
-    // ✅ Create USDC transfer instruction (6 decimals)
+    // Create USDC transfer instruction (6 decimals)
     const ix = splToken.createTransferInstruction(
       fromTokenAccount,
       toTokenAccount,
@@ -1204,7 +1201,7 @@
       Math.floor(PRICE_USDC * 1_000_000)
     );
 
-    // ✅ Build + sign + send transaction
+    // Build + sign + send transaction
     const transaction = new solanaWeb3.Transaction().add(ix);
     transaction.feePayer = payer;
     const { blockhash } = await connection.getLatestBlockhash();
@@ -1254,7 +1251,7 @@
       <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt || JSON.stringify(data, null, 2)}</div>
     `;
     if (data.download_url) {
-      // ✅ Respect the selected output format
+      // Respect the selected output format
       if (data.format === "pdf") {
         // Open PDF in new tab
         window.open(data.download_url, "_blank");
@@ -1390,7 +1387,7 @@ async function tryCodeCall(simulate) {
           <p class="text-xs text-cyan-400 mt-2">Engine: ${data2.engine_version} | Asset ID: ${data2.asset_id}</p>
         `;
         if (data2.download_url) {
-          // ✅ Open or download based on chosen format
+          // Open or download based on chosen format
           if (data2.format === "pdf") {
             window.open(data2.download_url, "_blank"); // opens PDF in new tab
           } else {
