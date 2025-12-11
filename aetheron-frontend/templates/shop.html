@@ -3,6 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src
+          'self'
+          'unsafe-inline'
+          https://cdn.tailwindcss.com
+          https://unpkg.com
+          https://cdn.jsdelivr.net
+          https://esm.sh;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https:;
+        connect-src 'self' https://mainnet.helius-rpc.com;
+        frame-ancestors 'none';
+        object-src 'none';
+      "
+    />
     <title>Aetheron Components</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Solana Web3 -->
