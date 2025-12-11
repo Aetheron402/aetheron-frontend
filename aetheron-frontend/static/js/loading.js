@@ -26,7 +26,7 @@ function hideLoading() {
   const bar = document.getElementById("loading-bar");
 
   if (!overlay || !bar) {
-    console.warn("⚠️ hideLoading() called but overlay not found");
+    console.warn("hideLoading() called but overlay not found");
     return;
   }
 
