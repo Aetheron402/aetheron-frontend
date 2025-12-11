@@ -3,47 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src 
-          'self'
-          'unsafe-inline'
-          https://cdn.jsdelivr.net
-          https://cdn.tailwindcss.com
-          https://esm.sh
-          'sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z';
-        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-        img-src 'self' data:;
-        connect-src 'self'
-          https://api.mainnet-beta.solana.com
-          https://api.devnet.solana.com
-          https://mainnet.helius-rpc.com
-          https://*.helius-rpc.com;
-        frame-ancestors 'none';
-        object-src 'none';
-      "
-    />
-
     <title>Aetheron Components</title>
-
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Solana Web3.js (SAFE VERSION + SRI) -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.2/lib/index.iife.min.js"
-      integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Solana Web3 -->
+    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
 
     <!-- SPL Token (final working dynamic import using esm.sh) -->
     <script type="module">
-      import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
-      window.splToken = spl;
-      console.log("✅ SPL Token lib loaded (via esm.sh):", spl);
+      import {
+        getAssociatedTokenAddress,
+        getOrCreateAssociatedTokenAccount,
+        createTransferInstruction,
+        TOKEN_2022_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      } from "https://esm.sh/@solana/spl-token@0.3.11";
+
+      // Make functions available to window scripts
+      window.splToken = {
+        getAssociatedTokenAddress,
+        getOrCreateAssociatedTokenAccount,
+        createTransferInstruction,
+        TOKEN_2022_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      };
     </script>
 
     <style>
@@ -126,6 +108,8 @@
     box-shadow: 0 0 16px rgba(34,211,238,.45);
   }
 
+
+  /* MOBILE FIXES BELOW */
   @media (max-width: 640px) {
 
     .card {
@@ -173,6 +157,7 @@
       padding: 0.6rem 0.8rem !important;
     }
   }
+  /* END MOBILE FIXES */
 
     /* MOBILE HEADER FIX */
 @media (max-width: 768px) {
@@ -280,38 +265,48 @@
           <p class="text-gray-400 text-sm mt-2">{{ c.description }}</p>
         </div>
 
+        <!-- BUTTON + PRICE INLINE ROW -->
         <div class="mt-6 flex justify-between items-center">
+
+          <!-- PRICE FIRST -->
           <span class="text-cyan-300 font-semibold">{{ c.price }}</span>
 
+          <!-- BUTTON SECOND -->
           {% if c.slug == "prompt-optimizer" %}
-            <button class="btn use-btn" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+            <button class="btn" onclick="document.getElementById('modal-bg').style.display='flex'">
+              Use
+            </button>
 
           {% elif c.slug == "code-explainer" %}
-            <button class="btn use-btn" data-component="code-explainer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+            <button class="btn" onclick="document.getElementById('modal-code-bg').style.display='flex'">
+              Use
+            </button>
 
           {% elif c.slug == "prompt-tester" %}
-            <button class="btn use-btn" data-component="prompt-tester" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+            <button class="btn" onclick="document.getElementById('modal-tester-bg').style.display='flex'">
+              Use
+            </button>
 
           {% elif c.slug == "contract-intel" %}
-            <button class="btn use-btn" data-component="contract-analyzer" data-price="{{ c.price | replace(' USDC','') }}">Use</button>
+            <button class="btn" onclick="document.getElementById('modal-contract-bg').style.display='flex'">
+              Analyze
+            </button>
 
           {% elif c.slug == "agents" %}
-            <!-- Correct slug — opens the agents store -->
             <a class="btn" href="/agents">Open Store</a>
 
           {% elif c.coming_soon %}
             <button class="btn bg-gray-700 text-gray-400 cursor-not-allowed">Coming Soon</button>
-    
+
           {% else %}
             <a class="btn" href="/buy/{{ c.id }}">Buy</a>
           {% endif %}
-
         </div>
-      </div>
-      {% endfor %}
-    </main>
+        </div>
+        {% endfor %}
+        </main>
 
-    <!-- ====== My Recent Assets Section ====== -->
+    <!-- My Recent Assets Section -->
     <section id="my-assets-section" class="max-w-5xl mx-auto mt-20 hidden">
       <h2 class="text-2xl font-semibold text-cyan-300 mb-4 text-center">My Recent Assets</h2>
       <div id="my-assets-list" class="bg-gray-900/40 border border-cyan-400/20 rounded-xl p-6 text-gray-300">
@@ -319,7 +314,7 @@
       </div>
     </section>
 
-    <!-- ====== Roadmap Preview Section ====== -->
+    <!-- Roadmap Preview Section -->
     <section class="max-w-5xl mx-auto mt-28 mb-24 text-center relative z-10">
       <h2 class="text-3xl font-semibold mb-4 text-cyan-300">The Aetheron Roadmap</h2>
       <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
@@ -373,6 +368,19 @@
           <option value="html">Web Page (.html)</option>
           <option value="md">Markdown (.md)</option>
         </select>
+
+        <label class="block text-sm text-gray-400 mt-4 mb-2">Payment method</label>
+        <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_opt" value="USDC" checked>
+                <span>USDC</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_opt" value="AETH">
+                <span>AETH</span>
+            </label>
+        </div>
 
         <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryCall(false)">Execute</button>
@@ -438,6 +446,19 @@
           <option value="md">Markdown (.md)</option>
         </select>
 
+        <label class="block text-sm text-gray-400 mt-4 mb-2">Payment method</label>
+        <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_code" value="USDC" checked>
+                <span>USDC</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_code" value="AETH">
+                <span>AETH</span>
+            </label>
+        </div>
+
         <!-- Execute button -->
         <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryCodeCall(false)">Execute</button>
@@ -482,6 +503,19 @@
           <option value="html">Web Page (.html)</option>
           <option value="md">Markdown (.md)</option>
         </select>
+
+        <label class="block text-sm text-gray-400 mt-4 mb-2">Payment method</label>
+        <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_test" value="USDC" checked>
+                <span>USDC</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_test" value="AETH">
+                <span>AETH</span>
+            </label>
+        </div>
 
         <!-- Execute button -->
         <div class="flex justify-center mt-6 gap-3">
@@ -533,6 +567,18 @@
           <option value="md">Markdown (.md)</option>
         </select>
 
+        <label class="block text-sm text-gray-400 mt-4 mb-2">Payment method</label>
+        <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_intel" value="USDC" checked>
+                <span>USDC</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pay_method_intel" value="AETH">
+                <span>AETH</span>
+            </label>
+        </div>
 
         <div class="flex justify-center mt-6 gap-3">
           <button class="btn px-8 py-2.5 text-base" onclick="tryContractCall(false)">Analyze</button>
@@ -574,8 +620,105 @@
       // --- SOLANA CONFIG ---
       const SOLANA_NETWORK = "API";
       const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+      const AETH_MINT = "DGNicx6qMPKSL1deR3fZfbHYjnm5ZJWmHNdY2NhDpump";
       const PAYMENT_WALLET = "FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1";
       let PRICE_USDC = 0.25; // this will update when user selects a component
+
+      // Helper to get Phantom provider (supports extension + in-app)
+      function getPhantomProvider() {
+        // Newer pattern
+        if ("phantom" in window && window.phantom?.solana?.isPhantom) {
+          return window.phantom.solana;
+        }
+        // Legacy pattern (still used by many)
+        if (window.solana?.isPhantom) {
+          return window.solana;
+        }
+        return null;
+      }
+
+      // Fetch required AETH from backend for a given USDC price
+      async function fetchRequiredAeth(usdcPrice) {
+        try {
+          const res = await fetch(`/api/price/aeth?usdc_price=${usdcPrice}`);
+          const data = await res.json();
+          return data.required_aeth;
+        } catch (err) {
+          console.error("AETH price fetch failed:", err);
+          throw new Error("Unable to fetch AETH price");
+        }
+      }
+
+  // Send AETH SPL Token Payment via Phantom (Token-2022 Compatible)
+  async function payWithAeth(amountAeth) {
+    if (!window.solana?.isPhantom) {
+      alert("Phantom wallet not found.");
+      return null;
+    }
+    if (!currentWallet) {
+      alert("Please connect your wallet first.");
+      return null;
+    }
+
+    try {
+      const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
+
+      const payer = new solanaWeb3.PublicKey(currentWallet);
+      const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
+      const mint = new solanaWeb3.PublicKey(AETH_MINT);
+
+      // Convert amount (decimals = 9)
+      const amount = Math.floor(amountAeth * 1_000_000_000);
+
+      // Correct token program for pump.fun tokens (Token-2022)
+      const programId = splToken.TOKEN_2022_PROGRAM_ID;
+
+      // Get ATA's for sender and receiver
+      const fromTokenAccount = await splToken.getAssociatedTokenAddress(
+        mint,
+        payer,
+        false,
+        programId,
+        splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+
+      const toTokenAccount = await splToken.getAssociatedTokenAddress(
+        mint,
+        receiver,
+        false,
+        programId,
+        splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+
+      // Build transfer ix using TOKEN_2022_PROGRAM_ID
+      const ix = splToken.createTransferInstruction(
+        fromTokenAccount,
+        toTokenAccount,
+        payer,
+        amount,
+        [],
+        programId
+      );
+
+      const tx = new solanaWeb3.Transaction().add(ix);
+      tx.feePayer = payer;
+
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+
+      const signedTx = await window.solana.signTransaction(tx);
+      const sig = await connection.sendRawTransaction(signedTx.serialize());
+      await connection.confirmTransaction(sig, "finalized");
+
+      console.log("AETH payment successful:", sig);
+      return sig;
+
+    } catch (err) {
+      console.error("AETH payment failed:", err);
+      alert("AETH payment failed: " + (err.message || err));
+      return null;
+    }
+  }
 
   let currentWallet = "";
   let currentChain  = "";
@@ -619,7 +762,8 @@
 
   // Update wallet button + ledger link
   function updateWalletUI() {
-    walletBtn.textContent = shorten(currentWallet);
+    walletBtn.textContent = shorten(currentWallet);                // desktop button
+    document.getElementById("mobile-connect-wallet").textContent = shorten(currentWallet);  // mobile button
   }
 
   function closeWalletSelector() {
@@ -648,29 +792,51 @@
   function closeContractModal() {
   document.getElementById("modal-contract-bg").style.display = "none";
 }
-
-  // Always force popup, never reuse cached sessions
+      
+  // Always force popup, and support both window.solana + window.phantom.solana
   async function connectPhantom() {
+    console.log("[Phantom] connectPhantom() called");
     try {
-      if (window.solana?.isPhantom) {
-        // Forcefully disconnect any existing session before connecting
-        await window.solana.disconnect().catch(() => {});
-        const res = await window.solana.connect({ onlyIfTrusted: false }); // forces popup
-        currentWallet = res.publicKey.toString();
-        currentChain = "solana";
-        updateWalletUI();
-        // Save to localStorage and make globally available
-        window.userWallet = currentWallet;
-        onWalletConnected();
-      } else {
+      const provider = getPhantomProvider();
+
+      if (!provider) {
         alert(
-          "To continue, please open this site through the Phantom app browser on mobile, or use a desktop browser with the Phantom extension installed."
+          "On mobile: open this site inside the Phantom in-app browser. On desktop: install the Phantom browser extension."
         );
+        console.warn("[Phantom] Provider not found on window");
+        return;
       }
+
+      if (provider.isConnected) {
+        try {
+          await provider.disconnect();
+        } catch (e) {
+          console.warn("[Phantom] disconnect failed (ignore):", e);
+        }
+      }
+
+      console.log("[Phantom] Opening connect popup...");
+      const res = await provider.connect({ onlyIfTrusted: false });
+
+      if (!res?.publicKey) {
+        console.error("[Phantom] No publicKey returned from connect()");
+        alert("Failed to get public key from Phantom.");
+        return;
+      }
+
+      currentWallet = res.publicKey.toString();
+      currentChain = "solana";
+      console.log("[Phantom] Connected wallet:", currentWallet);
+
+      updateWalletUI();
+      window.userWallet = currentWallet;
+      onWalletConnected();
     } catch (err) {
-      console.error("Phantom connection failed:", err);
+      console.error("[Phantom] Connection failed:", err);
+      alert("Phantom connection failed: " + (err.message || err));
+    } finally {
+      closeWalletSelector();
     }
-    closeWalletSelector();
   }
 
   // Always force MetaMask permission popup
@@ -711,30 +877,35 @@
     document.body.style.opacity = 1;
 
     walletBtn.addEventListener("click", () => {
-      if (currentWallet) {
-        const confirmDisconnect = confirm(
-          `Connected as ${shorten(currentWallet)}\n\nDisconnect / switch wallet?`
-        );
-        if (confirmDisconnect) {
-          // Clear everything on disconnect
-          currentWallet = "";
-          currentChain = "";
-          walletBtn.textContent = "Connect Wallet";
+      console.log("Connect Wallet clicked");
 
-          localStorage.removeItem("connectedWallet");
-          delete window.userWallet;
-
-          // Phantom cleanup
-          if (window.solana?.isConnected) {
-            window.solana.disconnect().catch(() => {});
-          }
-        }
-      } else {
+      if (!currentWallet) {
+        // Always open the modal
         document.getElementById("wallet-select-modal").style.display = "flex";
+        return;
+      }
+
+      // If wallet already connected → allow disconnect
+      const confirmDisconnect = confirm(
+        `Connected as ${shorten(currentWallet)}\n\nDisconnect / switch wallet?`
+      );
+      if (confirmDisconnect) {
+        currentWallet = "";
+        currentChain = "";
+
+        walletBtn.textContent = "Connect Wallet";
+        document.getElementById("mobile-connect-wallet").textContent = "Connect Wallet";
+
+        localStorage.removeItem("connectedWallet");
+        delete window.userWallet;
+
+        if (window.solana?.isConnected) {
+          window.solana.disconnect().catch(() => {});
+        }
       }
     });
 
-    // MOBILE WALLET BUTTON — mirror desktop connect behavior
+    // MOBILE WALLET BUTTON
     const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
     if (mobileWalletBtn) {
       mobileWalletBtn.addEventListener("click", () => {
@@ -752,26 +923,6 @@
         if (detected) networkSelect.value = detected;
       });
     }
-
-    document.querySelectorAll(".use-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const price = parseFloat(btn.dataset.price);
-        const comp = btn.dataset.component;
-
-        if (comp === "code-explainer") {
-          document.getElementById("modal-code-bg").style.display = "flex";
-
-        } else if (comp === "prompt-tester") {      // PersonaSim
-          document.getElementById("modal-tester-bg").style.display = "flex";
-
-        } else if (comp === "contract-analyzer") {  // NEW — Analyzer
-          document.getElementById("modal-contract-bg").style.display = "flex";
-
-        } else {
-          openPromptModal(price);
-        }
-      });
-    });
 
     function closeTesterModal(){ document.getElementById("modal-tester-bg").style.display = "none"; }
 
@@ -823,77 +974,87 @@
       });
 
       if (res.status === 402) {
-        resultDiv.textContent = "💰 Payment required. Opening Phantom…";
+          resultDiv.textContent = "💰 Payment required. Choose payment method.";
 
-        // SETTINGS
-        const priceUSDC = 1.00;
-
-        try {
-          if (currentChain !== "solana" || !window.solana?.isPhantom) {
-            resultDiv.textContent = "⚠️ Please connect Phantom wallet first.";
-            return;
-          }
-
-          const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
-          const payer = new solanaWeb3.PublicKey(currentWallet);
-          const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
-          const mint = new solanaWeb3.PublicKey(USDC_MINT);
-
-          // USDC transfer
-          const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-            connection, payer, mint, payer
-          )).address;
-
-          const toTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-            connection, payer, mint, receiver
-          )).address;
-
-          const ix = splToken.createTransferInstruction(
-            fromTokenAccount,
-            toTokenAccount,
-            payer,
-            Math.floor(priceUSDC * 1_000_000)
-          );
-
-          const tx = new solanaWeb3.Transaction().add(ix);
-          tx.feePayer = payer;
-          const { blockhash } = await connection.getLatestBlockhash();
-          tx.recentBlockhash = blockhash;
-
-          const signed = await window.solana.signTransaction(tx);
-          const signature = await connection.sendRawTransaction(signed.serialize());
-          await connection.confirmTransaction(signature, "finalized");
-
-          console.log("USDC payment tx:", signature);
-
-          resultDiv.textContent = "Payment confirmed. Running analysis…";
-
-          // Re-run API call with payment signature
-          const paidRes = await fetch("/api/contract-intel", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-WALLET": signature,
-              "X-USER-WALLET": currentWallet
-            },
-            body: JSON.stringify({
+          pendingComponent = "contract-intel";
+          pendingPayload = {
               contract_address: addr,
               network,
               format
-            })
-          });
+          };
 
-          const data2 = await paidRes.json();
-          if (paidRes.status === 202 && data2.task_id) {
-            pollJobStatus(data2.task_id, resultDiv, format);
-            return;
+          // identify component ID from shop: contract-intel = ID 4
+          const payMethod = document.querySelector('input[name="pay_method_intel"]:checked').value;
+
+          if (payMethod === "AETH") {
+              try {
+                  // Contract Intel price = 1.00 USDC
+                  const requiredAeth = await fetchRequiredAeth(1.00);
+
+                  // 1. Send AETH payment
+                  const sig = await payWithAeth(requiredAeth);
+                  if (!sig) {
+                      resultDiv.textContent = "❌ AETH payment cancelled.";
+                      return;
+                  }
+
+                  // 2. Headers to tell backend this is AETH
+                  const paidHeaders = {
+                      "Content-Type": "application/json",
+                      "X-WALLET": sig,
+                      "X-USER-WALLET": currentWallet,
+                      "X-PAYMENT-METHOD": "AETH",
+                      "X-AETH-AMOUNT": requiredAeth,
+                  };
+
+                  // 3. Correct payload for Contract Intel
+                  const paidBody = JSON.stringify({
+                      contract_address: addr,
+                      network,
+                      format
+                  });
+
+                  // 4. Correct API endpoint
+                  const paidRes = await fetch("/api/contract-intel", {
+                      method: "POST",
+                      headers: paidHeaders,
+                      body: paidBody
+                  });
+
+                  const paidData = await paidRes.json();
+
+                  // 5. Handle Celery background job
+                  if (paidRes.status === 202 && paidData.task_id) {
+                      pollJobStatus(paidData.task_id, resultDiv, format);
+                      return;
+                  }
+
+                  resultDiv.textContent = JSON.stringify(paidData, null, 2);
+                  return;
+
+              } catch (err) {
+                  resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+                  return;
+              }
           }
-        } catch (err) {
-          console.error("Payment failed:", err);
-          resultDiv.textContent = "❌ Payment failed: " + err.message;
-        }
 
-        return;
+          if (payMethod === "USDC") {
+              try {
+                  const sig = await payWithUsdc(1.00); // USDC version
+                  if (!sig) {
+                      resultDiv.textContent = "❌ USDC payment cancelled.";
+                      return;
+                  }
+
+                  return await runPaidContractIntel(addr, network, format, sig, resultDiv);
+
+              } catch (err) {
+                  resultDiv.textContent = "❌ USDC payment failed.";
+                  return;
+              }
+          }
+
+          return;
       }
 
       const data = await res.json();
@@ -928,7 +1089,7 @@
         const headers = {
           "Content-Type": "application/json",
           "X-USER-WALLET": currentWallet,
-          "X-WALLET": simulate ? "DEMO_OK" : ""   // FIRST CALL MUST SEND EMPTY STRING
+          "X-WALLET": simulate ? "DEMO_OK" : ""  
         };
 
         const res = await fetch("/api/prompt-tester", {
@@ -942,95 +1103,29 @@
           })
         });
 
-        // Handle 402 Payment Required
-        if (res.status === 402) {
-          resultDiv.textContent = "💰 Payment required. Opening Phantom...(10-30s)";
-
-          try {
-            if (currentChain !== "solana" || !window.solana?.isPhantom) {
-              resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
-              return;
-            }
-
-            const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
-            const payer = new solanaWeb3.PublicKey(currentWallet);
-            const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
-            const mint = new solanaWeb3.PublicKey(USDC_MINT);
-
-            // Create token accounts
-            const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-              connection, payer, mint, payer
-            )).address;
-            const toTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-              connection, payer, mint, receiver
-            )).address;
-
-            // Send 0.50 USDC (6 decimals)
-            const ix = splToken.createTransferInstruction(
-              fromTokenAccount,
-              toTokenAccount,
-              payer,
-              Math.floor(0.5 * 1_000_000)
-            );
-
-            const transaction = new solanaWeb3.Transaction().add(ix);
-            transaction.feePayer = payer;
-            const { blockhash } = await connection.getLatestBlockhash();
-            transaction.recentBlockhash = blockhash;
-
-            const signedTx = await window.solana.signTransaction(transaction);
-            const signature = await connection.sendRawTransaction(signedTx.serialize());
-            await connection.confirmTransaction(signature, "finalized");
-
-            console.log("✅ USDC payment tx:", signature);
-            resultDiv.textContent = "✅ Payment confirmed. Generating PersonaSim analysis...";
-
-            // Re-run API call with signature as proof of payment
-            const paidHeaders = {
-              "Content-Type": "application/json",
-              "X-WALLET": signature,
-              "X-USER-WALLET": currentWallet
-            };
-
-            const paidRes = await fetch("/api/prompt-tester", {
+        async function runPaidContractIntel(addr, network, format, signature, resultDiv) {
+            const res = await fetch("/api/contract-intel", {
               method: "POST",
-              headers: paidHeaders,
-              body: JSON.stringify({
-                text,
-                wallet: currentWallet,
-                chain: currentChain,
-                format
-              })
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-WALLET": signature,
+                  "X-USER-WALLET": currentWallet
+                },
+                body: JSON.stringify({
+                    contract_address: addr,
+                    network,
+                    format
+                })
             });
 
-            const data2 = await paidRes.json();
-            if (paidRes.status === 202 && data2.task_id) {
-              pollJobStatus(data2.task_id, resultDiv, document.getElementById("tester-output-format").value);
-              return;
+            const data = await res.json();
+
+            if (res.status === 202 && data.task_id) {
+                pollJobStatus(data.task_id, resultDiv, format);
+                return;
             }
-            if (paidRes.status === 200) {
-              resultDiv.innerHTML = `
-                <div class="text-cyan-300 font-semibold mb-1">✅ PersonaSim Report:</div>
-                <div class="text-gray-200 whitespace-pre-line">${data2.optimized_prompt}</div>
-                <p class="text-xs text-cyan-400 mt-2">Engine: ${data2.engine_version} | Asset ID: ${data2.asset_id}</p>
-              `;
-              if (data2.download_url) {
-                if (data2.format === "pdf") window.open(data2.download_url, "_blank");
-                else {
-                  const a = document.createElement("a");
-                  a.href = data2.download_url;
-                  a.download = `personasim_${Date.now()}.txt`;
-                  a.click();
-                }
-              }
-            } else {
-              resultDiv.textContent = "❌ Error after payment: " + (data2.message || "Unknown error");
-            }
-          } catch (err) {
-            console.error("❌ Payment failed:", err);
-            resultDiv.textContent = "❌ Payment failed: " + err.message;
-          }
-          return;
+
+            resultDiv.innerHTML = JSON.stringify(data, null, 2);
         }
 
     // Handle successful or simulated call
@@ -1068,9 +1163,7 @@
     // document.getElementById("metamask-btn").addEventListener("click", connectMetamask);
   });
 
-  /* ============================
-    SEARCH + CATEGORY FILTERING
-  ============================ */
+  /* SEARCH + CATEGORY FILTERING */
   const searchInput = document.getElementById("search");
   const filterButtons = document.querySelectorAll("[data-filter-btn]");
   const cards = document.querySelectorAll("#components-grid .card");
@@ -1123,202 +1216,110 @@
   // initial load
   applyFilters();
 
-  // Make modal functions globally accessible (optional)
+  // Make modal functions globally accessible
   window.openPromptModal = openPromptModal;
   window.closeModal = closeModal;
 
     // --- PROMPT OPTIMIZER CALL LOGIC ---
-  async function tryCall(simulate) {
-    const resultDiv = document.getElementById("result");
-    const text = document.getElementById("user-text").value.trim();
+async function tryCall(simulate) {
+  const resultDiv = document.getElementById("result");
+  const text = document.getElementById("user-text").value.trim();
+  const format = document.getElementById("prompt-output-format").value;
 
-    if (!currentWallet) {
-      alert("Please connect your wallet first.");
-      return;
-    }
-    if (!text) {
-      alert("Please enter some text first.");
-      return;
-    }
-
-    resultDiv.classList.remove("hidden");
-    resultDiv.textContent = "⏳ Sending request...";
-    showLoading("Optimizing your prompt...");
-
-    try {
-      const headers = {
-        "Content-Type": "application/json",
-        "X-USER-WALLET": currentWallet,    // REQUIRED FOR REAL PAYMENT
-        "X-WALLET": simulate ? "DEMO_OK" : ""   // FIRST CALL MUST SEND EMPTY STRING
-      };
-
-      // temporary example endpoint
-      const res = await fetch("/api/prompt-optimizer", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          text,
-          wallet: currentWallet,
-          chain: currentChain,
-          format: document.getElementById("prompt-output-format").value
-        })
-      });
-
-      if (res.status === 402) {
-  resultDiv.textContent = "💰 Payment required. Opening Phantom... (10-30s)";
-
-  try {
-    if (currentChain !== "solana" || !window.solana?.isPhantom) {
-      resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
-      return;
-    }
-
-    const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
-    const payer = new solanaWeb3.PublicKey(currentWallet);
-    const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
-    const mint = new solanaWeb3.PublicKey(USDC_MINT);
-
-    // getOrCreateAssociatedTokenAccount returns an object
-    const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-      connection,
-      payer,
-      mint,
-      payer
-    )).address;
-
-    const toTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
-      connection,
-      payer,
-      mint,
-      receiver
-    )).address;
-
-    // Create USDC transfer instruction (6 decimals)
-    const ix = splToken.createTransferInstruction(
-      fromTokenAccount,
-      toTokenAccount,
-      payer,
-      Math.floor(PRICE_USDC * 1_000_000)
-    );
-
-    // Build + sign + send transaction
-    const transaction = new solanaWeb3.Transaction().add(ix);
-    transaction.feePayer = payer;
-    const { blockhash } = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-
-    const signedTx = await window.solana.signTransaction(transaction);
-    const signature = await connection.sendRawTransaction(signedTx.serialize());
-    await connection.confirmTransaction(signature, "finalized");
-
-    console.log("✅ USDC payment tx:", signature);
-    resultDiv.textContent = "✅ Payment confirmed. Generating optimized prompt...";
-
-    // Re-run API call with payment signature
-    if (!signature) {
-      console.warn("⚠️ No signature found, skipping paid request.");
-      resultDiv.textContent = "⚠️ Payment sent, but no signature detected in frontend.";
-      return;
-    }
-
-    const paidHeaders = {
-      "Content-Type": "application/json",
-      "X-WALLET": signature,
-      "X-USER-WALLET": currentWallet
-    };
-
-    const paidBody = JSON.stringify({
-      text,
-      wallet: currentWallet,
-      chain: currentChain,
-      format: document.getElementById("prompt-output-format").value
-    });
-
-    console.log("🔁 Sending paid verification with signature:", signature);
-    const paidRes = await fetch("/api/prompt-optimizer", {
-      method: "POST",
-      headers: paidHeaders,
-      body: paidBody
-    });
-
-    const data = await paidRes.json();
-    if (paidRes.status === 202 && data.task_id) {
-      pollJobStatus(data.task_id, resultDiv, document.getElementById("prompt-output-format").value);
-      return;
-    }
-    resultDiv.innerHTML = `
-      <div class="text-cyan-300 font-semibold mb-1">✅ Optimized Prompt:</div>
-      <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt || JSON.stringify(data, null, 2)}</div>
-    `;
-    if (data.download_url) {
-      // Respect the selected output format
-      if (data.format === "pdf") {
-        // Open PDF in new tab
-        window.open(data.download_url, "_blank");
-      } else {
-        // Download plain text file
-        const a = document.createElement("a");
-        a.href = data.download_url;
-        a.download = `optimized_prompt_${Date.now()}.${data.format || format}`;
-        a.click();
-      }
-    } else if (data.optimized_prompt) {
-      // Fallback if file URL not returned
-      const blob = new Blob([data.optimized_prompt], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `optimized_prompt_${Date.now()}.${data.format || 'txt'}`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-  } catch (err) {
-    console.error(err);
-    resultDiv.textContent = "❌ Payment failed: " + err.message;
+  if (!currentWallet) {
+    alert("Please connect your wallet first.");
+    return;
   }
-}
-
-    } catch (err) {
-      console.error(err);
-      resultDiv.textContent = "❌ Request failed: " + err.message;
-    }
+  if (!text) {
+    alert("Please enter some text first.");
+    return;
   }
-
-  // --- CODE EXPLAINER CALL LOGIC ---
-async function tryCodeCall(simulate) {
-  const resultDiv = document.getElementById("code-result");
-  const code = document.getElementById("user-code").value.trim();
-  if (!currentWallet) { alert("Please connect your wallet first."); return; }
-  if (!code) { alert("Please paste your code first."); return; }
 
   resultDiv.classList.remove("hidden");
   resultDiv.textContent = "⏳ Sending request...";
-  showLoading("Analyzing your code...");
+  showLoading("Optimizing your prompt...");
 
   try {
     const headers = {
       "Content-Type": "application/json",
-      "X-USER-WALLET": currentWallet,       
-      "X-WALLET": simulate ? "DEMO_OK" : "" 
+      "X-USER-WALLET": currentWallet,
+      "X-WALLET": simulate ? "DEMO_OK" : ""
     };
-    const format = document.getElementById("output-format").value;
 
-    const res = await fetch("/api/code-explainer", {
+    const res = await fetch("/api/prompt-optimizer", {
       method: "POST",
       headers,
       body: JSON.stringify({
-        text: code,
+        text,
         wallet: currentWallet,
         chain: currentChain,
         format
       })
     });
-    const data = await res.json();
 
+    console.log("[PromptOptimizer] Response status:", res.status);
+
+    // 402 → need payment (USDC or AETH)
     if (res.status === 402) {
-      resultDiv.textContent = "💰 Payment required. Opening Phantom...(10-30s)";
+      resultDiv.textContent = "💰 Payment required. Opening Phantom... (10–30s)";
 
+      // Which radio is selected for component id 1 (Prompt Optimizer)?
+      const payMethod = document.querySelector('input[name="pay_method_opt"]:checked').value;
+
+      // ---------- AETH PAYMENT ----------
+      if (payMethod === "AETH") {
+        try {
+          const requiredAeth = await fetchRequiredAeth(0.25); // 0.25 USDC price
+
+          const sig = await payWithAeth(requiredAeth);
+          if (!sig) {
+            resultDiv.textContent = "❌ AETH payment cancelled.";
+            return;
+          }
+
+          const paidHeaders = {
+            "Content-Type": "application/json",
+            "X-WALLET": sig,
+            "X-USER-WALLET": currentWallet,
+            "X-PAYMENT-METHOD": "AETH",
+            "X-AETH-AMOUNT": requiredAeth
+          };
+
+          const paidRes = await fetch("/api/prompt-optimizer", {
+            method: "POST",
+            headers: paidHeaders,
+            body: JSON.stringify({
+              text,
+              wallet: currentWallet,
+              chain: currentChain,
+              format
+            })
+          });
+
+          const paidData = await paidRes.json();
+
+          if (paidRes.status === 202 && paidData.task_id) {
+            pollJobStatus(paidData.task_id, resultDiv, format);
+            return;
+          }
+
+          resultDiv.innerHTML = `
+            <div class="text-cyan-300 font-semibold mb-1">🔥 Optimized Prompt (AETH payment)</div>
+            <div class="text-gray-200 whitespace-pre-line">
+              ${paidData.optimized_prompt || JSON.stringify(paidData, null, 2)}
+            </div>
+          `;
+          return;
+
+        } catch (err) {
+          console.error(err);
+          resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+          return;
+        }
+      }
+      // ---------- END AETH ----------
+
+      // ---------- USDC PAYMENT (your existing flow) ----------
       try {
         if (currentChain !== "solana" || !window.solana?.isPhantom) {
           resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
@@ -1330,7 +1331,213 @@ async function tryCodeCall(simulate) {
         const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
         const mint = new solanaWeb3.PublicKey(USDC_MINT);
 
-        // Create token accounts
+        const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
+          connection,
+          payer,
+          mint,
+          payer
+        )).address;
+
+        const toTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
+          connection,
+          payer,
+          mint,
+          receiver
+        )).address;
+
+        const ix = splToken.createTransferInstruction(
+          fromTokenAccount,
+          toTokenAccount,
+          payer,
+          Math.floor(0.25 * 1_000_000) // 0.25 USDC
+        );
+
+        const transaction = new solanaWeb3.Transaction().add(ix);
+        transaction.feePayer = payer;
+        const { blockhash } = await connection.getLatestBlockhash();
+        transaction.recentBlockhash = blockhash;
+
+        const signedTx = await window.solana.signTransaction(transaction);
+        const signature = await connection.sendRawTransaction(signedTx.serialize());
+        await connection.confirmTransaction(signature, "finalized");
+
+        console.log("✅ USDC payment tx:", signature);
+        resultDiv.textContent = "✅ Payment confirmed. Generating optimized prompt...";
+
+        const paidHeaders = {
+          "Content-Type": "application/json",
+          "X-WALLET": signature,
+          "X-USER-WALLET": currentWallet
+        };
+
+        const paidRes = await fetch("/api/prompt-optimizer", {
+          method: "POST",
+          headers: paidHeaders,
+          body: JSON.stringify({
+            text,
+            wallet: currentWallet,
+            chain: currentChain,
+            format
+          })
+        });
+
+        const data = await paidRes.json();
+        if (paidRes.status === 202 && data.task_id) {
+          pollJobStatus(data.task_id, resultDiv, format);
+          return;
+        }
+
+        resultDiv.innerHTML = `
+          <div class="text-cyan-300 font-semibold mb-1">✅ Optimized Prompt:</div>
+          <div class="text-gray-200 whitespace-pre-line">
+            ${data.optimized_prompt || JSON.stringify(data, null, 2)}
+          </div>
+        `;
+        return;
+
+      } catch (err) {
+        console.error(err);
+        resultDiv.textContent = "❌ Payment failed: " + err.message;
+        return;
+      }
+      // ---------- END USDC ----------
+    }
+
+    // Non-402 normal or demo response
+    const data = await res.json();
+    if (res.status === 200) {
+      resultDiv.innerHTML = `
+        <div class="text-cyan-300 font-semibold mb-1">✅ Optimized Prompt:</div>
+        <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
+      `;
+      if (data.download_url) {
+        if (data.format === "pdf") {
+          window.open(data.download_url, "_blank");
+        } else {
+          const a = document.createElement("a");
+          a.href = data.download_url;
+          a.download = `optimized_prompt_${Date.now()}.${data.format || format}`;
+          a.click();
+        }
+      }
+    } else {
+      resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+    }
+  } catch (err) {
+    console.error(err);
+    resultDiv.textContent = "❌ Request failed: " + err.message;
+  }
+}
+
+  // --- CODE EXPLAINER CALL LOGIC ---
+async function tryCodeCall(simulate) {
+  const resultDiv = document.getElementById("code-result");
+  const code = document.getElementById("user-code").value.trim();
+  const format = document.getElementById("output-format").value;
+
+  if (!currentWallet) {
+    alert("Please connect your wallet first.");
+    return;
+  }
+  if (!code) {
+    alert("Please paste your code first.");
+    return;
+  }
+
+  resultDiv.classList.remove("hidden");
+  resultDiv.textContent = "⏳ Sending request...";
+  showLoading("Analyzing your code...");
+
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      "X-USER-WALLET": currentWallet,
+      "X-WALLET": simulate ? "DEMO_OK" : ""
+    };
+
+    const res = await fetch("/api/code-explainer", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        text: code,
+        wallet: currentWallet,
+        chain: currentChain,
+        format
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.status === 402) {
+      resultDiv.textContent = "💰 Payment required. Opening Phantom...(10–30s)";
+
+      const payMethod = document.querySelector('input[name="pay_method_code"]:checked').value;
+
+      // ---------- AETH PAYMENT ----------
+      if (payMethod === "AETH") {
+        try {
+          const requiredAeth = await fetchRequiredAeth(0.50);
+
+          const sig = await payWithAeth(requiredAeth);
+          if (!sig) {
+            resultDiv.textContent = "❌ AETH payment cancelled.";
+            return;
+          }
+
+          const paidHeaders = {
+            "Content-Type": "application/json",
+            "X-WALLET": sig,
+            "X-USER-WALLET": currentWallet,
+            "X-PAYMENT-METHOD": "AETH",
+            "X-AETH-AMOUNT": requiredAeth
+          };
+
+          const paidRes = await fetch("/api/code-explainer", {
+            method: "POST",
+            headers: paidHeaders,
+            body: JSON.stringify({
+              text: code,
+              wallet: currentWallet,
+              chain: currentChain,
+              format
+            })
+          });
+
+          const paidData = await paidRes.json();
+
+          if (paidRes.status === 202 && paidData.task_id) {
+            pollJobStatus(paidData.task_id, resultDiv, format);
+            return;
+          }
+
+          resultDiv.innerHTML = `
+            <div class="text-cyan-300 font-semibold mb-1">🔥 Code Analysis (AETH payment):</div>
+            <div class="text-gray-200 whitespace-pre-line">
+              ${paidData.optimized_prompt || JSON.stringify(paidData, null, 2)}
+            </div>
+          `;
+          return;
+
+        } catch (err) {
+          console.error(err);
+          resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+          return;
+        }
+      }
+      // ---------- END AETH ----------
+
+      // ---------- USDC PAYMENT (existing flow) ----------
+      try {
+        if (currentChain !== "solana" || !window.solana?.isPhantom) {
+          resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
+          return;
+        }
+
+        const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
+        const payer = new solanaWeb3.PublicKey(currentWallet);
+        const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
+        const mint = new solanaWeb3.PublicKey(USDC_MINT);
+
         const fromTokenAccount = (await splToken.getOrCreateAssociatedTokenAccount(
           connection, payer, mint, payer
         )).address;
@@ -1338,7 +1545,6 @@ async function tryCodeCall(simulate) {
           connection, payer, mint, receiver
         )).address;
 
-        // Send 0.50 USDC (6 decimals)
         const ix = splToken.createTransferInstruction(
           fromTokenAccount,
           toTokenAccount,
@@ -1358,7 +1564,6 @@ async function tryCodeCall(simulate) {
         console.log("✅ USDC payment tx:", signature);
         resultDiv.textContent = "✅ Payment confirmed. Generating explanation...";
 
-        // Re-run API call with payment signature
         const paidHeaders = {
           "Content-Type": "application/json",
           "X-WALLET": signature,
@@ -1372,61 +1577,37 @@ async function tryCodeCall(simulate) {
             text: code,
             wallet: currentWallet,
             chain: currentChain,
-            format: document.getElementById("output-format").value
+            format
           })
         });
 
         const data2 = await paidRes.json();
         if (paidRes.status === 202 && data2.task_id) {
-          pollJobStatus(data2.task_id, resultDiv, document.getElementById("output-format").value);
+          pollJobStatus(data2.task_id, resultDiv, format);
           return;
         }
+
         resultDiv.innerHTML = `
           <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
           <div class="text-gray-200 whitespace-pre-line">${data2.optimized_prompt}</div>
           <p class="text-xs text-cyan-400 mt-2">Engine: ${data2.engine_version} | Asset ID: ${data2.asset_id}</p>
         `;
-        if (data2.download_url) {
-          // Open or download based on chosen format
-          if (data2.format === "pdf") {
-            window.open(data2.download_url, "_blank"); // opens PDF in new tab
-          } else {
-            // Download txt directly
-            const a = document.createElement("a");
-            a.href = data2.download_url;
-            a.download = `code_explainer_${Date.now()}.${data.format || format}`;
-            a.click();
-          }
-        } else if (data2.optimized_prompt) {
-          // Fallback if backend didn’t generate file
-          const blob = new Blob([data2.optimized_prompt], { type: "text/plain" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `code_explainer_${Date.now()}.${data2.format}`;
-          a.click();
-          URL.revokeObjectURL(url);
-        }
+        return;
       } catch (err) {
         console.error(err);
         resultDiv.textContent = "❌ Payment failed: " + err.message;
+        return;
       }
-      return;
+      // ---------- END USDC ----------
     }
 
+    // Non-402 path
     if (res.status === 200) {
       resultDiv.innerHTML = `
         <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
         <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
         <p class="text-xs text-cyan-400 mt-2">Engine: ${data.engine_version} | Asset ID: ${data.asset_id}</p>
       `;
-      const blob = new Blob([data.optimized_prompt], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `code_explainer_${Date.now()}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
     } else {
       resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
     }
@@ -1463,7 +1644,9 @@ async function loadMyAssets(page = 1) {
           <div class="text-xs text-gray-400">${new Date(e.timestamp * 1000).toLocaleString()}</div>
         </div>
         <div class="flex items-center gap-4">
-          <span class="text-cyan-400 font-mono text-sm">${e.price.toFixed(2)} USDC</span>
+          <span class="text-cyan-400 font-mono text-sm">
+              ${e.price.toFixed(2)} ${e.currency}
+          </span>
           <a href="/download/${e.filename}" class="text-cyan-300 hover:text-cyan-200 text-sm">Download</a>
         </div>
       </div>
