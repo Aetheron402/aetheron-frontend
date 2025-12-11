@@ -3,33 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src
-          'self'
-          'unsafe-inline'
-          https://cdn.tailwindcss.com
-          https://unpkg.com
-          https://esm.sh
-          https://www.phantom.app
-          https://api.phantom.app;
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data: https:;
-        connect-src
-          'self'
-          https://mainnet.helius-rpc.com
-          https://api.phantom.app;
-        frame-ancestors 'none';
-        object-src 'none';
-      "
-    />
     <title>Aetheron Components</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Solana Web3 -->
     <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
 
-    <!-- SPL Token (final working dynamic import using esm.sh) -->
+    <!-- SPL Token -->
     <script type="module">
       import {
         getAssociatedTokenAddress,
@@ -339,8 +318,8 @@
     <section class="max-w-5xl mx-auto mt-28 mb-24 text-center relative z-10">
       <h2 class="text-3xl font-semibold mb-4 text-cyan-300">The Aetheron Roadmap</h2>
       <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
-        Aetheron evolves from a component marketplace into a decentralized AI ecosystem — 
-        introducing new tools, SDKs, and verified on-chain intelligence through 2026.
+        Aetheron evolves from a component marketplace into a decentralized AI ecosystem. 
+        Introducing new tools, SDKs, and verified on-chain intelligence through 2026.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left text-gray-300">
@@ -448,7 +427,7 @@
         <!-- Description -->
         <p class="text-gray-400 text-sm mb-4 leading-relaxed">
           Paste your code snippet below, and Aetheron will generate a detailed report explaining its structure,
-          logic, and complexity — complete with <span class="text-cyan-300">readability, performance, and security scores</span>.
+          logic, and complexity. Complete with <span class="text-cyan-300">readability, performance, and security scores</span>.
           Your result can be exported as a formatted PDF or plain text.
         </p>
 
@@ -504,7 +483,7 @@
 
         <!-- Description -->
         <p class="text-gray-400 text-sm mb-4 leading-relaxed">
-          Evaluate your prompt through multiple AI perspectives — including <span class="text-cyan-300">Developer</span>, 
+          Evaluate your prompt through multiple AI perspectives. Including <span class="text-cyan-300">Developer</span>, 
           <span class="text-cyan-300">Skeptic</span>, and <span class="text-cyan-300">Hacker</span> personas.  
           Aetheron will analyze responses, highlight strengths, and generate a hardened prompt blueprint for you.
         </p>
@@ -740,6 +719,70 @@
       return null;
     }
   }
+
+  // Global USDC Payment (used by Prompt Tester + Contract Intel + others)
+async function payWithUsdc(amountUsdc) {
+    if (!window.solana?.isPhantom) {
+        alert("Phantom wallet not found.");
+        return null;
+    }
+    if (!currentWallet) {
+        alert("Please connect your wallet first.");
+        return null;
+    }
+
+    try {
+        const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
+
+        const payer = new solanaWeb3.PublicKey(currentWallet);
+        const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
+        const mint = new solanaWeb3.PublicKey(USDC_MINT);
+
+        const fromToken = (
+            await splToken.getOrCreateAssociatedTokenAccount(
+                connection,
+                payer,
+                mint,
+                payer
+            )
+        ).address;
+
+        const toToken = (
+            await splToken.getOrCreateAssociatedTokenAccount(
+                connection,
+                payer,
+                mint,
+                receiver
+            )
+        ).address;
+
+        // USDC uses 6 decimals
+        const amount = Math.floor(amountUsdc * 1_000_000);
+
+        const ix = splToken.createTransferInstruction(
+            fromToken,
+            toToken,
+            payer,
+            amount
+        );
+
+        const tx = new solanaWeb3.Transaction().add(ix);
+        tx.feePayer = payer;
+
+        const { blockhash } = await connection.getLatestBlockhash();
+        tx.recentBlockhash = blockhash;
+
+        const signed = await window.solana.signTransaction(tx);
+        const sig = await connection.sendRawTransaction(signed.serialize());
+        await connection.confirmTransaction(sig, "finalized");
+
+        console.log("USDC payment successful:", sig);
+        return sig;
+    } catch (err) {
+        console.error("USDC payment failed:", err);
+        return null;
+    }
+}
 
   let currentWallet = "";
   let currentChain  = "";
@@ -1060,119 +1103,213 @@
           }
 
           if (payMethod === "USDC") {
-              try {
-                  const sig = await payWithUsdc(1.00); // USDC version
-                  if (!sig) {
-                      resultDiv.textContent = "❌ USDC payment cancelled.";
-                      return;
-                  }
+    try {
+        const sig = await payWithUsdc(1.00); 
+        if (!sig) {
+            resultDiv.textContent = "❌ USDC payment cancelled.";
+            return;
+        }
 
-                  return await runPaidContractIntel(addr, network, format, sig, resultDiv);
+        const paidHeaders = {
+            "Content-Type": "application/json",
+            "X-WALLET": sig,
+            "X-USER-WALLET": currentWallet,
+            "X-PAYMENT-METHOD": "USDC",
+            "X-USDC-AMOUNT": 1.00
+        };
 
-              } catch (err) {
-                  resultDiv.textContent = "❌ USDC payment failed.";
-                  return;
-              }
-          }
+        const paidRes = await fetch("/api/contract-intel", {
+            method: "POST",
+            headers: paidHeaders,
+            body: JSON.stringify({
+                contract_address: addr,
+                network,
+                format
+            })
+        });
 
-          return;
-      }
+        const paidData = await paidRes.json();
 
-      const data = await res.json();
+        if (paidRes.status === 202 && paidData.task_id) {
+            pollJobStatus(paidData.task_id, resultDiv, format);
+            return;
+        }
 
-      if (res.status === 202 && data.task_id) {
-        pollJobStatus(data.task_id, resultDiv, format);
+        resultDiv.textContent = JSON.stringify(paidData, null, 2);
         return;
-      }
 
-      resultDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        resultDiv.textContent = "❌ USDC payment failed: " + err.message;
+        return;
+    }
+}
+
+              // ---------- END OF PAYMENT HANDLING ----------
+      return;
     }
 
-    async function tryTesterModalCall(simulate) {
-      const resultDiv = document.getElementById("tester-result");
-      const text = document.getElementById("tester-text").value.trim();
-      const format = document.getElementById("tester-output-format").value;
+    // ---------- NORMAL NON-PAYMENT RESPONSE ----------
+    const data = await res.json();
 
-      if (!currentWallet) { 
+    if (res.status === 202 && data.task_id) {
+        pollJobStatus(data.task_id, resultDiv, format);
+        return;
+    }
+
+    resultDiv.textContent = JSON.stringify(data, null, 2);
+}
+
+    async function tryTesterModalCall(simulate) {
+    const resultDiv = document.getElementById("tester-result");
+    const text = document.getElementById("tester-text").value.trim();
+    const format = document.getElementById("tester-output-format").value;
+
+    if (!currentWallet) { 
         alert("Please connect your wallet first."); 
         return; 
-      }
-      if (!text) { 
+    }
+    if (!text) { 
         alert("Please enter a prompt first."); 
         return; 
-      }
+    }
 
-      resultDiv.classList.remove("hidden");
-      resultDiv.textContent = "⏳ Sending request...";
-      showLoading("Optimizing your prompt...");
+    resultDiv.classList.remove("hidden");
+    resultDiv.textContent = "⏳ Sending request...";
+    showLoading("Analyzing prompt...");
 
-      try {
+    try {
         const headers = {
-          "Content-Type": "application/json",
-          "X-USER-WALLET": currentWallet,
-          "X-WALLET": simulate ? "DEMO_OK" : ""  
+            "Content-Type": "application/json",
+            "X-USER-WALLET": currentWallet,
+            "X-WALLET": simulate ? "DEMO_OK" : ""
         };
 
         const res = await fetch("/api/prompt-tester", {
-          method: "POST",
-          headers,
-          body: JSON.stringify({
-            text,
-            wallet: currentWallet,
-            chain: currentChain,
-            format
-          })
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                text,
+                wallet: currentWallet,
+                chain: currentChain,
+                format
+            })
         });
 
-        async function runPaidContractIntel(addr, network, format, signature, resultDiv) {
-            const res = await fetch("/api/contract-intel", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  "X-WALLET": signature,
-                  "X-USER-WALLET": currentWallet
-                },
-                body: JSON.stringify({
-                    contract_address: addr,
-                    network,
-                    format
-                })
-            });
+        // ========== 402 PAYMENT REQUIRED ================
+        if (res.status === 402) {
+            resultDiv.textContent = "💰 Payment required...";
 
-            const data = await res.json();
+            const payMethod = document.querySelector('input[name="pay_method_test"]:checked').value;
 
-            if (res.status === 202 && data.task_id) {
-                pollJobStatus(data.task_id, resultDiv, format);
-                return;
+            // ========== AETH PAYMENT ======================
+            if (payMethod === "AETH") {
+                try {
+                    const requiredAeth = await fetchRequiredAeth(0.50);
+
+                    const sig = await payWithAeth(requiredAeth);
+                    if (!sig) return resultDiv.textContent = "❌ AETH payment cancelled.";
+
+                    const paidHeaders = {
+                        "Content-Type": "application/json",
+                        "X-WALLET": sig,
+                        "X-USER-WALLET": currentWallet,
+                        "X-PAYMENT-METHOD": "AETH",
+                        "X-AETH-AMOUNT": requiredAeth
+                    };
+
+                    const paidRes = await fetch("/api/prompt-tester", {
+                        method: "POST",
+                        headers: paidHeaders,
+                        body: JSON.stringify({
+                            text,
+                            wallet: currentWallet,
+                            chain: currentChain,
+                            format
+                        })
+                    });
+
+                    const paidData = await paidRes.json();
+
+                    if (paidRes.status === 202 && paidData.task_id)
+                        return pollJobStatus(paidData.task_id, resultDiv, format);
+
+                    resultDiv.innerHTML = `
+                        <div class="text-cyan-300 font-semibold mb-1">🔥 PersonaSim Report (AETH payment):</div>
+                        <div class="text-gray-200 whitespace-pre-line">${paidData.optimized_prompt}</div>
+                    `;
+                    hideLoading();
+                    return;
+
+                } catch (err) {
+                    hideLoading();
+                    return resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+                }
             }
 
-            resultDiv.innerHTML = JSON.stringify(data, null, 2);
+            // ========== USDC PAYMENT ======================
+            if (!window.solana?.isPhantom) {
+                hideLoading();
+                return resultDiv.textContent = "⚠️ USDC requires Phantom wallet.";
+            }
+
+            try {
+                const sig = await payWithUsdc(0.50);
+                if (!sig) return resultDiv.textContent = "❌ USDC payment cancelled.";
+
+                const paidHeaders = {
+                    "Content-Type": "application/json",
+                    "X-WALLET": sig,
+                    "X-USER-WALLET": currentWallet
+                };
+
+                const paidRes = await fetch("/api/prompt-tester", {
+                    method: "POST",
+                    headers: paidHeaders,
+                    body: JSON.stringify({
+                        text,
+                        wallet: currentWallet,
+                        chain: currentChain,
+                        format
+                    })
+                });
+
+                const paidData = await paidRes.json();
+
+                if (paidRes.status === 202 && paidData.task_id)
+                    return pollJobStatus(paidData.task_id, resultDiv, format);
+
+                resultDiv.innerHTML = `
+                    <div class="text-cyan-300 font-semibold mb-1">🔥 PersonaSim Report (USDC payment):</div>
+                    <div class="text-gray-200 whitespace-pre-line">${paidData.optimized_prompt}</div>
+                `;
+                hideLoading();
+                return;
+
+            } catch (err) {
+                hideLoading();
+                return resultDiv.textContent = "❌ USDC payment failed: " + err.message;
+            }
         }
 
-    // Handle successful or simulated call
-    const data = await res.json();
-    if (res.status === 200) {
-      resultDiv.innerHTML = `
-        <div class="text-cyan-300 font-semibold mb-1">✅ PersonaSim Report:</div>
-        <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
-        <p class="text-xs text-cyan-400 mt-2">Engine: ${data.engine_version} | Asset ID: ${data.asset_id}</p>
-      `;
-      if (data.download_url) {
-        if (data.format === "pdf") window.open(data.download_url, "_blank");
-        else {
-          const a = document.createElement("a");
-          a.href = data.download_url;
-          a.download = `personasim_${Date.now()}.${data.format || format}`;
-          a.click();
+        // ========== NORMAL SUCCESS ======================
+        const data = await res.json();
+
+        if (res.status === 200) {
+            resultDiv.innerHTML = `
+                <div class="text-cyan-300 font-semibold mb-1">✅ PersonaSim Report:</div>
+                <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
+            `;
+            hideLoading();
+            return;
         }
-      }
-    } else {
-      resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+
+        hideLoading();
+        resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+
+    } catch (err) {
+        hideLoading();
+        resultDiv.textContent = "❌ Request failed: " + err.message;
     }
-  } catch (err) {
-    console.error(err);
-    resultDiv.textContent = "❌ Request failed: " + err.message;
-  }
 }
 
     window.tryTesterModalCall = tryTesterModalCall;
@@ -1340,7 +1477,7 @@ async function tryCall(simulate) {
       }
       // ---------- END AETH ----------
 
-      // ---------- USDC PAYMENT (your existing flow) ----------
+      // ---------- USDC PAYMENT ----------
       try {
         if (currentChain !== "solana" || !window.solana?.isPhantom) {
           resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
