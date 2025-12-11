@@ -1036,7 +1036,7 @@ async function payWithUsdc(amountUsdc) {
       }
 
       resultDiv.classList.remove("hidden");
-      resultDiv.textContent = "⏳ Sending request...";
+      resultDiv.textContent = "Sending request...";
       showLoading("Analyzing contract...");
 
       const headers = {
@@ -1056,7 +1056,7 @@ async function payWithUsdc(amountUsdc) {
       });
 
       if (res.status === 402) {
-          resultDiv.textContent = "💰 Payment required. Opening Phantom... (10-30s)";
+          resultDiv.textContent = "Payment required. Opening Phantom... (10-30s)";
 
           pendingComponent = "contract-intel";
           pendingPayload = {
@@ -1076,7 +1076,7 @@ async function payWithUsdc(amountUsdc) {
                   // 1. Send AETH payment
                   const sig = await payWithAeth(requiredAeth);
                   if (!sig) {
-                      resultDiv.textContent = "❌ AETH payment cancelled.";
+                      resultDiv.textContent = "AETH payment cancelled.";
                       return;
                   }
 
@@ -1115,7 +1115,7 @@ async function payWithUsdc(amountUsdc) {
                   return;
 
               } catch (err) {
-                  resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+                  resultDiv.textContent = "AETH payment failed: " + err.message;
                   return;
               }
           }
@@ -1124,7 +1124,7 @@ async function payWithUsdc(amountUsdc) {
     try {
         const sig = await payWithUsdc(1.00); 
         if (!sig) {
-            resultDiv.textContent = "❌ USDC payment cancelled.";
+            resultDiv.textContent = "USDC payment cancelled.";
             return;
         }
 
@@ -1157,7 +1157,7 @@ async function payWithUsdc(amountUsdc) {
         return;
 
     } catch (err) {
-        resultDiv.textContent = "❌ USDC payment failed: " + err.message;
+        resultDiv.textContent = "USDC payment failed: " + err.message;
         return;
     }
 }
@@ -1192,7 +1192,7 @@ async function payWithUsdc(amountUsdc) {
     }
 
     resultDiv.classList.remove("hidden");
-    resultDiv.textContent = "⏳ Sending request...";
+    resultDiv.textContent = "Sending request...";
     showLoading("Analyzing prompt...");
 
     try {
@@ -1215,7 +1215,7 @@ async function payWithUsdc(amountUsdc) {
 
         // ========== 402 PAYMENT REQUIRED ================
         if (res.status === 402) {
-            resultDiv.textContent = "💰 Payment required. Opening Phantom... (10-30s)";
+            resultDiv.textContent = "Payment required. Opening Phantom... (10-30s)";
 
             const payMethod = document.querySelector('input[name="pay_method_test"]:checked').value;
 
@@ -1225,7 +1225,7 @@ async function payWithUsdc(amountUsdc) {
                     const requiredAeth = await fetchRequiredAeth(0.50);
 
                     const sig = await payWithAeth(requiredAeth);
-                    if (!sig) return resultDiv.textContent = "❌ AETH payment cancelled.";
+                    if (!sig) return resultDiv.textContent = "AETH payment cancelled.";
 
                     const paidHeaders = {
                         "Content-Type": "application/json",
@@ -1252,7 +1252,7 @@ async function payWithUsdc(amountUsdc) {
                         return pollJobStatus(paidData.task_id, resultDiv, format);
 
                     resultDiv.innerHTML = `
-                        <div class="text-cyan-300 font-semibold mb-1">🔥 PersonaSim Report (AETH payment):</div>
+                        <div class="text-cyan-300 font-semibold mb-1">PersonaSim Report (AETH payment):</div>
                         <div class="text-gray-200 whitespace-pre-line">${paidData.optimized_prompt}</div>
                     `;
                     hideLoading();
@@ -1260,19 +1260,19 @@ async function payWithUsdc(amountUsdc) {
 
                 } catch (err) {
                     hideLoading();
-                    return resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+                    return resultDiv.textContent = "AETH payment failed: " + err.message;
                 }
             }
 
             // ========== USDC PAYMENT ======================
             if (!window.solana?.isPhantom) {
                 hideLoading();
-                return resultDiv.textContent = "⚠️ USDC requires Phantom wallet.";
+                return resultDiv.textContent = "USDC requires Phantom wallet.";
             }
 
             try {
                 const sig = await payWithUsdc(0.50);
-                if (!sig) return resultDiv.textContent = "❌ USDC payment cancelled.";
+                if (!sig) return resultDiv.textContent = "USDC payment cancelled.";
 
                 const paidHeaders = {
                     "Content-Type": "application/json",
@@ -1297,7 +1297,7 @@ async function payWithUsdc(amountUsdc) {
                     return pollJobStatus(paidData.task_id, resultDiv, format);
 
                 resultDiv.innerHTML = `
-                    <div class="text-cyan-300 font-semibold mb-1">🔥 PersonaSim Report (USDC payment):</div>
+                    <div class="text-cyan-300 font-semibold mb-1">PersonaSim Report (USDC payment):</div>
                     <div class="text-gray-200 whitespace-pre-line">${paidData.optimized_prompt}</div>
                 `;
                 hideLoading();
@@ -1305,7 +1305,7 @@ async function payWithUsdc(amountUsdc) {
 
             } catch (err) {
                 hideLoading();
-                return resultDiv.textContent = "❌ USDC payment failed: " + err.message;
+                return resultDiv.textContent = "USDC payment failed: " + err.message;
             }
         }
 
@@ -1314,7 +1314,7 @@ async function payWithUsdc(amountUsdc) {
 
         if (res.status === 200) {
             resultDiv.innerHTML = `
-                <div class="text-cyan-300 font-semibold mb-1">✅ PersonaSim Report:</div>
+                <div class="text-cyan-300 font-semibold mb-1">PersonaSim Report:</div>
                 <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
             `;
             hideLoading();
@@ -1322,11 +1322,11 @@ async function payWithUsdc(amountUsdc) {
         }
 
         hideLoading();
-        resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+        resultDiv.textContent = "Error: " + (data.message || "Unknown error");
 
     } catch (err) {
         hideLoading();
-        resultDiv.textContent = "❌ Request failed: " + err.message;
+        resultDiv.textContent = "Request failed: " + err.message;
     }
 }
 
@@ -1412,7 +1412,7 @@ async function tryCall(simulate) {
   }
 
   resultDiv.classList.remove("hidden");
-  resultDiv.textContent = "⏳ Sending request...";
+  resultDiv.textContent = "Sending request...";
   showLoading("Optimizing your prompt...");
 
   try {
@@ -1437,7 +1437,7 @@ async function tryCall(simulate) {
 
     // 402 → need payment (USDC or AETH)
     if (res.status === 402) {
-      resultDiv.textContent = "💰 Payment required. Opening Phantom... (10–30s)";
+      resultDiv.textContent = "Payment required. Opening Phantom... (10–30s)";
 
       // Which radio is selected for component id 1 (Prompt Optimizer)?
       const payMethod = document.querySelector('input[name="pay_method_opt"]:checked').value;
@@ -1449,7 +1449,7 @@ async function tryCall(simulate) {
 
           const sig = await payWithAeth(requiredAeth);
           if (!sig) {
-            resultDiv.textContent = "❌ AETH payment cancelled.";
+            resultDiv.textContent = "AETH payment cancelled.";
             return;
           }
 
@@ -1480,7 +1480,7 @@ async function tryCall(simulate) {
           }
 
           resultDiv.innerHTML = `
-            <div class="text-cyan-300 font-semibold mb-1">🔥 Optimized Prompt (AETH payment)</div>
+            <div class="text-cyan-300 font-semibold mb-1">Optimized Prompt (AETH payment)</div>
             <div class="text-gray-200 whitespace-pre-line">
               ${paidData.optimized_prompt || JSON.stringify(paidData, null, 2)}
             </div>
@@ -1489,7 +1489,7 @@ async function tryCall(simulate) {
 
         } catch (err) {
           console.error(err);
-          resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+          resultDiv.textContent = "AETH payment failed: " + err.message;
           return;
         }
       }
@@ -1498,7 +1498,7 @@ async function tryCall(simulate) {
       // ---------- USDC PAYMENT ----------
       try {
         if (currentChain !== "solana" || !window.solana?.isPhantom) {
-          resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
+          resultDiv.textContent = "Please connect Phantom (Solana) wallet first.";
           return;
         }
 
@@ -1537,8 +1537,8 @@ async function tryCall(simulate) {
         const signature = await connection.sendRawTransaction(signedTx.serialize());
         await connection.confirmTransaction(signature, "finalized");
 
-        console.log("✅ USDC payment tx:", signature);
-        resultDiv.textContent = "✅ Payment confirmed. Generating optimized prompt...";
+        console.log("USDC payment tx:", signature);
+        resultDiv.textContent = "Payment confirmed. Generating optimized prompt...";
 
         const paidHeaders = {
           "Content-Type": "application/json",
@@ -1564,7 +1564,7 @@ async function tryCall(simulate) {
         }
 
         resultDiv.innerHTML = `
-          <div class="text-cyan-300 font-semibold mb-1">✅ Optimized Prompt:</div>
+          <div class="text-cyan-300 font-semibold mb-1">Optimized Prompt:</div>
           <div class="text-gray-200 whitespace-pre-line">
             ${data.optimized_prompt || JSON.stringify(data, null, 2)}
           </div>
@@ -1573,7 +1573,7 @@ async function tryCall(simulate) {
 
       } catch (err) {
         console.error(err);
-        resultDiv.textContent = "❌ Payment failed: " + err.message;
+        resultDiv.textContent = "Payment failed: " + err.message;
         return;
       }
       // ---------- END USDC ----------
@@ -1583,7 +1583,7 @@ async function tryCall(simulate) {
     const data = await res.json();
     if (res.status === 200) {
       resultDiv.innerHTML = `
-        <div class="text-cyan-300 font-semibold mb-1">✅ Optimized Prompt:</div>
+        <div class="text-cyan-300 font-semibold mb-1">Optimized Prompt:</div>
         <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
       `;
       if (data.download_url) {
@@ -1597,11 +1597,11 @@ async function tryCall(simulate) {
         }
       }
     } else {
-      resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+      resultDiv.textContent = "Error: " + (data.message || "Unknown error");
     }
   } catch (err) {
     console.error(err);
-    resultDiv.textContent = "❌ Request failed: " + err.message;
+    resultDiv.textContent = "Request failed: " + err.message;
   }
 }
 
@@ -1621,7 +1621,7 @@ async function tryCodeCall(simulate) {
   }
 
   resultDiv.classList.remove("hidden");
-  resultDiv.textContent = "⏳ Sending request...";
+  resultDiv.textContent = "Sending request...";
   showLoading("Analyzing your code...");
 
   try {
@@ -1645,7 +1645,7 @@ async function tryCodeCall(simulate) {
     const data = await res.json();
 
     if (res.status === 402) {
-      resultDiv.textContent = "💰 Payment required. Opening Phantom... (10–30s)";
+      resultDiv.textContent = "Payment required. Opening Phantom... (10–30s)";
 
       const payMethod = document.querySelector('input[name="pay_method_code"]:checked').value;
 
@@ -1656,7 +1656,7 @@ async function tryCodeCall(simulate) {
 
           const sig = await payWithAeth(requiredAeth);
           if (!sig) {
-            resultDiv.textContent = "❌ AETH payment cancelled.";
+            resultDiv.textContent = "AETH payment cancelled.";
             return;
           }
 
@@ -1687,7 +1687,7 @@ async function tryCodeCall(simulate) {
           }
 
           resultDiv.innerHTML = `
-            <div class="text-cyan-300 font-semibold mb-1">🔥 Code Analysis (AETH payment):</div>
+            <div class="text-cyan-300 font-semibold mb-1">Code Analysis (AETH payment):</div>
             <div class="text-gray-200 whitespace-pre-line">
               ${paidData.optimized_prompt || JSON.stringify(paidData, null, 2)}
             </div>
@@ -1696,7 +1696,7 @@ async function tryCodeCall(simulate) {
 
         } catch (err) {
           console.error(err);
-          resultDiv.textContent = "❌ AETH payment failed: " + err.message;
+          resultDiv.textContent = "AETH payment failed: " + err.message;
           return;
         }
       }
@@ -1705,7 +1705,7 @@ async function tryCodeCall(simulate) {
       // ---------- USDC PAYMENT (existing flow) ----------
       try {
         if (currentChain !== "solana" || !window.solana?.isPhantom) {
-          resultDiv.textContent = "⚠️ Please connect Phantom (Solana) wallet first.";
+          resultDiv.textContent = "Please connect Phantom (Solana) wallet first.";
           return;
         }
 
@@ -1737,8 +1737,8 @@ async function tryCodeCall(simulate) {
         const signature = await connection.sendRawTransaction(signedTx.serialize());
         await connection.confirmTransaction(signature, "finalized");
 
-        console.log("✅ USDC payment tx:", signature);
-        resultDiv.textContent = "✅ Payment confirmed. Generating explanation...";
+        console.log("USDC payment tx:", signature);
+        resultDiv.textContent = "Payment confirmed. Generating explanation...";
 
         const paidHeaders = {
           "Content-Type": "application/json",
@@ -1764,14 +1764,14 @@ async function tryCodeCall(simulate) {
         }
 
         resultDiv.innerHTML = `
-          <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
+          <div class="text-cyan-300 font-semibold mb-1">Code Analysis Generated:</div>
           <div class="text-gray-200 whitespace-pre-line">${data2.optimized_prompt}</div>
           <p class="text-xs text-cyan-400 mt-2">Engine: ${data2.engine_version} | Asset ID: ${data2.asset_id}</p>
         `;
         return;
       } catch (err) {
         console.error(err);
-        resultDiv.textContent = "❌ Payment failed: " + err.message;
+        resultDiv.textContent = "Payment failed: " + err.message;
         return;
       }
       // ---------- END USDC ----------
@@ -1780,16 +1780,16 @@ async function tryCodeCall(simulate) {
     // Non-402 path
     if (res.status === 200) {
       resultDiv.innerHTML = `
-        <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
+        <div class="text-cyan-300 font-semibold mb-1">Code Analysis Generated:</div>
         <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
         <p class="text-xs text-cyan-400 mt-2">Engine: ${data.engine_version} | Asset ID: ${data.asset_id}</p>
       `;
     } else {
-      resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+      resultDiv.textContent = "Error: " + (data.message || "Unknown error");
     }
   } catch (err) {
     console.error(err);
-    resultDiv.textContent = "❌ Request failed: " + err.message;
+    resultDiv.textContent = "Request failed: " + err.message;
   }
 }
 
@@ -1867,7 +1867,7 @@ function onWalletConnected() {
 }
 
 async function pollJobStatus(taskId, resultDiv, userFormat = "pdf") {
-  resultDiv.textContent = "⏳ Processing your request... don’t refresh. (20-60s)";
+  resultDiv.textContent = "Processing your request... don’t refresh. (20-60s)";
   while (true) {
     const res = await fetch(`/api/job-status/${taskId}`);
     const data = await res.json();
@@ -1878,7 +1878,7 @@ async function pollJobStatus(taskId, resultDiv, userFormat = "pdf") {
       const label = format.toUpperCase();
 
       resultDiv.innerHTML = `
-        ✅ <b>Completed!</b><br>
+        <b>Completed!</b><br>
         <a href="${url}" target="_blank" class="text-cyan-400 underline">
           Download ${label}
         </a>
@@ -1899,7 +1899,7 @@ async function pollJobStatus(taskId, resultDiv, userFormat = "pdf") {
     }
 
     if (data.state === "FAILURE") {
-      resultDiv.textContent = "❌ Failed: " + (data.error || "Unknown error");
+      resultDiv.textContent = "Failed: " + (data.error || "Unknown error");
       hideLoading();
       break;
     }
