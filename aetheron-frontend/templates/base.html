@@ -5,39 +5,11 @@
   <title>{% block title %}Aetheron{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta
-    http-equiv="Content-Security-Policy"
-    content="
-      default-src 'self';
-      script-src
-        'self'
-        'unsafe-inline'
-        https://cdn.tailwindcss.com
-        https://cdn.jsdelivr.net
-        https://esm.sh;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      connect-src 'self' https://mainnet.helius-rpc.com;
-      frame-ancestors 'none';
-      object-src 'none';
-    "
-  />
-
-  <script
-    src="https://cdn.tailwindcss.com/3.4.1"
-    integrity="sha384-Y6DgSq1sH2lUv7f5NQ1pCcyG8xv4aR7xVplgFMBfBd5x3pwmzNeU76A6kO4Yp83G"
-    crossorigin="anonymous"
-  ></script>
-
-  <!-- Your own CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
-    integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
-    crossorigin="anonymous"
-  ></script>
-
+  <!-- SPL Token -->
   <script type="module">
     import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
     window.splToken = spl;
@@ -54,6 +26,7 @@
 
 <body class="font-sans">
 
+<!-- HEADER -->
 <header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
 
   <!-- LOGO -->
@@ -99,10 +72,12 @@
 
 </header>
 
+<!-- PAGE CONTENT -->
 <main class="p-6">
   {% block content %}{% endblock %}
 </main>
 
+<!-- FOOTER -->
 <footer class="border-t border-cyan-900/30 mt-12 text-center text-sm text-gray-500 p-6">
   © 2025 Aetheron — Built on the X402 protocol.
   <div class="space-x-4 mt-2">
@@ -151,8 +126,10 @@
   </div>
 </div>
 
+
+<!-- WALLET JS -->
 <script>
-  const SOLANA_NETWORK = "API";
+  const SOLANA_NETWORK = "https://mainnet.helius-rpc.com/?api-key=63f5896a-519d-4701-a181-654bcd2f5854";
   let currentWallet = "";
   let currentChain  = "";
   const walletBtn = document.getElementById("connect-wallet");
@@ -162,11 +139,16 @@
   }
 
   function updateWalletUI() {
+    const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
+
     if (!currentWallet) {
       walletBtn.textContent = "Connect Wallet";
+      if (mobileWalletBtn) mobileWalletBtn.textContent = "Connect Wallet";
       return;
     }
+
     walletBtn.textContent = shorten(currentWallet);
+    if (mobileWalletBtn) mobileWalletBtn.textContent = shorten(currentWallet);
   }
 
   async function connectPhantom() {
