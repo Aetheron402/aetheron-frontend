@@ -148,7 +148,7 @@
         if (!currentWallet) { alert("Please connect your wallet first."); return; }
         if (!code) { alert("Please paste your code first."); return; }
         resultDiv.classList.remove("hidden");
-        resultDiv.textContent = "⏳ Sending request...";
+        resultDiv.textContent = "Sending request...";
 
         try {
           const headers = { "Content-Type": "application/json" };
@@ -161,13 +161,13 @@
           const data = await res.json();
 
           if (res.status === 402) {
-            resultDiv.textContent = "💰 Payment required. Please complete the transaction in your wallet.";
+            resultDiv.textContent = "Payment required. Please complete the transaction in your wallet.";
             return;
           }
 
           if (res.status === 200) {
             resultDiv.innerHTML = `
-              <div class="text-cyan-300 font-semibold mb-1">✅ Code Analysis Generated:</div>
+              <div class="text-cyan-300 font-semibold mb-1">Code Analysis Generated:</div>
               <div class="text-gray-200 whitespace-pre-line">${data.optimized_prompt}</div>
               <p class="text-xs text-cyan-400 mt-2">Engine: ${data.engine_version} | Asset ID: ${data.asset_id}</p>
             `;
@@ -179,11 +179,11 @@
             a.click();
             URL.revokeObjectURL(url);
           } else {
-            resultDiv.textContent = "❌ Error: " + (data.message || "Unknown error");
+            resultDiv.textContent = "Error: " + (data.message || "Unknown error");
           }
         } catch (err) {
           console.error(err);
-          resultDiv.textContent = "❌ Request failed: " + err.message;
+          resultDiv.textContent = "Request failed: " + err.message;
         }
       }
     </script>
