@@ -1056,7 +1056,7 @@ async function payWithUsdc(amountUsdc) {
       });
 
       if (res.status === 402) {
-          resultDiv.textContent = "💰 Payment required. Choose payment method.";
+          resultDiv.textContent = "💰 Payment required. Opening Phantom... (10-30s)";
 
           pendingComponent = "contract-intel";
           pendingPayload = {
@@ -1215,7 +1215,7 @@ async function payWithUsdc(amountUsdc) {
 
         // ========== 402 PAYMENT REQUIRED ================
         if (res.status === 402) {
-            resultDiv.textContent = "💰 Payment required...";
+            resultDiv.textContent = "💰 Payment required. Opening Phantom... (10-30s)";
 
             const payMethod = document.querySelector('input[name="pay_method_test"]:checked').value;
 
@@ -1645,7 +1645,7 @@ async function tryCodeCall(simulate) {
     const data = await res.json();
 
     if (res.status === 402) {
-      resultDiv.textContent = "💰 Payment required. Opening Phantom...(10–30s)";
+      resultDiv.textContent = "💰 Payment required. Opening Phantom... (10–30s)";
 
       const payMethod = document.querySelector('input[name="pay_method_code"]:checked').value;
 
