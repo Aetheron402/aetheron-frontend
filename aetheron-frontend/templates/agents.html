@@ -4,36 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prebuilt Agent Store — Aetheron</title>
-  
-  <meta
-    http-equiv="Content-Security-Policy"
-    content="
-      default-src 'self';
-      script-src
-        'self'
-        'unsafe-inline'
-        https://cdn.tailwindcss.com
-        https://cdn.jsdelivr.net
-        https://esm.sh;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      connect-src 'self' https://mainnet.helius-rpc.com;
-      frame-ancestors 'none';
-      object-src 'none';
-    "
-  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@solana/web3.js@1.95.0/lib/index.iife.min.js"></script>
 
-  <script
-    src="https://cdn.tailwindcss.com/3.4.1"
-    integrity="sha384-Y6DgSq1sH2lUv7f5NQ1pCcyG8xv4aR7xVplgFMBfBd5x3pwmzNeU76A6kO4Yp83G"
-    crossorigin="anonymous"
-  ></script>
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"
-    integrity="sha384-E6n2v9Y8Xg6fR8z4z5X8c9b8e7f6g5h4j3k2m1n0o9p8q7r6s5t4u3v2w1x0y9z"
-    crossorigin="anonymous"
-  ></script>
+  <!-- SPL Token -->
   <script type="module">
     import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
     window.splToken = spl;
@@ -63,6 +37,7 @@
     .pill {
       display: inline-flex;
       align-items: center;
+      width: auto;
       padding: 0.35rem 0.9rem;
       border-radius: 9999px;
       background: rgba(15,23,42,.8);
@@ -84,25 +59,25 @@
       background:#67e8f9;
     }
 
+    /* Wallet Modal */
     .modal-bg {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.65);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
     }
 
     .modal {
-      background:#0b1220;
-      border:1px solid rgba(56,189,248,.25);
-      border-radius:1rem;
-      width:min(480px, 92vw);
-      padding:1.25rem;
+      background: #0b1220;
+      border: 1px solid rgba(56,189,248,.25);
+      border-radius: 1rem;
+      width: min(480px, 92vw);
+      padding: 1.25rem;
     }
   </style>
-
 </head>
 
 <body class="font-sans">
@@ -112,7 +87,7 @@
   });
 </script>
 
-<!-- ========== HEADER ========== -->
+<!-- HEADER -->
 <header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
 
   <!-- LOGO -->
@@ -173,7 +148,7 @@
 
 </div>
 
-<!-- ========== TITLE ========== -->
+<!-- TITLE -->
 <section class="text-center max-w-3xl mx-auto mt-4">
   <h2 class="text-4xl font-semibold text-cyan-300 mb-4">Prebuilt Agent Store (Template)</h2>
   <p class="text-gray-400">
@@ -181,102 +156,140 @@
   </p>
 </section>
 
-<!-- ========== GRID ========== -->
+<!-- GRID -->
 <main class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mt-16">
 
   <!-- Agent 1 -->
-  <div class="card flex flex-col justify-between">
-    <div class="w-fit mb-3">
-      <span class="pill">download</span>
-    </div>
-    <div>
-      <h2 class="text-xl font-semibold text-cyan-400">Sniper Trade Agent</h2>
-      <p class="text-gray-400 text-sm mt-2">
-        Real-time memecoin sniper bot with safety rules, blacklist protection and adjustable auto-buy triggers.
-      </p>
-    </div>
-
-    <div class="mt-6 flex justify-between items-center">
-      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-      <button class="btn buy-agent-btn" data-id="solana-sniper" data-price="4.99">Buy</button>
-    </div>
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
   </div>
 
-  <!-- Agent 2 -->
-  <div class="card flex flex-col justify-between">
-    <div class="w-fit mb-3">
-      <span class="pill">download</span>
-    </div>
-    <div>
-      <h2 class="text-xl font-semibold text-cyan-400">Wallet Watcher Bot</h2>
-      <p class="text-gray-400 text-sm mt-2">
-        Monitor any wallet in real time — transfers, NFT actions, and smart swap/liquidity signals with optional alerts.
-      </p>
-    </div>
-
-    <div class="mt-6 flex justify-between items-center">
-      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-      <button class="btn buy-agent-btn" data-id="wallet-watcher" data-price="4.99">Buy</button>
-    </div>
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Sniper Trade Agent</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Real-time memecoin sniper bot with safety rules, blacklist protection and adjustable auto-buy triggers.
+    </p>
   </div>
 
-  <!-- Agent 3 -->
-  <div class="card flex flex-col justify-between">
-    <div class="w-fit mb-3">
-      <span class="pill">download</span>
-    </div>
-    <div>
-      <h2 class="text-xl font-semibold text-cyan-400">Discord Support Agent</h2>
-      <p class="text-gray-400 text-sm mt-2">
-        Automated AI Discord assistant — responds to users, runs commands,
-        moderates and manages intelligently.
-      </p>
-    </div>
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
 
-    <div class="mt-6 flex justify-between items-center">
-      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-      <button class="btn buy-agent-btn" data-id="discord-helper" data-price="4.99">Buy</button>
-    </div>
+    <button class="btn buy-agent-btn"
+      data-id="solana-sniper"
+      data-price="4.99">
+      Buy
+    </button>
+  </div>
+</div>
+
+
+
+<!-- Agent 2 -->
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
   </div>
 
-  <!-- Agent 4 -->
-  <div class="card flex flex-col justify-between">
-    <div class="w-fit">
-      <span class="pill mb-3">download</span>
-    </div>
-    <div>
-      <h2 class="text-xl font-semibold text-cyan-400">Pump.fun Launch Assistant</h2>
-      <p class="text-gray-400 text-sm mt-2">
-        Automates tracking new launches, liquidity events, and early-signal opportunities in real time.
-      </p>
-    </div>
-
-    <div class="mt-6 flex justify-between items-center">
-      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-      <button class="btn buy-agent-btn" data-id="pumpfun-launcher" data-price="4.99">Buy</button>
-    </div>
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Wallet Watcher Bot</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Monitor any wallet in real-time — transfers, NFT actions, swap/liquidity signals with alerting. With optional filters for what you want to follow.
+    </p>
   </div>
 
-  <!-- Agent 5 -->
-  <div class="card flex flex-col justify-between">
-    <div class="w-fit">
-      <span class="pill mb-3">download</span>
-    </div>
-    <div>
-      <h2 class="text-xl font-semibold text-cyan-400">Solana Trading Assistant</h2>
-      <p class="text-gray-400 text-sm mt-2">
-        Helps analyze tokens, identify trends, and assist with decision-making using real-time data.
-      </p>
-    </div>
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
 
-    <div class="mt-6 flex justify-between items-center">
-      <span class="text-cyan-300 font-semibold">4.99 USDC</span>
-      <button class="btn buy-agent-btn" data-id="solana-trading-assistant" data-price="4.99">Buy</button>
-    </div>
+    <button class="btn buy-agent-btn"
+      data-id="wallet-watcher"
+      data-price="4.99">
+      Buy
+    </button>
   </div>
+</div>
+
+
+
+<!-- Agent 3 -->
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
+  </div>
+
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Discord Support Agent</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Automated AI Discord assistant — responses, moderation, commands, and intelligent support features.
+    </p>
+  </div>
+
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+
+    <button class="btn buy-agent-btn"
+      data-id="discord-helper"
+      data-price="4.99">
+      Buy
+    </button>
+  </div>
+</div>
+
+
+
+<!-- Agent 4 -->
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
+  </div>
+
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Pump.fun Launch Assistant</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Track new launches, liquidity events, and early-signal opportunities with automated intelligence.
+    </p>
+  </div>
+
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+
+    <button class="btn buy-agent-btn"
+      data-id="pumpfun-launcher"
+      data-price="4.99">
+      Buy
+    </button>
+  </div>
+</div>
+
+
+
+<!-- Agent 5 -->
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
+  </div>
+
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Solana Trading Assistant</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Analyze tokens, detect trends, and make on-chain insights actionable. Provides quick summaries to guide fast decision-making.
+    </p>
+  </div>
+
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+
+    <button class="btn buy-agent-btn"
+      data-id="solana-trading-assistant"
+      data-price="4.99">
+      Buy
+    </button>
+  </div>
+</div>
+
 </main>
 
-<!-- ========== FOOTER ========== -->
+<!-- FOOTER -->
 <footer class="border-t border-cyan-900/30 mt-20 text-center text-sm text-gray-500 p-6">
   © 2025 Aetheron — Built on the X402 protocol.
 
@@ -319,6 +332,46 @@
   </div>
 </div>
 
+<!-- PAYMENT MODAL -->
+<div id="payment-modal" class="modal-bg" style="display:none;">
+  <div class="modal text-center p-6 w-[360px]">
+
+    <h3 class="text-cyan-300 text-2xl font-semibold mb-3">Choose Payment Method</h3>
+
+    <p class="text-gray-400 text-sm mb-6">
+      Select how you would like to pay for this agent.
+    </p>
+
+    <!-- OPTIONS -->
+    <div class="flex flex-col gap-4 items-start mx-auto w-56 ml+0.5 text-gray-200">
+      <label class="flex items-center gap-3 cursor-pointer hover:text-cyan-200 transition">
+        <input type="radio" name="payment_method" value="USDC" checked class="scale-110">
+        <span class="text-sm">USDC</span>
+      </label>
+
+      <label class="flex items-center gap-3 cursor-pointer hover:text-cyan-200 transition">
+        <input type="radio" name="payment_method" value="AETH" class="scale-110">
+        <span class="text-sm">AETH</span>
+      </label>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="flex justify-center gap-12 mt-8">
+
+      <button id="confirm-payment-btn"
+              class="btn px-8 py-2 text-sm rounded-md">
+        Confirm Purchase
+      </button>
+
+      <button onclick="closePaymentModal()"
+              class="text-gray-400 hover:text-gray-200 text-sm transition">
+        Cancel
+      </button>
+
+    </div>
+  </div>
+</div>
+
 <script>
 let currentWallet = "";
 let currentChain  = "";
@@ -326,6 +379,12 @@ let currentChain  = "";
 const SOLANA_NETWORK = "API";
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 const PAYMENT_WALLET = "FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1";
+const AETH_MINT = "DGNicx6qMPKSL1deR3fZfbHYjnm5ZJWmHNdY2NhDpump";
+</script>
+
+<script>
+let selectedAgent = null;
+let selectedPrice = null;
 </script>
 
 <script>
@@ -349,15 +408,15 @@ function closeWalletSelector() {
 async function connectPhantom() {
   try {
     if (window.solana?.isPhantom) {
-      await window.solana.disconnect().catch(()=>{});
       const res = await window.solana.connect({ onlyIfTrusted: false });
 
       currentWallet = res.publicKey.toString();
       currentChain = "solana";
 
       document.getElementById("connect-wallet").textContent = shorten(currentWallet);
+      document.getElementById("mobile-connect-wallet").textContent = shorten(currentWallet);
     } else {
-      alert("To continue, please open this site through the Phantom app browser on mobile, or use a desktop browser with the Phantom extension installed.");
+      alert("On mobile: open this site inside the Phantom in-app browser. On desktop: install the Phantom browser extension.");
     }
   } catch (err) {
     console.error(err);
@@ -372,11 +431,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("wallet-select-modal");
 
     if (!currentWallet) {
-      modal.style.display = "flex";   // SHOW MODAL
+      modal.style.display = "flex";  
     } else {
       if (confirm("Disconnect wallet?")) {
         currentWallet = "";
+
+        // Desktop resets exactly as before
         walletBtn.textContent = "Connect Wallet";
+
+        // Mobile also resets
+        document.getElementById("mobile-connect-wallet").textContent = "Connect Wallet";
       }
     }
   });
@@ -387,84 +451,228 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script>
+function getAgentPayMethod(groupName) {
+  const selected = document.querySelector(`input[name="${groupName}"]:checked`);
+  return selected ? selected.value : "USDC";
+}
+</script>
+
+<script>
+async function fetchRequiredAeth(usdcPrice) {
+  const res = await fetch(`/api/price/aeth?usdc_price=${usdcPrice}`);
+  const data = await res.json();
+  return data.required_aeth;
+}
+</script>
+
+<script>
+async function payWithAeth(requiredAmountAeth) {
+  if (!window.solana?.isPhantom) {
+    alert("Phantom not installed");
+    return null;
+  }
+
+  try {
+    const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
+
+    const payer = new solanaWeb3.PublicKey(currentWallet);
+    const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
+    const mint = new solanaWeb3.PublicKey(AETH_MINT);
+
+    // AETH has 9 decimals
+    const rawAmount = Math.floor(requiredAmountAeth * 1_000_000_000);
+
+    // Use the correct Token-2022 program from spl-token
+    const TOKEN_2022 = splToken.TOKEN_2022_PROGRAM_ID;
+
+    // Associated token accounts
+    const fromATA = await splToken.getAssociatedTokenAddress(
+      mint,
+      payer,
+      false,
+      TOKEN_2022,
+      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const toATA = await splToken.getAssociatedTokenAddress(
+      mint,
+      receiver,
+      false,
+      TOKEN_2022,
+      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    // Transfer instruction
+    const ix = splToken.createTransferInstruction(
+      fromATA,
+      toATA,
+      payer,
+      rawAmount,
+      [],
+      TOKEN_2022
+    );
+
+    const tx = new solanaWeb3.Transaction().add(ix);
+    tx.feePayer = payer;
+    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
+    const signed = await window.solana.signTransaction(tx);
+    const sig = await connection.sendRawTransaction(signed.serialize());
+    await connection.confirmTransaction(sig, "confirmed");
+
+    console.log("AETH Pay Signature:", sig);
+    return sig;
+
+  } catch (err) {
+    console.error("AETH payment failed:", err);
+    alert("AETH payment failed: " + err.message);
+    return null;
+  }
+}
+</script>
+
+<script>
 document.querySelectorAll(".buy-agent-btn").forEach(btn => {
-  btn.addEventListener("click", async () => {
+  btn.addEventListener("click", () => {
 
     if (!currentWallet) {
       alert("Connect your wallet first.");
       return;
     }
 
-    if (!window.solana?.isPhantom) {
-      alert("Phantom wallet not installed.");
-      return;
-    }
+    selectedAgent = btn.dataset.id;
+    selectedPrice = parseFloat(btn.dataset.price || "4.99");
 
-    const agentId = btn.dataset.id;
-    const price = parseFloat(btn.dataset.price || "4.99");
-    const decimals = 6;
-    const amount = BigInt(Math.round(price * 10 ** decimals));
-
-    try {
-      const connection = new Connection(SOLANA_NETWORK, "confirmed");
-
-      const payer = new PublicKey(currentWallet);
-      const merchant = new PublicKey(PAYMENT_WALLET);
-      const mint = new PublicKey(USDC_MINT);
-
-      // IMPORTANT: use window.splToken
-      const payerATA = await window.splToken.getAssociatedTokenAddress(mint, payer);
-      const merchantATA = await window.splToken.getAssociatedTokenAddress(mint, merchant);
-
-      const transferIx = window.splToken.createTransferInstruction(
-        payerATA,
-        merchantATA,
-        payer,
-        amount,
-        [],
-        window.splToken.TOKEN_PROGRAM_ID
-      );
-
-      const { blockhash } = await connection.getLatestBlockhash("finalized");
-
-      const tx = new Transaction({
-        recentBlockhash: blockhash,
-        feePayer: payer
-      }).add(transferIx);
-
-      const { signature } = await window.solana.signAndSendTransaction(tx);
-
-      console.log("USDC Pay Signature:", signature);
-
-      const res = await fetch(`/api/download_agent/${agentId}`, {
-        method: "GET",
-        headers: {
-          "X-WALLET": signature,
-          "X-USER-WALLET": currentWallet
-        }
-      });
-
-      if (res.status === 200) {
-        const blob = await res.blob();
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = agentId + ".zip";
-        link.click();
-      }
-      else if (res.status === 402) {
-        alert("Payment rejected by backend.");
-      }
-      else {
-        alert("Download failed (status " + res.status + ")");
-      }
-
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("Payment failed. Check console.");
-    }
-
+    openPaymentModal(selectedAgent, selectedPrice);
   });
 });
+</script>
+
+<script>   
+function openPaymentModal(agentId, price) {
+  selectedAgent = agentId;
+  selectedPrice = price;
+  document.getElementById("payment-modal").style.display = "flex";
+}
+
+function closePaymentModal() {
+  document.getElementById("payment-modal").style.display = "none";
+}
+</script>
+
+<script>
+function showLoading() {
+  document.getElementById("loading").classList.remove("hidden");
+}
+
+function hideLoading() {
+  document.getElementById("loading").classList.add("hidden");
+}
+</script>
+
+<script>
+document.getElementById("confirm-payment-btn").addEventListener("click", async () => {
+    const method = document.querySelector('input[name="payment_method"]:checked').value;
+
+    closePaymentModal();
+    showLoading();
+    await payForAgent(method);
+    hideLoading();
+});
+
+</script>
+<script>
+async function payWithUsdc(priceUSDC) {
+  try {
+    const connection = new Connection(SOLANA_NETWORK, "confirmed");
+
+    const payer = new PublicKey(currentWallet);
+    const merchant = new PublicKey(PAYMENT_WALLET);
+    const mint = new PublicKey(USDC_MINT);
+
+    const amount = BigInt(Math.round(priceUSDC * 1e6)); // USDC has 6 decimals
+
+    const payerATA = await window.splToken.getAssociatedTokenAddress(mint, payer);
+    const merchantATA = await window.splToken.getAssociatedTokenAddress(mint, merchant);
+
+    const ix = window.splToken.createTransferInstruction(
+      payerATA,
+      merchantATA,
+      payer,
+      amount,
+      [],
+      window.splToken.TOKEN_PROGRAM_ID
+    );
+
+    const { blockhash } = await connection.getLatestBlockhash("finalized");
+
+    const tx = new Transaction({
+      recentBlockhash: blockhash,
+      feePayer: payer
+    }).add(ix);
+
+    const signed = await window.solana.signTransaction(tx);
+    const sig = await connection.sendRawTransaction(signed.serialize());
+    await connection.confirmTransaction(sig, "confirmed");
+
+    console.log("USDC Pay Signature:", sig);
+    return sig;
+
+  } catch (err) {
+    console.error("USDC payment failed:", err);
+    alert("USDC payment failed.");
+    return null;
+  }
+}
+</script>
+
+<script>
+async function payForAgent(method) {
+
+  if (!currentWallet) {
+    alert("Connect your wallet first.");
+    return;
+  }
+
+  let signature = null;
+
+  if (method === "AETH") {
+    const requiredAeth = await fetchRequiredAeth(selectedPrice);
+    signature = await payWithAeth(requiredAeth);
+  }
+
+  if (method === "USDC") {
+    signature = await payWithUsdc(selectedPrice);
+  }
+
+  if (!signature) {
+    alert(method + " payment failed.");
+    return;
+  }
+
+  // DOWNLOAD AGENT
+  const res = await fetch(`/api/download_agent/${selectedAgent}`, {
+    method: "GET",
+    headers: {
+      "X-WALLET": signature,
+      "X-USER-WALLET": currentWallet,
+      "X-PAYMENT-METHOD": method
+    }
+  });
+
+  if (res.status === 200) {
+    const blob = await res.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = selectedAgent + ".zip";
+    link.click();
+  } else {
+    alert("Download failed: " + res.status);
+  }
+  // Reset AFTER everything is done
+  selectedAgent = null;
+  selectedPrice = null;
+}
 </script>
 
 <script>
@@ -484,6 +692,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+<!-- LOADING OVERLAY -->
+<div id="loading" class="fixed inset-0 bg-black/70 hidden z-[9999] flex items-center justify-center">
+  <div class="text-center">
+    <div class="animate-spin h-10 w-10 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+    <p class="text-cyan-300 text-lg font-semibold">Processing payment…</p>
+    <p class="text-cyan-600 text-sm">Please wait.</p>
+  </div>
+</div>
   
 </body>
 </html>
