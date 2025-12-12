@@ -10,7 +10,7 @@ This repository contains the **public-facing frontend** for Aetheron.
 It provides the interface for:
 
 - Browsing AI components  
-- Wallet authentication (Phantom → MetaMask coming Q1 2026)  
+- Wallet authentication (Phantom → MetaMask planned Q1 2026)  
 - Triggering X402 on-chain payments  
 - Submitting component requests to the backend  
 - Showing generated outputs (PDF, TXT, DOCX, MD, HTML)  
@@ -23,13 +23,14 @@ The frontend is fully static, lightweight, and framework-agnostic.
 
 ## Important Note
 
-This repository contains **UI code only**.  
+This repository contains **UI code only**.
+
 It does **not** include:
 
 - Backend or worker logic  
 - Payment verification or validation  
 - Component engines  
-- PDF/MD/TXT renderers  
+- PDF/MD/TXT/DOCX/HTML renderers  
 - AETH price calculations  
 - AI prompts or processing logic  
 - Any proprietary intelligence systems  
@@ -54,7 +55,7 @@ This repo is safe for public visibility.
 
 ## Backend (Private)
 
-The frontend communicates with the private backend, which handles:
+The frontend communicates with a private backend, which handles:
 
 - On-chain payment verification  
 - USDC and AETH price routing  
@@ -62,7 +63,7 @@ The frontend communicates with the private backend, which handles:
 - PDF/TXT/DOCX/HTML/MD generation  
 - Agent ZIP packaging  
 - Ledger & billing entries  
-- R2 (S3) storage uploads  
+- R2 (S3-compatible) storage uploads  
 - Rate limits, validation, and security  
 
 The backend remains closed-source for product protection.
@@ -86,13 +87,19 @@ The backend remains closed-source for product protection.
 
 ## SDK
 
-Aetheron provides a public **TypeScript SDK** for wallet-native integration:
+Aetheron provides a **public TypeScript SDK** for developers who want to integrate
+Aetheron components directly into their own applications.
 
-- USDC / AETH payments  
-- Component generation  
-- Wallet-adapter support  
+The SDK supports:
 
-(Repository: aetheron-sdk — coming soon)
+- Wallet-native USDC & AETH payments  
+- Component execution via X402  
+- Asset delivery and download handling  
+- Wallet adapter compatibility  
+
+**Repository:** https://github.com/Aetheron402/aetheron-sdk  
+
+The SDK is maintained separately and is not required for using this frontend.
 
 ---
 
@@ -105,3 +112,4 @@ Aetheron provides a public **TypeScript SDK** for wallet-native integration:
 ---
 
 <p align="center"><sub>Part of the Aetheron AI ecosystem — powered by X402.</sub></p>
+
