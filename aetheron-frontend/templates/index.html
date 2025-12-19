@@ -3,23 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src
-          'self'
-          'unsafe-inline'
-          https://cdn.tailwindcss.com
-          https://unpkg.com
-          https://esm.sh;
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data: https:;
-        connect-src 'self' https://mainnet.helius-rpc.com;
-        frame-ancestors 'none';
-        object-src 'none';
-      "
-    />
     <title>Aetheron – AI Components powered by X402</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -29,7 +12,6 @@
         overflow: hidden;
       }
 
-      /* --- PARTICLE BACKGROUND --- */
       .background {
         position: fixed;
         inset: 0;
@@ -66,7 +48,6 @@
         z-index: 1;
       }
 
-      /* --- NEW CLEAN LOADING INTRO --- */
       #loading-screen {
         position: fixed;
         inset: 0;
@@ -88,7 +69,6 @@
         transition: opacity 0.4s ease;
       }
 
-      /* --- MAIN CONTENT --- */
       #main-content {
         position: relative;
         z-index: 10;
@@ -118,20 +98,17 @@
 
   <body class="text-gray-100 font-sans page-fade">
 
-    <!-- PARTICLES -->
     <div class="background">
       <div id="particle-container"></div>
       <div class="scanlines"></div>
     </div>
 
-    <!-- UPDATED LOADING SCREEN -->
     <div id="loading-screen">
 
       <h1 class="text-3xl font-semibold mb-4 text-cyan-300 tracking-wide text-center leading-snug">
         Initializing <span class="text-cyan-400">Aetheron Protocol</span>
       </h1>
 
-      <!-- Clean premium loading bar -->
       <div class="w-72 h-2 bg-white/10 rounded-full overflow-hidden shadow-lg shadow-cyan-400/10">
         <div id="loading-bar" class="h-full w-0 bg-cyan-400 transition-all duration-500"></div>
       </div>
@@ -139,7 +116,6 @@
       <p id="loading-seq" class="loading-text text-gray-400 text-sm mt-4"></p>
     </div>
 
-    <!-- MAIN LANDING CONTENT -->
     <section
       id="main-content"
       class="min-h-screen flex flex-col items-center justify-center text-center p-8"
@@ -154,7 +130,6 @@
         A premium AI component marketplace powered by the X402 protocol.
       </p>
 
-      <!-- Existing Explore button -->
       <button
         id="explore-btn"
         class="px-6 py-3 bg-cyan-500 text-black rounded-xl font-semibold hover:bg-cyan-400 transition animate-[glowPulse_3s_infinite]"
@@ -162,21 +137,18 @@
         Explore Components
       </button>
 
-      <!-- Aetheron Token header (clickable, smaller) -->
       <a href="/aetheron-token" class="block text-center group mt-8 mb-4">
 
   <h2 class="text-xl font-semibold text-cyan-300 transition group-hover:text-cyan-200">
     Aetheron Token
   </h2>
 
-  <!-- Smaller arrow animation -->
   <span class="text-cyan-400 text-base opacity-80 inline-block mt-1 group-hover:opacity-100 animate-soft-bounce">
     ↓
   </span>
 
       </a>
 
-      <!-- Soft bounce animation -->
       <style>
       @keyframes soft-bounce {
         0%, 100% { transform: translateY(0); opacity: 0.85; }
@@ -188,7 +160,6 @@
       </style>
 
     <script>
-      // Generate particles
       const particleContainer = document.getElementById("particle-container");
       for (let i = 0; i < 80; i++) {
         const p = document.createElement("div");
@@ -199,7 +170,6 @@
         particleContainer.appendChild(p);
       }
 
-      // Boot sequence
       const messages = [
         "Loading core modules...",
         "Activating AI lattice...",
@@ -218,7 +188,6 @@
       function showNextMessage() {
         if (index < messages.length) {
 
-          // fade text out
           loadingText.style.opacity = 0;
 
           setTimeout(() => {
@@ -226,7 +195,6 @@
             loadingText.style.opacity = 1;
             index++;
 
-            // smooth progress
             progress += Math.random() * 18 + 12;
             if (progress > 100) progress = 100;
             loadingBar.style.width = progress + "%";
@@ -250,7 +218,6 @@
 
       showNextMessage();
 
-      // Navigate to shop
       document.getElementById("explore-btn").addEventListener("click", () => {
         window.location.href = "/shop";
       });
