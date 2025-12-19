@@ -1,161 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src
-          'self'
-          'unsafe-inline'
-          https://cdn.tailwindcss.com
-          https://unpkg.com
-          https://esm.sh;
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data: https:;
-        connect-src 'self' https://mainnet.helius-rpc.com;
-        frame-ancestors 'none';
-        object-src 'none';
-      ">
-  <title>Prebuilt Agent Store — Aetheron</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@solana/web3.js@1.95.0/lib/index.iife.min.js"></script>
+{% extends "base.html" %}
 
-  <!-- SPL Token -->
-  <script type="module">
-    import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
-    window.splToken = spl;
-    console.log("SPL Token loaded:", spl);
-  </script>
+{% block title %}Prebuilt Agent Store — Aetheron{% endblock %}
 
-  <style>
-    body {
-      background-color: #030712;
-      color: #e5e7eb;
-      opacity: 0;
-      transition: opacity .6s ease;
-    }
+{% block body_class %}page-agents{% endblock %}
 
-    .card {
-      background: rgba(15,23,42,.85);
-      border: 1px solid rgba(56,189,248,.2);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      transition: .25s;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 25px rgba(34,211,238,.25);
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      width: auto;
-      padding: 0.35rem 0.9rem;
-      border-radius: 9999px;
-      background: rgba(15,23,42,.8);
-      border: 1px solid rgba(56,189,248,.3);
-      color: #67e8f9;
-      font-size: .85rem;
-      white-space: nowrap;
-    }
-
-    .btn {
-      background:#22d3ee;
-      color:#000;
-      font-weight:600;
-      padding:.5rem 1rem;
-      border-radius:.5rem;
-      transition:.25s;
-    }
-    .btn:hover {
-      background:#67e8f9;
-    }
-
-    /* Wallet Modal */
-    .modal-bg {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.65);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .modal {
-      background: #0b1220;
-      border: 1px solid rgba(56,189,248,.25);
-      border-radius: 1rem;
-      width: min(480px, 92vw);
-      padding: 1.25rem;
-    }
-  </style>
-</head>
-
-<body class="font-sans">
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    document.body.style.opacity = 1;
-  });
-</script>
-
-<!-- HEADER -->
-<header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
-
-  <!-- LOGO -->
-  <h1 onclick="window.location.href='/'"
-      class="text-2xl font-bold text-cyan-400 cursor-pointer hover:text-cyan-300 transition">
-    Aetheron Components
-  </h1>
-
-  <!-- DESKTOP NAV -->
-  <nav class="desktop-nav hidden md:flex gap-6 text-sm items-center">
-    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">GitHub</a>
-    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300">Aetheron on X</a>
-    <a href="/learn" class="text-gray-400 hover:text-cyan-300">Learn</a>
-    <a href="/roadmap" class="text-gray-400 hover:text-cyan-300">Roadmap</a>
-    <a href="/legal" class="text-gray-400 hover:text-cyan-300">Legal</a>
-    <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300">Aetheron Token</a>
-
-    <button id="connect-wallet"
-      class="bg-cyan-700 text-white px-3 py-1 rounded hover:bg-cyan-600 text-xs transition">
-      Connect Wallet
-    </button>
-  </nav>
-
-  <!-- MOBILE MENU BUTTON -->
-  <button class="mobile-menu-btn md:hidden text-cyan-300 text-3xl" onclick="toggleMobileMenu()">☰</button>
-
-  <!-- MOBILE NAV -->
-  <nav id="mobile-nav"
-     class="hidden flex-col gap-4 bg-[#030712]/95 border-t border-cyan-400/30 p-4 absolute left-0 right-0 top-full z-50 md:hidden">
-
-    <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-300">GitHub</a>
-    <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-300">Aetheron on X</a>
-    <a href="/learn" class="text-gray-300">Learn</a>
-    <a href="/roadmap" class="text-gray-300">Roadmap</a>
-    <a href="/legal" class="text-gray-300">Legal</a>
-    <a href="/aetheron-token" class="text-gray-300">Aetheron Token</a>
-
-    <button id="mobile-connect-wallet"
-      class="bg-cyan-700 text-white px-3 py-2 rounded">
-      Connect Wallet
-    </button>
-  </nav>
-
-</header>
+{% block content %}
 
 <div class="max-w-4xl mx-auto px-6 mt-6">
 
-  <!-- Breadcrumb -->
   <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">
     / AETHERON / AGENTS
   </p>
 
-  <!-- Back Button -->
   <a href="/shop"
      class="inline-flex items-center text-cyan-300 hover:text-cyan-200 text-sm mb-6 transition">
     ← Back to Shop
@@ -163,7 +19,6 @@
 
 </div>
 
-<!-- TITLE -->
 <section class="text-center max-w-3xl mx-auto mt-4">
   <h2 class="text-4xl font-semibold text-cyan-300 mb-4">Prebuilt Agent Store (Template)</h2>
   <p class="text-gray-400">
@@ -171,10 +26,9 @@
   </p>
 </section>
 
-<!-- GRID -->
 <main class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mt-16">
 
-  <!-- Agent 1 -->
+<!-- Agent 1 -->
 <div class="card flex flex-col justify-between">
   <div class="w-fit mb-3">
     <span class="pill">download</span>
@@ -198,8 +52,6 @@
   </div>
 </div>
 
-
-
 <!-- Agent 2 -->
 <div class="card flex flex-col justify-between">
   <div class="w-fit mb-3">
@@ -209,7 +61,7 @@
   <div>
     <h2 class="text-xl font-semibold text-cyan-400">Wallet Watcher Bot</h2>
     <p class="text-gray-400 text-sm mt-2">
-      Monitor any wallet in real-time — transfers, NFT actions, swap/liquidity signals with alerting. With optional filters for what you want to follow.
+      Monitor any wallet in real-time. Transfers, NFT actions, swap/liquidity signals with alerting. With optional filters for what you want to follow.
     </p>
   </div>
 
@@ -224,8 +76,6 @@
   </div>
 </div>
 
-
-
 <!-- Agent 3 -->
 <div class="card flex flex-col justify-between">
   <div class="w-fit mb-3">
@@ -235,7 +85,7 @@
   <div>
     <h2 class="text-xl font-semibold text-cyan-400">Discord Support Agent</h2>
     <p class="text-gray-400 text-sm mt-2">
-      Automated AI Discord assistant — responses, moderation, commands, and intelligent support features.
+      Automated AI Discord assistant. Responses, moderation, commands, and intelligent support features.
     </p>
   </div>
 
@@ -249,8 +99,6 @@
     </button>
   </div>
 </div>
-
-
 
 <!-- Agent 4 -->
 <div class="card flex flex-col justify-between">
@@ -275,8 +123,6 @@
     </button>
   </div>
 </div>
-
-
 
 <!-- Agent 5 -->
 <div class="card flex flex-col justify-between">
@@ -304,50 +150,6 @@
 
 </main>
 
-<!-- FOOTER -->
-<footer class="border-t border-cyan-900/30 mt-20 text-center text-sm text-gray-500 p-6">
-  © 2025 Aetheron — Built on the X402 protocol.
-
-  <div class="space-x-4 mt-2">
-
-    <a href="https://github.com/Aetheron402" target="_blank"
-       class="hover:text-cyan-300">GitHub</a>
-
-    <a href="https://x.com/Aetheron402" target="_blank"
-       class="hover:text-cyan-300">Aetheron on X</a>
-
-    <a href="/learn" class="hover:text-cyan-300">Learn</a>
-    <a href="/roadmap" class="hover:text-cyan-300">Roadmap</a>
-    <a href="/legal" class="hover:text-cyan-300">Legal</a>
-    <a href="/aetheron-token" class="hover:text-cyan-300">Aetheron Token</a>
-
-  </div>
-</footer>
-
-<!-- Wallet Selection Modal -->
-<div id="wallet-select-modal" class="modal-bg" style="display: none;">
-  <div class="modal text-center">
-    <h3 class="text-cyan-300 text-lg font-semibold mb-4">Choose Wallet</h3>
-
-    <!-- Phantom (Solana) — ACTIVE -->
-    <button id="phantom-btn"
-            class="btn mb-3 w-full flex items-center justify-center gap-2">
-      Phantom Wallet
-    </button>
-
-    <!-- MetaMask (Ethereum) — Coming Soon -->
-    <button class="btn w-full flex flex-col items-center justify-center gap-0.5
-                   bg-gray-800 cursor-not-allowed opacity-60">
-      <span>MetaMask</span>
-      <span class="text-xs text-gray-400">Coming Q1 2026</span>
-    </button>
-
-    <p class="text-xs text-gray-400 mt-4 cursor-pointer hover:underline"
-       onclick="closeWalletSelector()">Cancel</p>
-  </div>
-</div>
-
-<!-- PAYMENT MODAL -->
 <div id="payment-modal" class="modal-bg" style="display:none;">
   <div class="modal text-center p-6 w-[360px]">
 
@@ -357,8 +159,7 @@
       Select how you would like to pay for this agent.
     </p>
 
-    <!-- OPTIONS -->
-    <div class="flex flex-col gap-4 items-start mx-auto w-56 ml+0.5 text-gray-200">
+    <div class="flex flex-col gap-4 items-start mx-auto w-56 ml-1 text-gray-200">
       <label class="flex items-center gap-3 cursor-pointer hover:text-cyan-200 transition">
         <input type="radio" name="payment_method" value="USDC" checked class="scale-110">
         <span class="text-sm">USDC</span>
@@ -370,7 +171,26 @@
       </label>
     </div>
 
-    <!-- BUTTONS -->
+    <div id="agent-pay-info"
+         class="mt-4 bg-black/30 border border-cyan-400/20 rounded-lg p-3 hidden text-left">
+
+      <div class="text-xs text-gray-400 mb-1">Send to wallet</div>
+      <div class="text-cyan-300 font-mono text-sm break-all">
+        FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1
+      </div>
+
+      <div class="text-xs text-gray-400 mt-3 mb-1">Send this amount</div>
+      <div id="agent-pay-amount"
+           class="text-gray-200 text-sm font-semibold">
+        —
+      </div>
+
+      <div id="agent-aeth-note"
+           class="text-xs text-gray-400 mt-2 hidden">
+        AETH amount is calculated automatically.
+      </div>
+    </div>
+
     <div class="flex justify-center gap-12 mt-8">
 
       <button id="confirm-payment-btn"
@@ -387,14 +207,12 @@
   </div>
 </div>
 
-<script>
-let currentWallet = "";
-let currentChain  = "";
+{% endblock %}
 
-const SOLANA_NETWORK = "API";
-const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
-const PAYMENT_WALLET = "FZtoQTD7MLHvJzxxSPcUaQkXB5yP6qKYBZ8tUV18hHo1";
-const AETH_MINT = "DGNicx6qMPKSL1deR3fZfbHYjnm5ZJWmHNdY2NhDpump";
+{% block scripts %}
+
+<script>
+window.SOLANA_NETWORK = "{{ SOLANA_RPC }}";
 </script>
 
 <script>
@@ -403,66 +221,15 @@ let selectedPrice = null;
 </script>
 
 <script>
-const { 
-  Connection,
-  PublicKey,
-  Transaction,
-  SystemProgram 
-} = solanaWeb3;
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
 </script>
 
 <script>
 function shorten(addr) {
   return "🔗 " + addr.slice(0, 4) + "..." + addr.slice(-4);
 }
-
-function closeWalletSelector() {
-  document.getElementById("wallet-select-modal").style.display = "none";
-}
-
-async function connectPhantom() {
-  try {
-    if (window.solana?.isPhantom) {
-      const res = await window.solana.connect({ onlyIfTrusted: false });
-
-      currentWallet = res.publicKey.toString();
-      currentChain = "solana";
-
-      document.getElementById("connect-wallet").textContent = shorten(currentWallet);
-      document.getElementById("mobile-connect-wallet").textContent = shorten(currentWallet);
-    } else {
-      alert("On mobile: open this site inside the Phantom in-app browser. On desktop: install the Phantom browser extension.");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-  closeWalletSelector();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const walletBtn = document.getElementById("connect-wallet");
-
-  walletBtn.addEventListener("click", () => {
-    const modal = document.getElementById("wallet-select-modal");
-
-    if (!currentWallet) {
-      modal.style.display = "flex";  
-    } else {
-      if (confirm("Disconnect wallet?")) {
-        currentWallet = "";
-
-        // Desktop resets exactly as before
-        walletBtn.textContent = "Connect Wallet";
-
-        // Mobile also resets
-        document.getElementById("mobile-connect-wallet").textContent = "Connect Wallet";
-      }
-    }
-  });
-
-  document.getElementById("phantom-btn")
-    .addEventListener("click", connectPhantom);
-});
 </script>
 
 <script>
@@ -470,91 +237,26 @@ function getAgentPayMethod(groupName) {
   const selected = document.querySelector(`input[name="${groupName}"]:checked`);
   return selected ? selected.value : "USDC";
 }
-</script>
 
-<script>
-async function fetchRequiredAeth(usdcPrice) {
-  const res = await fetch(`/api/price/aeth?usdc_price=${usdcPrice}`);
-  const data = await res.json();
-  return data.required_aeth;
-}
-</script>
-
-<script>
-async function payWithAeth(requiredAmountAeth) {
-  if (!window.solana?.isPhantom) {
-    alert("Phantom not installed");
-    return null;
-  }
-
-  try {
-    const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
-
-    const payer = new solanaWeb3.PublicKey(currentWallet);
-    const receiver = new solanaWeb3.PublicKey(PAYMENT_WALLET);
-    const mint = new solanaWeb3.PublicKey(AETH_MINT);
-
-    // AETH has 9 decimals
-    const rawAmount = Math.floor(requiredAmountAeth * 1_000_000_000);
-
-    // Use the correct Token-2022 program from spl-token
-    const TOKEN_2022 = splToken.TOKEN_2022_PROGRAM_ID;
-
-    // Associated token accounts
-    const fromATA = await splToken.getAssociatedTokenAddress(
-      mint,
-      payer,
-      false,
-      TOKEN_2022,
-      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
-    );
-
-    const toATA = await splToken.getAssociatedTokenAddress(
-      mint,
-      receiver,
-      false,
-      TOKEN_2022,
-      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
-    );
-
-    // Transfer instruction
-    const ix = splToken.createTransferInstruction(
-      fromATA,
-      toATA,
-      payer,
-      rawAmount,
-      [],
-      TOKEN_2022
-    );
-
-    const tx = new solanaWeb3.Transaction().add(ix);
-    tx.feePayer = payer;
-    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-    const signed = await window.solana.signTransaction(tx);
-    const sig = await connection.sendRawTransaction(signed.serialize());
-    await connection.confirmTransaction(sig, "confirmed");
-
-    console.log("AETH Pay Signature:", sig);
-    return sig;
-
-  } catch (err) {
-    console.error("AETH payment failed:", err);
-    alert("AETH payment failed: " + err.message);
-    return null;
-  }
-}
-</script>
-
-<script>
 document.querySelectorAll(".buy-agent-btn").forEach(btn => {
   btn.addEventListener("click", () => {
 
-    if (!currentWallet) {
+    if (!window.currentWallet) {
       alert("Connect your wallet first.");
       return;
     }
 
+    // MOBILE BLOCK (EARLY)
+    if (isMobileDevice()) {
+      alert(
+        "Agent downloads are only available on desktop.\n\n" +
+        "These templates include multiple files and folders " +
+        "and are intended to be used on a computer."
+      );
+      return;
+    }
+
+    // DESKTOP FLOW
     selectedAgent = btn.dataset.id;
     selectedPrice = parseFloat(btn.dataset.price || "4.99");
 
@@ -568,6 +270,7 @@ function openPaymentModal(agentId, price) {
   selectedAgent = agentId;
   selectedPrice = price;
   document.getElementById("payment-modal").style.display = "flex";
+  setTimeout(updateAgentPayAmount, 0);
 }
 
 function closePaymentModal() {
@@ -586,129 +289,115 @@ function hideLoading() {
 </script>
 
 <script>
-document.getElementById("confirm-payment-btn").addEventListener("click", async () => {
-    const method = document.querySelector('input[name="payment_method"]:checked').value;
+document.getElementById("confirm-payment-btn")
+  .addEventListener("click", async () => {
 
+    // DESKTOP FLOW (unchanged)
     closePaymentModal();
-    showLoading();
-    await payForAgent(method);
-    hideLoading();
-});
-
-</script>
-<script>
-async function payWithUsdc(priceUSDC) {
-  try {
-    const connection = new Connection(SOLANA_NETWORK, "confirmed");
-
-    const payer = new PublicKey(currentWallet);
-    const merchant = new PublicKey(PAYMENT_WALLET);
-    const mint = new PublicKey(USDC_MINT);
-
-    const amount = BigInt(Math.round(priceUSDC * 1e6)); // USDC has 6 decimals
-
-    const payerATA = await window.splToken.getAssociatedTokenAddress(mint, payer);
-    const merchantATA = await window.splToken.getAssociatedTokenAddress(mint, merchant);
-
-    const ix = window.splToken.createTransferInstruction(
-      payerATA,
-      merchantATA,
-      payer,
-      amount,
-      [],
-      window.splToken.TOKEN_PROGRAM_ID
-    );
-
-    const { blockhash } = await connection.getLatestBlockhash("finalized");
-
-    const tx = new Transaction({
-      recentBlockhash: blockhash,
-      feePayer: payer
-    }).add(ix);
-
-    const signed = await window.solana.signTransaction(tx);
-    const sig = await connection.sendRawTransaction(signed.serialize());
-    await connection.confirmTransaction(sig, "confirmed");
-
-    console.log("USDC Pay Signature:", sig);
-    return sig;
-
-  } catch (err) {
-    console.error("USDC payment failed:", err);
-    alert("USDC payment failed.");
-    return null;
-  }
-}
+    await downloadAgent(selectedAgent);
+  });
 </script>
 
 <script>
-async function payForAgent(method) {
+async function updateAgentPayAmount() {
+  const method =
+    document.querySelector("input[name='payment_method']:checked")?.value || "USDC";
 
-  if (!currentWallet) {
-    alert("Connect your wallet first.");
-    return;
-  }
+  const box = document.getElementById("agent-pay-info");
+  const amount = document.getElementById("agent-pay-amount");
+  const note = document.getElementById("agent-aeth-note");
 
-  let signature = null;
-
-  if (method === "AETH") {
-    const requiredAeth = await fetchRequiredAeth(selectedPrice);
-    signature = await payWithAeth(requiredAeth);
-  }
+  box.classList.remove("hidden");
 
   if (method === "USDC") {
-    signature = await payWithUsdc(selectedPrice);
-  }
-
-  if (!signature) {
-    alert(method + " payment failed.");
+    note.classList.add("hidden");
+    amount.textContent = "4.99 USDC";
     return;
   }
 
-  // DOWNLOAD AGENT
-  const res = await fetch(`/api/download_agent/${selectedAgent}`, {
-    method: "GET",
-    headers: {
-      "X-WALLET": signature,
-      "X-USER-WALLET": currentWallet,
-      "X-PAYMENT-METHOD": method
-    }
-  });
+  note.classList.remove("hidden");
+  amount.textContent = "Fetching AETH amount…";
 
-  if (res.status === 200) {
-    const blob = await res.blob();
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = selectedAgent + ".zip";
-    link.click();
-  } else {
-    alert("Download failed: " + res.status);
+  try {
+    const res = await fetch("/api/price/aeth?usdc_price=4.99");
+    const data = await res.json();
+    amount.textContent = `${data.required_aeth} AETH`;
+  } catch {
+    amount.textContent = "Failed to fetch AETH amount";
   }
-  // Reset AFTER everything is done
-  selectedAgent = null;
-  selectedPrice = null;
 }
 </script>
 
 <script>
-function toggleMobileMenu() {
-  const nav = document.getElementById("mobile-nav");
-  nav.classList.toggle("hidden");
-  nav.classList.toggle("flex");
-}
-
-// Mirror mobile wallet button → desktop connect logic
-document.addEventListener("DOMContentLoaded", () => {
-  const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
-  const desktopWalletBtn = document.getElementById("connect-wallet");
-
-  if (mobileWalletBtn && desktopWalletBtn) {
-    mobileWalletBtn.addEventListener("click", () => desktopWalletBtn.click());
-  }
-});
+document.querySelectorAll("input[name='payment_method']")
+  .forEach(r => r.addEventListener("change", updateAgentPayAmount));
 </script>
 
-<!-- LOADING OVERLAY -->
+<script>
+async function downloadAgent(agentId) {
+  if (!window.currentWallet) {
+    alert("Connect wallet first.");
+    return;
+  }
+
+  const method =
+    document.querySelector('input[name="payment_method"]:checked')?.value || "USDC";
+
+  showLoading();
+
+  try {
+    let res = await fetch(`/api/download_agent/${agentId}`, {
+      headers: {
+        "X-USER-WALLET": window.currentWallet,
+        "X-PAYMENT-METHOD": method
+      }
+    });
+
+    if (res.status === 402) {
+      alert(
+        "Payment required.\n\n" +
+        "Send the shown amount to the provided wallet,\n" +
+        "then paste the transaction signature."
+      );
+
+      const sig = prompt("Paste your Solana transaction signature:");
+      if (!sig) return;
+
+      res = await fetch(`/api/download_agent/${agentId}`, {
+        headers: {
+          "X-USER-WALLET": window.currentWallet,
+          "X-PAYMENT-METHOD": method,
+          "X-TX-SIG": sig
+        }
+      });
+    }
+
+    if (res.status === 409) {
+      alert("This transaction was already used.");
+      return;
+    }
+
+    if (!res.ok) {
+      const msg = await res.text();
+      alert(msg || "Download failed.");
+      return;
+    }
+
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${agentId}.zip`;
+    a.click();
+
+  } catch (e) {
+    console.error(e);
+    alert("Unexpected error.");
+  } finally {
+    hideLoading();
+  }
+}
+</script>
+
 <div id="loading" class="fixed inset-0 bg-black/70 hidden z-[9999] flex items-center justify-center">
   <div class="text-center">
     <div class="animate-spin h-10 w-10 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -717,5 +406,4 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 </div>
   
-</body>
-</html>
+{% endblock %}
