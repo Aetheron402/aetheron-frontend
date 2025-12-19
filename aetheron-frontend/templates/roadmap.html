@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+
 {% block title %}Roadmap – Aetheron{% endblock %}
+
+{% block body_class %}page-roadmap{% endblock %}
 
 {% block content %}
 <section class="max-w-4xl mx-auto">
 
-  <!-- Breadcrumb -->
   <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">/ Aetheron / Roadmap</p>
 
-  <!-- Back Button -->
   <a href="/shop"
      class="inline-flex items-center text-cyan-300 hover:text-cyan-200 text-sm mb-6 transition">
     ← Back to Shop
@@ -21,7 +22,6 @@
 
   <div class="space-y-8 text-gray-300">
 
-    <!-- Q4 2025 -->
     <div class="bg-gray-900 border border-cyan-400/20 rounded-xl p-5 hover:shadow-[0_0_25px_rgba(34,211,238,0.15)] transition">
       <h2 class="text-xl text-cyan-300 font-semibold mb-2">
         Q4 2025 — Expansion of Intelligence Suite
@@ -30,7 +30,6 @@
 
       <ul class="list-disc ml-6 space-y-1">
 
-        <!-- DONE 1 -->
         <li class="roadmap-done">
           <span>
             <strong>Contract Intelligence Analyzer</strong> — input any Ethereum or Solana contract address
@@ -41,14 +40,13 @@
 
         <!-- NOT DONE -->
         <li class="roadmap-done">
-        <span>
-          <strong>Prebuilt Agent Store (Template)</strong> — one-click downloads of agent templates like
-          <em>DeFi Discord Bot</em>, <em>PDF Chat Assistant</em>, or <em>Solana Watcher</em>. Unlockable
-          through X402 one-time payments.
-        </span>
-      </li>
+          <span>
+            <strong>Prebuilt Agent Store (Template)</strong> — one-click downloads of agent templates like
+            <em>DeFi Discord Bot</em>, <em>PDF Chat Assistant</em>, or <em>Solana Watcher</em>. Unlockable
+            through X402 one-time payments.
+          </span>
+        </li>
 
-        <!-- DONE 2 -->
         <li class="roadmap-done">
           <span>
             <strong>Token Launch</strong> — Aetheron Token released on Pump.fun with active volume generated
@@ -56,7 +54,6 @@
           </span>
         </li>
 
-        <!-- DONE -->
         <li class="roadmap-done">
           <span>
             <strong>Infrastructure Refactor</strong> — move the core app to a multi-endpoint backend for
@@ -91,7 +88,6 @@
         <li><strong>Cross-Chain Roadmap</strong> — exploration into integrating Base, Arbitrum, and Solana side-chain mirrors for component verification.</li>
         <li><strong>CLI Tooling</strong> — “Aetheron CLI” for automating bulk prompt or code analysis from terminal workflows.</li>
 
-        <!-- NEW ITEM: MetaMask -->
         <li><strong>MetaMask Payment Integration</strong> — full EVM wallet support added for purchasing Aetheron components.</li>
       </ul>
 
@@ -164,7 +160,6 @@
 
   </div>
 
-  <!-- Visual Timeline -->
   <div class="mt-20 relative border-t border-cyan-400/20 pt-10">
     <h2 class="text-2xl font-bold text-cyan-400 text-center mb-10">Aetheron Visual Roadmap</h2>
 
@@ -207,11 +202,9 @@
 
     </div>
 
-    <!-- Connecting line -->
     <div class="hidden md:block absolute top-[30px] left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent"></div>
   </div>
 
-  <!-- ↑ Back to top link -->
   <p class="text-center mt-12">
     <a href="#" class="text-cyan-400 hover:text-cyan-300 text-sm">↑ Back to top</a>
   </p>
