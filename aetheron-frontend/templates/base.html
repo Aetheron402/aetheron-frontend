@@ -4,32 +4,9 @@
   <meta charset="UTF-8" />
   <title>{% block title %}Aetheron{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta
-    http-equiv="Content-Security-Policy"
-    content="
-      default-src 'self';
-      script-src
-        'self'
-        'unsafe-inline'
-        https://cdn.tailwindcss.com
-        https://unpkg.com
-        https://esm.sh;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      connect-src 'self' https://mainnet.helius-rpc.com;
-      frame-ancestors 'none';
-      object-src 'none';
-    "
-  />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/css/style.css">
-  <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
-
-  <!-- SPL Token -->
-  <script type="module">
-    import * as spl from "https://esm.sh/@solana/spl-token@0.3.11";
-    window.splToken = spl;
-  </script>
 
   <style>
     body { background-color: #030712; color: #e5e7eb; opacity: 0; transition: opacity .8s ease; }
@@ -37,10 +14,51 @@
     .btn:hover { background:#67e8f9; }
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.65); display:none; align-items:center; justify-content:center; z-index:50; }
     .modal { background:#0b1220; border:1px solid rgba(56,189,248,.25); border-radius:1rem; width:min(480px, 92vw); padding:1.25rem; }
+
+    .card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.25);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #67e8f9;
+      font-size: .75rem;
+      text-transform: lowercase;
+    }
+
+    .page-shop .shop-modal-bg { z-index: 60; }
+    
+    /* ===== Mobile modal overflow fix ===== */
+    @media (max-width: 768px) {
+      .modal {
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+
+      textarea,
+      .code-input {
+        max-height: 40vh;
+        resize: vertical;
+      }
+    }
   </style>
 </head>
 
-<body class="font-sans">
+<body class="font-sans {% block body_class %}{% endblock %}">
 
 <!-- HEADER -->
 <header class="p-6 border-b border-cyan-900/30 flex justify-between items-center relative">
@@ -142,12 +160,11 @@
   </div>
 </div>
 
-
 <!-- WALLET JS -->
 <script>
-  const SOLANA_NETWORK = "API";
   let currentWallet = "";
   let currentChain  = "";
+  window.currentWallet = "";
   const walletBtn = document.getElementById("connect-wallet");
 
   function shorten(addr) {
@@ -178,7 +195,13 @@
       const res = await window.solana.connect({ onlyIfTrusted: false });
       currentWallet = res.publicKey.toString();
       currentChain = "solana";
+
+      window.currentWallet = currentWallet;
+      
       updateWalletUI();
+
+      window.dispatchEvent(new Event("wallet:connected"));
+
     } catch(err) {
       console.error(err);
     }
@@ -193,11 +216,6 @@
     }
 
     try {
-      await window.ethereum.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }]
-      });
-
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       currentWallet = accounts[0];
       currentChain = "ethereum";
@@ -209,7 +227,6 @@
     document.getElementById("wallet-select-modal").style.display = "none";
   }
 
-  // Click handler for wallet button
   walletBtn.addEventListener("click", () => {
     if (!currentWallet) {
       document.getElementById("wallet-select-modal").style.display = "flex";
@@ -217,34 +234,106 @@
       if (confirm("Disconnect wallet?")) {
         currentWallet = "";
         currentChain = "";
+
+        window.currentWallet = "";
+        
         updateWalletUI();
       }
     }
   });
 
   document.getElementById("phantom-btn").onclick = connectPhantom;
-  // document.getElementById("metamask-btn").onclick = connectMetamask;
 
   document.body.style.opacity = 1;
 </script>
 
 <script>
+  const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
+
+  if (mobileWalletBtn) {
+    mobileWalletBtn.addEventListener("click", () => {
+      if (!currentWallet) {
+        document.getElementById("wallet-select-modal").style.display = "flex";
+      } else {
+        if (confirm("Disconnect wallet?")) {
+          currentWallet = "";
+          currentChain = "";
+          window.currentWallet = "";
+          updateWalletUI();
+        }
+      }
+    });
+  }
+</script>
+
+
+<script>
+async function registerPayment({ txSig, payMethod }) {
+  if (!currentWallet) {
+    throw new Error("Wallet not connected");
+  }
+
+  return {
+    txSig,
+    wallet: currentWallet,
+    method: payMethod || "USDC"
+  };
+}
+</script>
+
+<script>
 function toggleMobileMenu() {
   const nav = document.getElementById("mobile-nav");
+  if (!nav) return;
   nav.classList.toggle("hidden");
   nav.classList.toggle("flex");
 }
-
-// Mobile wallet button mirrors desktop
-document.addEventListener("DOMContentLoaded", () => {
-  const mobileWalletBtn = document.getElementById("mobile-connect-wallet");
-  const walletBtn = document.getElementById("connect-wallet");
-
-  if (mobileWalletBtn && walletBtn) {
-    mobileWalletBtn.addEventListener("click", () => walletBtn.click());
-  }
-});
 </script>
+
+<script>
+async function requestTxSignature() {
+  const sig = prompt("Paste your transaction signature:");
+  if (!sig) throw new Error("Transaction signature required");
+  return sig.trim();
+}
+</script>
+
+<script>
+function forceClosePaymentModal() {
+  const modal = document.getElementById("payment-modal");
+  if (!modal) return;
+
+  modal.style.display = "none";
+
+  modal.classList.remove("flex");
+  document.body.style.pointerEvents = "auto";
+}
+</script>
+
+<script>
+const globalLocks = {};
+
+function lock(key) {
+  if (globalLocks[key]) return false;
+  globalLocks[key] = true;
+  return true;
+}
+
+function unlock(key) {
+  globalLocks[key] = false;
+}
+
+async function safeJson(res) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { error: "Invalid JSON response", raw: text.slice(0, 200) };
+  }
+}
+</script>
+
+{% block scripts %}{% endblock %}
 
 </body>
 </html>
