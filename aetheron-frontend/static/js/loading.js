@@ -1,4 +1,4 @@
-// --- Universal loading overlay ---
+// Universal loading overlay
 const loaderHTML = `
 <div id="loading-overlay" class="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-50 hidden">
   <div class="w-64 h-1 bg-gray-700 rounded-full overflow-hidden mb-6">
