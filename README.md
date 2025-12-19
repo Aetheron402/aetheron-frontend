@@ -1,72 +1,120 @@
 # Aetheron Frontend
 
-Public UI for the **Aetheron X402 Component Marketplace** and **Aetheron Token ecosystem**.
+Public UI for the **Aetheron X402 Component Marketplace** and **Aetheron ecosystem**.
 
 ---
 
 ## Overview
 
-This repository contains the **public-facing frontend** for Aetheron.  
-It provides the interface for:
+This repository contains the **public-facing frontend** for Aetheron.
 
-- Browsing AI components  
-- Wallet authentication (Phantom → MetaMask planned Q1 2026)  
-- Triggering X402 on-chain payments  
-- Submitting component requests to the backend  
-- Showing generated outputs (PDF, TXT, DOCX, MD, HTML)  
-- Accessing the Aetheron Token page  
-- Purchasing downloadable agent templates (Agent Store)  
+It provides the user interface for:
 
-The frontend is fully static, lightweight, and framework-agnostic.
+- Browsing pay-per-use AI components  
+- Connecting a Solana wallet (Phantom)  
+- Selecting USDC or AETH as payment method  
+- Triggering X402-style payment-required flows  
+- Manually submitting on-chain payments  
+- Pasting transaction signatures for verification  
+- Submitting component execution requests  
+- Tracking job status and downloading generated outputs  
+- Browsing and purchasing prebuilt automation agent templates  
+- Viewing ecosystem, roadmap, and token information  
+
+The frontend is intentionally **lightweight, static, and framework-agnostic**, with all critical logic enforced server-side.
 
 ---
 
 ## Important Note
 
-This repository contains **UI code only**.
+This repository contains **frontend UI code only**.
 
 It does **not** include:
 
-- Backend or worker logic  
-- Payment verification or validation  
-- Component engines  
-- PDF/MD/TXT/DOCX/HTML renderers  
-- AETH price calculations  
-- AI prompts or processing logic  
-- Any proprietary intelligence systems  
+- Backend APIs or worker logic  
+- On-chain payment verification  
+- Transaction validation or replay protection  
+- AI prompts or inference logic  
+- PDF / DOCX / TXT / HTML / Markdown generation  
+- AETH pricing or oracle logic  
+- Ledger, billing, or accounting systems  
+- Agent source code or proprietary templates  
 
-All operational logic exists in the private backend.
+All operational logic exists in a **private backend** and is not exposed here.
 
-This repo is safe for public visibility.
+This repository is safe for public visibility.
+
+---
+
+## Core Concepts
+
+### X402 Payment Flow (Manual)
+
+Aetheron uses a **manual X402-style payment-required flow**.
+
+1. The user initiates a component or agent request  
+2. The backend responds with `402 Payment Required`  
+3. The frontend displays:
+   - Destination wallet address  
+   - Required payment amount (USDC or AETH)  
+4. The user manually submits an on-chain transaction using their wallet  
+5. The user pastes the transaction signature into the interface  
+6. The backend verifies the transaction on-chain  
+7. The request is accepted, queued, or fulfilled  
+
+The frontend **does not construct, sign, or submit transactions** and never has access to private keys.
+
+All payment enforcement and verification occurs server-side.
+
+---
+
+### Component Types
+
+#### Pay-Per-Use AI Components
+- Prompt Optimizer  
+- Code Explainer  
+- Prompt Tester (PersonaSim)  
+- Contract Intelligence Analyzer  
+
+These generate **user-specific outputs** (PDF, TXT, DOCX, HTML, MD) and are tracked via the backend ledger.
+
+#### Prebuilt Agent Templates
+- Large downloadable ZIP templates  
+- Desktop-only by design  
+- Not stored in the user asset library  
+- Intended as one-time licensed downloads  
+
+Agents are intentionally **not treated as ledger assets** to avoid mobile UX issues and excessive storage coupling.
 
 ---
 
 ## Tech Stack
 
-- HTML & Jinja2 templates  
+- HTML + Jinja2 templates  
 - TailwindCSS  
 - Vanilla JavaScript  
-- Solana Web3.js (Phantom)  
-- Token-2022 SPL integration  
-- Secure CSP headers  
-- X402 on-chain triggers (USDC + AETH)  
+- Phantom Wallet (address connection only)  
+- Manual Solana SPL payments (USDC + AETH)  
+- Backend-enforced X402-style payment verification  
+
+No frontend frameworks or client-side signing libraries are used.
 
 ---
 
 ## Backend (Private)
 
-The frontend communicates with a private backend, which handles:
+The frontend communicates with a **private FastAPI backend**, which handles:
 
-- On-chain payment verification  
-- USDC and AETH price routing  
-- Worker task creation (Celery)  
-- PDF/TXT/DOCX/HTML/MD generation  
-- Agent ZIP packaging  
-- Ledger & billing entries  
-- R2 (S3-compatible) storage uploads  
-- Rate limits, validation, and security  
+- Solana on-chain payment verification  
+- USDC & AETH routing and tolerance checks  
+- Partial payment handling  
+- Replay protection  
+- Job dispatching via Celery  
+- AI processing and report generation  
+- Secure file delivery (R2 / S3-compatible storage)  
+- Rate limits, validation, and security enforcement  
 
-The backend remains closed-source for product protection.
+The backend is closed-source by design.
 
 ---
 
@@ -78,28 +126,37 @@ The backend remains closed-source for product protection.
    /js
 /templates
    base.html
-   component pages
-   agent store
-   token page
+   shop.html
+   agents.html
+   component modals
+   token & roadmap pages
 ```
+
+All pages extend a shared base layout and wallet integration layer.
+
+---
+
+## Wallet Support
+
+- **Solana (Phantom)** — supported  
+- **Ethereum (MetaMask)** — planned (Q1 2026)
+
+Wallet state is shared globally across pages via the base template.
 
 ---
 
 ## SDK
 
 Aetheron provides a **public TypeScript SDK** for developers who want to integrate
-Aetheron components directly into their own applications.
+Aetheron components directly into their own applications without using the web UI.
 
-The SDK supports:
+The SDK supports **manual and programmatic X402-style payment flows**, depending on integration context.
 
-- Wallet-native USDC & AETH payments  
-- Component execution via X402  
-- Asset delivery and download handling  
-- Wallet adapter compatibility  
+The web frontend currently uses a **manual payment + signature submission model**.
 
 **Repository:** https://github.com/Aetheron402/aetheron-sdk  
 
-The SDK is maintained separately and is not required for using this frontend.
+The SDK is optional and not required to use this frontend.
 
 ---
 
@@ -111,5 +168,5 @@ The SDK is maintained separately and is not required for using this frontend.
 
 ---
 
-<p align="center"><sub>Part of the Aetheron AI ecosystem — powered by X402.</sub></p>
+<p align="center"><sub>Part of the Aetheron ecosystem — execution powered by X402.</sub></p>
 
