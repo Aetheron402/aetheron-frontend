@@ -1,6 +1,6 @@
 # Aetheron Frontend
 
-Public UI for the **Aetheron X402 Component Marketplace** and **Aetheron ecosystem**.
+Public UI for the **Aetheron X402 Component Marketplace** and the broader **Aetheron ecosystem**.
 
 ---
 
@@ -12,16 +12,17 @@ It provides the user interface for:
 
 - Browsing pay-per-use AI components  
 - Connecting a Solana wallet (Phantom)  
-- Selecting USDC or AETH as payment method  
+- Selecting USDC or AETH as a payment method  
 - Triggering X402-style payment-required flows  
 - Manually submitting on-chain payments  
 - Pasting transaction signatures for verification  
 - Submitting component execution requests  
 - Tracking job status and downloading generated outputs  
 - Browsing and purchasing prebuilt automation agent templates  
+- Reading the Aetheron Litepaper (Docs V2) and protocol documentation  
 - Viewing ecosystem, roadmap, and token information  
 
-The frontend is intentionally **lightweight, static, and framework-agnostic**, with all critical logic enforced server-side.
+The frontend is intentionally **lightweight, static, and framework-agnostic**, with all critical enforcement handled server-side.
 
 ---
 
@@ -43,6 +44,23 @@ It does **not** include:
 All operational logic exists in a **private backend** and is not exposed here.
 
 This repository is safe for public visibility.
+
+---
+
+## Documentation (Docs V2)
+
+The frontend includes a public **Learn / Litepaper** section (Docs V2) that provides
+a technical overview of the Aetheron protocol.
+
+It covers:
+
+- X402 payment flow and execution model  
+- Component architecture and constraints  
+- On-chain verification and provenance  
+- Pseudocode examples and protocol behavior  
+- Wallet usage and $AETH utility  
+
+The documentation is informational only and does not expose backend logic.
 
 ---
 
@@ -68,9 +86,9 @@ All payment enforcement and verification occurs server-side.
 
 ---
 
-### Component Types
+## Component Types
 
-#### Pay-Per-Use AI Components
+### Pay-Per-Use AI Components
 - Prompt Optimizer  
 - Code Explainer  
 - Prompt Tester (PersonaSim)  
@@ -78,7 +96,7 @@ All payment enforcement and verification occurs server-side.
 
 These generate **user-specific outputs** (PDF, TXT, DOCX, HTML, MD) and are tracked via the backend ledger.
 
-#### Prebuilt Agent Templates
+### Prebuilt Agent Templates
 - Large downloadable ZIP templates  
 - Desktop-only by design  
 - Not stored in the user asset library  
@@ -128,6 +146,7 @@ The backend is closed-source by design.
    base.html
    shop.html
    agents.html
+   learn.html
    component modals
    token & roadmap pages
 ```
