@@ -6,10 +6,18 @@
     <title>Aetheron – AI Components powered by X402</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Favicons -->
+    <link rel="icon" href="/static/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/static/favicon/site.webmanifest">
+    <meta name="theme-color" content="#030712">
+
     <style>
       body {
         background-color: #030712;
-        overflow: hidden;
+        overflow: auto;
       }
 
       .background {
@@ -48,38 +56,11 @@
         z-index: 1;
       }
 
-      #loading-screen {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 50;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: opacity 1s ease;
-      }
-
-      #loading-screen.fade-out {
-        opacity: 0;
-      }
-
-      .loading-text {
-        opacity: 0;
-        transition: opacity 0.4s ease;
-      }
-
       #main-content {
         position: relative;
         z-index: 10;
-        opacity: 0;
-        transform: scale(0.98);
-        transition: opacity 1.5s ease, transform 1.5s ease;
-      }
-
-      #main-content.active {
         opacity: 1;
-        transform: scale(1);
+        transform: none;
       }
 
       @keyframes floatText {
@@ -97,23 +78,21 @@
   </head>
 
   <body class="text-gray-100 font-sans page-fade">
+    
+    <div id="boot-sequence"
+         class="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden">
+
+      <canvas id="matrix-canvas" class="absolute inset-0"></canvas>
+
+      <div id="boot-text"
+           class="relative z-10 text-cyan-300 font-mono text-lg opacity-0">
+      </div>
+
+    </div>
 
     <div class="background">
       <div id="particle-container"></div>
       <div class="scanlines"></div>
-    </div>
-
-    <div id="loading-screen">
-
-      <h1 class="text-3xl font-semibold mb-4 text-cyan-300 tracking-wide text-center leading-snug">
-        Initializing <span class="text-cyan-400">Aetheron Protocol</span>
-      </h1>
-
-      <div class="w-72 h-2 bg-white/10 rounded-full overflow-hidden shadow-lg shadow-cyan-400/10">
-        <div id="loading-bar" class="h-full w-0 bg-cyan-400 transition-all duration-500"></div>
-      </div>
-
-      <p id="loading-seq" class="loading-text text-gray-400 text-sm mt-4"></p>
     </div>
 
     <section
@@ -160,7 +139,9 @@
       </style>
 
     <script>
-      const particleContainer = document.getElementById("particle-container");
+    const particleContainer = document.getElementById("particle-container");
+
+    if (particleContainer) {
       for (let i = 0; i < 80; i++) {
         const p = document.createElement("div");
         p.classList.add("particle");
@@ -169,58 +150,77 @@
         p.style.animationDelay = Math.random() * 5 + "s";
         particleContainer.appendChild(p);
       }
+    }
 
-      const messages = [
-        "Loading core modules...",
-        "Activating AI lattice...",
-        "Establishing quantum handshake...",
-        "Connecting to X402 interface...",
-        "Deploying systems...",
-        "Aetheron online."
-      ];
+    const boot = document.getElementById("boot-sequence");
+    const canvas = document.getElementById("matrix-canvas");
 
-      const loadingText = document.getElementById("loading-seq");
-      const loadingBar = document.getElementById("loading-bar");
+    if (boot && canvas) {
+      const ctx = canvas.getContext("2d");
 
-      let index = 0;
-      let progress = 0;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-      function showNextMessage() {
-        if (index < messages.length) {
+      const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * (canvas.height / fontSize)));
 
-          loadingText.style.opacity = 0;
+      function drawMatrix() {
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          setTimeout(() => {
-            loadingText.textContent = messages[index];
-            loadingText.style.opacity = 1;
-            index++;
+        ctx.fillStyle = "rgba(34,211,238,0.35)";
+        ctx.font = `${fontSize}px monospace`;
 
-            progress += Math.random() * 18 + 12;
-            if (progress > 100) progress = 100;
-            loadingBar.style.width = progress + "%";
+        drops.forEach((y, i) => {
+          const char = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(char, i * fontSize, y * fontSize);
 
-            setTimeout(showNextMessage, 900);
-          }, 250);
-
-        } else {
-          loadingBar.style.width = "100%";
-
-          const loader = document.getElementById("loading-screen");
-          loader.classList.add("fade-out");
-
-          setTimeout(() => {
-            loader.style.display = "none";
-            document.getElementById("main-content").classList.add("active");
-            document.body.style.overflow = "auto";
-          }, 1100);
-        }
+          if (y * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        });
       }
 
-      showNextMessage();
+      const matrixInterval = setInterval(drawMatrix, 40);
 
-      document.getElementById("explore-btn").addEventListener("click", () => {
+      setTimeout(() => {
+        clearInterval(matrixInterval);
+        canvas.style.transition = "transform 0.9s ease, opacity 0.9s ease";
+        canvas.style.transform = "scale(0.05)";
+        canvas.style.opacity = "0";
+      }, 2200);
+
+      setTimeout(() => {
+        const text = document.getElementById("boot-text");
+        const msg = "Aetheron is alive_";
+        let i = 0;
+
+        text.style.opacity = "1";
+
+        const typer = setInterval(() => {
+          text.textContent += msg[i++];
+          if (i >= msg.length) clearInterval(typer);
+        }, 60);
+      }, 2600);
+
+      setTimeout(() => {
+        boot.style.transition = "opacity 0.6s ease";
+        boot.style.opacity = "0";
+        setTimeout(() => boot.remove(), 600);
+      }, 5000);
+    }
+
+    const exploreBtn = document.getElementById("explore-btn");
+    if (exploreBtn) {
+      exploreBtn.addEventListener("click", () => {
         window.location.href = "/shop";
       });
-    </script>
+    }
+</script>
   </body>
 </html>
