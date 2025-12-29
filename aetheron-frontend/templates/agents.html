@@ -148,6 +148,30 @@
   </div>
 </div>
 
+<!-- Agent 6 -->
+<div class="card flex flex-col justify-between">
+  <div class="w-fit mb-3">
+    <span class="pill">download</span>
+  </div>
+
+  <div>
+    <h2 class="text-xl font-semibold text-cyan-400">Market Tracker Agent</h2>
+    <p class="text-gray-400 text-sm mt-2">
+      Tracks market regimes using risk, volatility, liquidity, correlation, and psychology signals to help interpret overall market conditions before taking action.
+    </p>
+  </div>
+
+  <div class="mt-6 flex justify-between items-center">
+    <span class="text-cyan-300 font-semibold">4.99 USDC</span>
+
+    <button class="btn buy-agent-btn"
+      data-id="market-tracker"
+      data-price="4.99">
+      Buy
+    </button>
+  </div>
+</div>
+  
 </main>
 
 <div id="payment-modal" class="modal-bg" style="display:none;">
@@ -246,7 +270,6 @@ document.querySelectorAll(".buy-agent-btn").forEach(btn => {
       return;
     }
 
-    // MOBILE BLOCK (EARLY)
     if (isMobileDevice()) {
       alert(
         "Agent downloads are only available on desktop.\n\n" +
@@ -256,7 +279,6 @@ document.querySelectorAll(".buy-agent-btn").forEach(btn => {
       return;
     }
 
-    // DESKTOP FLOW
     selectedAgent = btn.dataset.id;
     selectedPrice = parseFloat(btn.dataset.price || "4.99");
 
@@ -292,7 +314,6 @@ function hideLoading() {
 document.getElementById("confirm-payment-btn")
   .addEventListener("click", async () => {
 
-    // DESKTOP FLOW (unchanged)
     closePaymentModal();
     await downloadAgent(selectedAgent);
   });
