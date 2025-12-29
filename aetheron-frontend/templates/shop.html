@@ -12,11 +12,11 @@
       <div class="max-w-xl mx-auto mb-6">
         <input id="search" placeholder="Search components..." class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-4 py-3 outline-none"/>
       </div>
-      <div class="flex justify-center gap-3 mb-12">
-        <button class="pill pill-active" data-filter-btn data-category="All">All</button>
-        <button class="pill" data-filter-btn data-category="AI Tools">AI Tools</button>
-        <button class="pill" data-filter-btn data-category="Data & Vision">Data & Vision</button>
-        <button class="pill" data-filter-btn data-category="Development">Development</button>
+      <div class="filter-bar mb-8">
+        <button class="filter-chip active" data-filter-btn data-category="All">all</button>
+        <button class="filter-chip" data-filter-btn data-category="AI Tools">ai tools</button>
+        <button class="filter-chip" data-filter-btn data-category="Data & Vision">data & vision</button>
+        <button class="filter-chip" data-filter-btn data-category="Development">development</button>
       </div>
     </section>
 
@@ -839,10 +839,10 @@ async function submitContractIntel() {
         activeCategory = cat;
       }
 
-      filterButtons.forEach((b) => b.classList.remove("pill-active"));
+      filterButtons.forEach((b) => b.classList.remove("active"));
       filterButtons.forEach((b) => {
         if (b.dataset.category === activeCategory) {
-          b.classList.add("pill-active");
+          b.classList.add("active");
         }
       });
 
