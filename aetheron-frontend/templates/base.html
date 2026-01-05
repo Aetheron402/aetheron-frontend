@@ -40,6 +40,7 @@
       <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300 transition">GitHub</a>
       <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-400 hover:text-cyan-300 transition">X</a>
       <a href="/learn" class="text-gray-400 hover:text-cyan-300 transition">Learn</a>
+      <a href="/sdk" class="text-gray-400 hover:text-cyan-300 transition">SDK</a>
       <a href="/roadmap" class="text-gray-400 hover:text-cyan-300 transition">Roadmap</a>
       <a href="/legal" class="text-gray-400 hover:text-cyan-300 transition">Legal</a>
       <a href="/aetheron-token" class="text-gray-400 hover:text-cyan-300 transition">Token</a>
@@ -66,6 +67,7 @@
       <a href="https://github.com/Aetheron402" target="_blank" class="text-gray-300">GitHub</a>
       <a href="https://x.com/Aetheron402" target="_blank" class="text-gray-300">X</a>
       <a href="/learn" class="text-gray-300">Learn</a>
+      <a href="/sdk" class="text-gray-300">SDK</a>
       <a href="/roadmap" class="text-gray-300">Roadmap</a>
       <a href="/legal" class="text-gray-300">Legal</a>
       <a href="/aetheron-token" class="text-gray-300">Token</a>
@@ -96,12 +98,14 @@
       --cyan-2: #67e8f9;
     }
 
-    body{
+    body {
       background: var(--bg);
       color: var(--text);
-      opacity: 0;
-      transition: opacity .65s ease;
       overflow-x: hidden;
+    }
+
+    html {
+      overflow-y: scroll;
     }
 
     .background {
@@ -176,6 +180,8 @@
       position: relative;
       z-index: 20;
 
+      min-height: 80px;
+
       isolation: isolate;
 
       backdrop-filter: blur(10px);
@@ -185,6 +191,11 @@
         rgba(3,7,18,0.65) 0%,
         rgba(3,7,18,0.25) 100%
       );
+    }
+
+    header,
+    header * {
+      transition: none !important;
     }
 
     .btn{
@@ -353,6 +364,10 @@
     .page-fade {
       animation: page-fade 0.55s ease-out both;
     }
+
+    #mobile-nav {
+      will-change: transform;
+    }
   </style>
 
   <!-- Ambient background -->
@@ -495,10 +510,6 @@
     });
 
     document.getElementById("phantom-btn").onclick = connectPhantom;
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.body.style.opacity = 1;
-    });
   </script>
 
   <script>
