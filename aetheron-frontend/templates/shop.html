@@ -202,17 +202,15 @@
         </div>
 
         <p class="text-gray-400 text-sm mb-4 leading-relaxed">
-          Paste your code snippet below, and Aetheron will generate a detailed report explaining its structure,
-          logic, and complexity. Complete with
-          <span class="text-cyan-300">readability, performance, and security scores</span>.
-          Best suited for backend logic, algorithms, smart contracts, and non-rendered scripts.
-          JavaScript that includes HTML, JSX, or DOM markup (e.g. innerHTML, &lt;div&gt;, &lt;span&gt;) should be submitted as plain text only.
-          Your result can be exported as a formatted PDF, TXT, DOCX, HTML or MD.
+          Paste your code snippet below, and Aetheron will generate a detailed report explaining its structure, logic, and complexity.
+          Including <span class="text-cyan-300">readability, performance, and security insights</span>.
+          Supports backend code, JavaScript, and JSX.
+          Export as PDF, TXT, DOCX, HTML, or MD.
         </p>
 
         <label class="block text-sm text-gray-400 mb-2">Your code</label>
         <textarea id="user-code" rows="6" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none placeholder-gray-500 text-gray-200"
-          placeholder="Paste Python, JavaScript, or Solidity code here..."></textarea>
+          placeholder="Paste your code here…"></textarea>
 
         <label class="block text-sm text-gray-400 mb-1 mt-4">Output format</label>
         <select id="output-format" class="w-full bg-white/5 border border-cyan-400/20 rounded-lg px-3 py-2 outline-none text-gray-200">
@@ -813,7 +811,6 @@ async function submitContractIntel() {
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    document.body.style.opacity = 1;
 
     const addrInput = document.getElementById("contract-address");
     const networkSelect = document.getElementById("contract-network");
